@@ -7,8 +7,12 @@ import android.arch.persistence.room.Query;
 
 import com.sdm.sdmflash.db.dataTypes.DatesTuple;
 import com.sdm.sdmflash.db.dataTypes.Language;
+import com.sdm.sdmflash.db.dataTypes.WordFile;
+import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 
+import java.util.Date;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * Jednotlivé query příkazy pro přístup k databázi.
@@ -73,7 +77,7 @@ public interface WordDao {
      * @return pole slov
      */
     @Query("SELECT word FROM words WHERE language = :language")
-    String[] loadWordColumnByLanguage(Language language);
+    String[] loadWordColumn(Language language);
 
     /**
      * Vrací sloupec translation z tabulky
@@ -90,4 +94,56 @@ public interface WordDao {
      */
     @Query("SELECT add_date, change_date FROM words WHERE word = :word LIMIT 1")
     DatesTuple loadDatesByWord(String word);
+
+    /**
+     *
+     * @param word slovo pro změnu kartotéky
+     * @param file nová kartotéka
+     * @return pocet změněných řádků
+     */
+    @Query("UPDATE words SET file = :file WHERE word = :word")
+    int changeWordFile(String word, WordFile file);
+
+    /**
+     *
+     * @param id ID slova pro změnu kartotéky
+     * @param file nová kartotéka
+     * @return pocet změněných řádků
+     */
+    @Query("UPDATE words SET file = :file WHERE id = :id")
+    int changeWordFile(int id, WordFile file);
+
+    /**
+     * Vybírá z celkové kartokéky
+     * @param file kartoréka k zobrazení
+     * @param limit počet zobrazených slov
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT word, translation FROM words WHERE file = :file ORDER BY change_date ASC LIMIT :limit")
+    List<WordsTuple> loadWordPairsByFile(WordFile file, int limit);
+
+    /**
+     * Vybírá od data
+     * @param file kartoréka k zobrazení
+     * @param limit počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
+    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, int limit);
+
+    /**
+     * Vybírá od data do data
+     * @param file kartoréka k zobrazení
+     * @param limit počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @param toDate do tohoto data
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate AND add_date <= :toDate ORDER BY change_date ASC LIMIT :limit")
+    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, Date toDate, int limit);
+
+    // TEMP!!!
+    @Query("UPDATE words SET add_date = :date WHERE id = :id")
+    int changeDate(int id, Date date);
 }

@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.sdm.sdmflash.db.dataTypes.File;
+import com.sdm.sdmflash.db.dataTypes.WordFile;
 import com.sdm.sdmflash.db.dataTypes.Language;
 
 import java.util.Date;
@@ -40,12 +40,12 @@ public class Word {
 
     //Kartotéka
     @ColumnInfo(name = "file")
-    private File file;
+    private WordFile file;
 
     //Constructor
     public Word(Language language, String word, String translation,
                 String source, Date add_date, Date change_date,
-                File file) {
+                WordFile file) {
         this.language = language;
         this.word = word;
         this.translation = translation;
@@ -84,7 +84,7 @@ public class Word {
         return change_date;
     }
 
-    public File getFile() {
+    public WordFile getFile() {
         return file;
     }
 
@@ -116,7 +116,7 @@ public class Word {
         this.change_date = change_date;
     }
 
-    public void setFile(File file) {
+    public void setFile(WordFile file) {
         this.file = file;
     }
 

@@ -5,16 +5,17 @@ package com.sdm.sdmflash.db.dataTypes;
  * Created by Dominik on 02.12.2017.
  */
 
-public enum File {
+public enum WordFile {
     FILE_1(1), FILE_2(2), FILE_3(3), FILE_4(4), FILE_5(5);
 
     private byte id;
+    public static final int NUM_OF_FILES = 5;
 
-    File(int id) {
+    WordFile(int id) {
         this.id = (byte)id;
     }
 
-    public static File findById(int id){
+    public static WordFile findById(int id){
         switch (id){
             case 1:
                 return FILE_1;

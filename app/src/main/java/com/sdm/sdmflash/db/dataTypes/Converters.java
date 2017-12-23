@@ -34,12 +34,12 @@ public class Converters {
 
     //File
     @TypeConverter
-    public static File fromFile(Byte id) {
-        return id == 0 ? null : File.findById(id);
+    public static WordFile fromFile(Byte id) {
+        return id == 0 ? null : WordFile.findById(id);
     }
 
     @TypeConverter
-    public static Byte fileToByte(File file) {
+    public static Byte fileToByte(WordFile file) {
         return file == null ? null : file.getId();
     }
 }
