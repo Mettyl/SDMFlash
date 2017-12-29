@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FlashCardsActivity"
+            android:name=".study.flashcards.FlashCardsActivity"
             android:label="Flash Cards"
             android:parentActivityName=".MainActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->

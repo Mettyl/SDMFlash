@@ -1,6 +1,5 @@
 package com.sdm.sdmflash.db;
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,16 +9,9 @@ import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.Word;
-import com.sdm.sdmflash.study.FlashCards;
+import com.sdm.sdmflash.study.flashcards.FlashCards;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * testovací třída
@@ -30,8 +22,6 @@ public class DbTest {
 
     //pouze pro testovací databazi v mezipaměti
     private static AppDatabase db;
-    public static String[] words;
-    public static String[] translations;
 
     public void test(final Context context){
         //vytvoří instanci databáze v mezipaměti (při každém spustění se vytváří nová testovací databáze)
@@ -66,16 +56,7 @@ public class DbTest {
 
                 //zkouška čtení, vypíše obsah
                 for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
-
-                words = db.wordDao().loadWordColumn();
-                translations = db.wordDao().loadTranslationColumn();
             }
         });
     }
-
-    public static void update(){
-        words = db.wordDao().loadWordColumn();
-        translations = db.wordDao().loadTranslationColumn();
-    }
-
 }

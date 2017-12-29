@@ -1,16 +1,11 @@
-package com.sdm.sdmflash.study;
-
-import android.arch.persistence.room.Room;
-import android.content.Context;
+package com.sdm.sdmflash.study.flashcards;
 
 import com.sdm.sdmflash.db.dataTypes.WordFile;
 import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 import com.sdm.sdmflash.db.structure.AppDatabase;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**

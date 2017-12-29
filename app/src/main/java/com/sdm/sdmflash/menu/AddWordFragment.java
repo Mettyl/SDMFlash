@@ -31,9 +31,9 @@ public class AddWordFragment extends Fragment {
         // Required empty public constructor
     }
 
-    EditText word;
-    EditText translation;
-    Button button;
+    private EditText word;
+    private EditText translation;
+    private Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +52,6 @@ public class AddWordFragment extends Fragment {
                     @Override
                     public void run() {
                         AppDatabase.getInstance(getContext()).wordDao().insertAll(new Word(Language.CZ, word.getText().toString(), translation.getText().toString(), "", new Date(), new Date(), WordFile.FILE_1));
-                        Log.d("debug", "added");
-                        DbTest.update();
-                        Log.d("debug", "updated");
                     }
                 });
             }

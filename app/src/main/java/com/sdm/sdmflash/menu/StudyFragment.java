@@ -9,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.sdm.sdmflash.FlashCardsActivity;
+import com.sdm.sdmflash.study.flashcards.FlashCardsActivity;
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.study.FlashCards;
 
 /**
  * A simple {@link Fragment} subclass.
