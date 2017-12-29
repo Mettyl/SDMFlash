@@ -29,17 +29,25 @@ public class YourWordsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    ListView listView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_your_words, container, false);
+        listView = (ListView)view.findViewById(R.id.word_list);
 
-        ArrayAdapter<String> itemsAdapter =
-                new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, DbTest.words);
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                ArrayAdapter<String> itemsAdapter = new ListAdapter(getContext(),
+                        AppDatabase.getInstance(getContext()).wordDao().loadWordColumn(),
+                        AppDatabase.getInstance(getContext()).wordDao().loadTranslationColumn());
 
-        ListView listView = (ListView)view.findViewById(R.id.word_list);
-        listView.setAdapter(itemsAdapter);
+                listView.setAdapter(itemsAdapter);
+            }
+        });
 
         return view;
     }
