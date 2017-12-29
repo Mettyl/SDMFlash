@@ -29,13 +29,13 @@ import java.util.Queue;
 public class DbTest {
 
     //pouze pro testovací databazi v mezipaměti
-    private AppDatabase db;
+    private static AppDatabase db;
+    public static String[] words;
+    public static String[] translations;
 
     public void test(final Context context){
         //vytvoří instanci databáze v mezipaměti (při každém spustění se vytváří nová testovací databáze)
-        db = Room.inMemoryDatabaseBuilder(context,
-                AppDatabase.class)
-                .build();
+        db = AppDatabase.getInstance(context);
 
         //vytvoří instanci databáze (konečná)
         //db = AppDatabase.getInstance(context);
@@ -66,8 +66,16 @@ public class DbTest {
 
                 //zkouška čtení, vypíše obsah
                 for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
+
+                words = db.wordDao().loadWordColumn();
+                translations = db.wordDao().loadTranslationColumn();
             }
         });
+    }
+
+    public static void update(){
+        words = db.wordDao().loadWordColumn();
+        translations = db.wordDao().loadTranslationColumn();
     }
 
 }

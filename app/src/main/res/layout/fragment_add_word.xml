@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sdm.sdmflash.menu.AddWordFragment">
+
+    <EditText
+        android:id="@+id/word_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:ems="10"
+        android:hint="word"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/translation_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/word_field"
+        android:layout_alignStart="@+id/word_field"
+        android:layout_below="@+id/word_field"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="translation"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/translation_field"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:text="Add" />
+</RelativeLayout>
