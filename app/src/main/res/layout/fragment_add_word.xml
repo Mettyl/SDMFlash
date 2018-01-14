@@ -2,37 +2,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.sdm.sdmflash.menu.AddWordFragment">
 
-    <EditText
-        android:id="@+id/word_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:ems="10"
-        android:hint="word"
-        android:inputType="textPersonName" />
+    <RelativeLayout
+        android:id="@+id/add_word_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/translation_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/word_field"
-        android:layout_alignStart="@+id/word_field"
-        android:layout_below="@+id/word_field"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:hint="translation"
-        android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/translation_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/word_field"
+            android:layout_alignStart="@+id/word_field"
+            android:layout_below="@+id/word_field"
+            android:layout_marginTop="28dp"
+            android:ems="10"
+            android:hint="translation"
+            android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/translation_field"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:text="Add" />
+        <EditText
+            android:id="@+id/word_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp"
+            android:ems="10"
+            android:hint="word"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_word_spinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="43dp"
+            android:text="Add" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="18dp"
+            android:layout_marginEnd="21dp"
+            android:layout_marginRight="21dp"
+            app:srcCompat="@android:drawable/ic_dialog_email" />
+
+        <Spinner
+            android:id="@+id/add_word_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/translation_field"
+            android:layout_alignLeft="@+id/translation_field"
+            android:layout_alignRight="@+id/translation_field"
+            android:layout_alignStart="@+id/translation_field"
+            android:layout_below="@+id/translation_field"
+            android:layout_marginTop="25dp"
+            android:contextClickable="true" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/dialog_add_source"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

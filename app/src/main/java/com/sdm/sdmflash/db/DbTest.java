@@ -8,6 +8,7 @@ import com.sdm.sdmflash.db.dataTypes.Language;
 import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.structure.AppDatabase;
+import com.sdm.sdmflash.db.structure.Source;
 import com.sdm.sdmflash.db.structure.Word;
 import com.sdm.sdmflash.study.flashcards.FlashCards;
 
@@ -56,6 +57,9 @@ public class DbTest {
 
                 //zkouška čtení, vypíše obsah
                 for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
+
+                //přidání zdrojů
+                db.sourceDao().insertAll(new Source("Kniha"), new Source("seznam.cz"));
             }
         });
     }

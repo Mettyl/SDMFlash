@@ -13,7 +13,7 @@ import com.sdm.sdmflash.db.dataTypes.Converters;
  * Created by Dominik on 02.12.2017.
  */
 
-@Database(entities = {Word.class},version = 1)
+@Database(entities = {Word.class, Source.class},version = 1)
 @TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {
@@ -21,6 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase INSTANCE;
 
     public abstract WordDao wordDao();
+    public abstract SourceDao sourceDao();
 
     /**
      * Vrací instaci databáze, pokud neexistuje, vytvoří novou.

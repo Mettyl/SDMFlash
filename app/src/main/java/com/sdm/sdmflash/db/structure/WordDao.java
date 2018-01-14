@@ -38,6 +38,14 @@ public interface WordDao {
     List<Word> loadAllByIds(int[] wordIds);
 
     /**
+     * Vrací slovíčko podle id
+     * @param id id slovíčka
+     * @return hledaný objekt {@link Word}
+     */
+    @Query("SELECT * FROM words WHERE id = :id")
+    Word loadById(int id);
+
+    /**
      * vloží slovíčka
      * @param words Objekty Word
      */
