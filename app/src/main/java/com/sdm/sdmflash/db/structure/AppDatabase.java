@@ -31,8 +31,12 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                    //! pouze v RAM
+                    /*INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "SDMdatabase")
+                            .build();*/
+                    INSTANCE = Room.inMemoryDatabaseBuilder(context,
+                            AppDatabase.class)
                             .build();
                 }
             }
