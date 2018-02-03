@@ -1,26 +1,23 @@
 package com.sdm.sdmflash.menu;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.db.DbTest;
-import com.sdm.sdmflash.db.structure.AccessExecutor;
-import com.sdm.sdmflash.db.structure.AppDatabase;
+import com.sdm.sdmflash.YourWordsFragment.WordInfoDialog;
+import com.sdm.sdmflash.YourWordsFragment.YourWordsViewModel;
+import com.sdm.sdmflash.db.structure.Word;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,42 +35,36 @@ public class YourWordsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Instance of ViewModel
+        YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_your_words, container, false);
 
-        listView = (ListView)view.findViewById(R.id.word_list);
+        listView = view.findViewById(R.id.your_words_list);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
-            public void onItemClick(AdapterView<?> adapterView, final View view, final int i, long l) {
-                new AccessExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        final String source = AppDatabase.getInstance(getContext()).wordDao().loadById(i+1).getSource();
-                        view.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Snackbar.make(view, "source: " + source, Snackbar.LENGTH_SHORT)
-                                        .setAction("Action", null).show();
-                            }
-                        });
-                    }
-                });
-            }
-
-        });
-
-        new AccessExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                ArrayAdapter<String> itemsAdapter = new ListAdapter(getContext(),
-                        AppDatabase.getInstance(getContext()).wordDao().loadWordColumn(),
-                        AppDatabase.getInstance(getContext()).wordDao().loadTranslationColumn());
-
-                listView.setAdapter(itemsAdapter);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Word word = (Word) listView.getItemAtPosition(i);
+                Bundle bundle = new Bundle();
+                bundle.putString("jedna", word.getWord());
+                DialogFragment fragment = new WordInfoDialog();
+                fragment.onCreate(bundle);
+                fragment.show(getFragmentManager(), "showDialog");
             }
         });
+
+        //Creating LiveData Observer
+        final Observer<List<Word>> observer = new Observer<List<Word>>() {
+            @Override
+            public void onChanged(@Nullable List<Word> words) {
+                listView.setAdapter(new YourWordsListAdapter(getContext(), words));
+            }
+        };
+
+        model.getWords().observe(this, observer);
+
 
         return view;
     }

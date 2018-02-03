@@ -1,5 +1,6 @@
 package com.sdm.sdmflash.db.structure;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -12,7 +13,6 @@ import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 
 import java.util.Date;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * Jednotlivé query příkazy pro přístup k databázi.
@@ -27,7 +27,7 @@ public interface WordDao {
      * @return List objektů Word
      */
     @Query("SELECT * FROM words")
-    List<Word> getAll();
+    LiveData<List<Word>> getAll();
 
     /**
      * Vrací slovíčka podle id

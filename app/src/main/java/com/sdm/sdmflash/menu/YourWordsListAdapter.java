@@ -7,37 +7,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.db.structure.Word;
+
+import java.util.List;
 
 /**
  * Created by Dominik on 29.12.2017.
  */
 
-public class ListAdapter extends ArrayAdapter<String> {
+public class YourWordsListAdapter extends ArrayAdapter<Word> {
 
-    private String[] words;
-    private String[] translations;
 
-    public ListAdapter(@NonNull Context context, String[] words, String[] translations) {
+    public YourWordsListAdapter(@NonNull Context context, List<Word> words) {
         super(context, R.layout.word_list_item, words);
-        this.words = words;
-        this.translations = translations;
+
+
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View customView = layoutInflater.inflate(R.layout.word_list_item, parent, false);
 
-        TextView word = (TextView)customView.findViewById(R.id.list_adapter_word);
-        TextView translation = (TextView)customView.findViewById(R.id.list_adapter_translation);
+        TextView word = customView.findViewById(R.id.list_adapter_word);
+        TextView translation = customView.findViewById(R.id.list_adapter_translation);
 
-        word.setText(words[position]);
-        translation.setText(translations[position]);
+        word.setText(getItem(position).getWord());
+        translation.setText(getItem(position).getTranslation());
 
         return customView;
     }

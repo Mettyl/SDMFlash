@@ -3,8 +3,8 @@ package com.sdm.sdmflash.db;
 import android.content.Context;
 import android.util.Log;
 
-import com.sdm.sdmflash.db.dataTypes.WordFile;
 import com.sdm.sdmflash.db.dataTypes.Language;
+import com.sdm.sdmflash.db.dataTypes.WordFile;
 import com.sdm.sdmflash.db.dataTypes.WordsTuple;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.structure.AppDatabase;
@@ -45,6 +45,7 @@ public class DbTest {
                         new Word(Language.CZ, "Praha", "Prague", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "Pes", "Dog", "book", new Date(), new Date(), WordFile.FILE_2),
                         new Word(Language.EN, "work", "práce", "book", new Date(), new Date(), WordFile.FILE_1),
+                        new Word(Language.CZ, "Pes", "Dog", "book", new Date(), new Date(), WordFile.FILE_2),
                         new Word(Language.EN, "jump", "skočit", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "slyšet", "hear", "book", new Date(), new Date(), WordFile.FILE_1)
                 );
@@ -55,8 +56,6 @@ public class DbTest {
 
                 //Log.d("debug", new SimpleDateFormat("dd. MM. yyyy HH:mm:ss.SSSZ").format(new Date(0)));
 
-                //zkouška čtení, vypíše obsah
-                for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
 
                 //přidání zdrojů
                 db.sourceDao().insertAll(new Source("Kniha"), new Source("seznam.cz"));
