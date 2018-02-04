@@ -59,6 +59,7 @@ public interface WordDao {
     @Delete
     void delete(Word word);
 
+
     /**
      * Vymaže obsah databáze (inkrementace id pokračuje od poslední hodnoty)
      */

@@ -15,15 +15,21 @@ import android.widget.ListView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.YourWordsFragment.WordInfoDialog;
+import com.sdm.sdmflash.YourWordsFragment.YourWordsListAdapter;
 import com.sdm.sdmflash.YourWordsFragment.YourWordsViewModel;
+import com.sdm.sdmflash.db.structure.AccessExecutor;
+import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.Word;
+import com.sdm.sdmflash.db.structure.WordDao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class YourWordsFragment extends Fragment {
+public class YourWordsFragment extends Fragment implements WordInfoDialog.WordInfoDialogListener {
 
 
     public YourWordsFragment() {
@@ -38,6 +44,9 @@ public class YourWordsFragment extends Fragment {
         // Instance of ViewModel
         YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
 
+        final DialogFragment fragment = new WordInfoDialog();
+        fragment.setTargetFragment(this, 0);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_your_words, container, false);
 
@@ -46,11 +55,20 @@ public class YourWordsFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 Word word = (Word) listView.getItemAtPosition(i);
+
                 Bundle bundle = new Bundle();
-                bundle.putString("jedna", word.getWord());
-                DialogFragment fragment = new WordInfoDialog();
-                fragment.onCreate(bundle);
+
+                DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                bundle.putString("slovo", word.getWord());
+                bundle.putString("preklad", word.getTranslation());
+                bundle.putString("zdroj", word.getSource());
+                bundle.putString("datum_pridani", df.format(word.getAdd_date()));
+                bundle.putString("datum_zmeny", df.format(word.getChange_date()));
+                bundle.putInt("ID", word.getId());
+
+                fragment.setArguments(bundle);
                 fragment.show(getFragmentManager(), "showDialog");
             }
         });
@@ -67,6 +85,18 @@ public class YourWordsFragment extends Fragment {
 
 
         return view;
+    }
+
+
+    @Override
+    public void onDialogNeutralClick(final int id) {
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                WordDao dao = AppDatabase.getInstance(getContext()).wordDao();
+                dao.delete(dao.loadById(id));
+            }
+        });
     }
 
 }

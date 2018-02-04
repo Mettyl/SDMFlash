@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.menu;
+package com.sdm.sdmflash.YourWordsFragment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
