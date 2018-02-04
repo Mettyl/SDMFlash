@@ -12,4 +12,9 @@
     <string name="edit">edit</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="word">Word:</string>
+    <string name="translation">Translation:</string>
+    <string name="source">Source:</string>
+    <string name="added">Added:</string>
+    <string name="last_seen">Last seen:</string>
 </resources>

@@ -15,16 +15,14 @@ import com.sdm.sdmflash.db.structure.Word;
 import java.util.List;
 
 /**
- * Created by Dominik on 29.12.2017.
+ * Created by mety on 3.2.18.
  */
 
 public class YourWordsListAdapter extends ArrayAdapter<Word> {
 
 
     public YourWordsListAdapter(@NonNull Context context, List<Word> words) {
-        super(context, R.layout.word_list_item, words);
-
-
+        super(context, R.layout.your_words_list_row, words);
     }
 
     @NonNull
@@ -32,7 +30,7 @@ public class YourWordsListAdapter extends ArrayAdapter<Word> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        View customView = layoutInflater.inflate(R.layout.word_list_item, parent, false);
+        View customView = layoutInflater.inflate(R.layout.your_words_list_row, parent, false);
 
         TextView word = customView.findViewById(R.id.list_adapter_word);
         TextView translation = customView.findViewById(R.id.list_adapter_translation);

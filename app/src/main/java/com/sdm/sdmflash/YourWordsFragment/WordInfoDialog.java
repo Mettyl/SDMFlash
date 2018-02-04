@@ -20,6 +20,8 @@ public class WordInfoDialog extends DialogFragment {
 
     public interface WordInfoDialogListener {
         void onDialogNeutralClick(int id);
+
+        void onDialogNegativeClick(int id);
     }
 
     WordInfoDialogListener dialogListener;
@@ -58,7 +60,6 @@ public class WordInfoDialog extends DialogFragment {
         final int ID = getArguments().getInt("ID");
 
         builder.setView(view)
-                .setTitle("Word detail")
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
@@ -66,7 +67,7 @@ public class WordInfoDialog extends DialogFragment {
                 })
                 .setNegativeButton(R.string.edit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        dialogListener.onDialogNegativeClick(ID);
                     }
                 })
                 .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {

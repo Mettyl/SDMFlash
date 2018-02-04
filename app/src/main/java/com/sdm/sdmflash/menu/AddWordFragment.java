@@ -1,12 +1,10 @@
 package com.sdm.sdmflash.menu;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.db.DbTest;
 import com.sdm.sdmflash.db.dataTypes.Language;
 import com.sdm.sdmflash.db.dataTypes.WordFile;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
@@ -26,7 +23,6 @@ import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.Source;
 import com.sdm.sdmflash.db.structure.Word;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,8 +36,8 @@ public class AddWordFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private EditText word;
-    private EditText translation;
+    //    private EditText word;
+//    private EditText translation;
     private Button button;
     private Spinner spinner;
     private RelativeLayout dialog;
@@ -55,7 +51,7 @@ public class AddWordFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_add_word, container, false);
 
         dialog = view.findViewById(R.id.add_source_layout);
-        dialog.setVisibility(dialog.INVISIBLE);
+        dialog.setVisibility(View.INVISIBLE);
 
         background = view.findViewById(R.id.add_word_main);
 
@@ -68,7 +64,7 @@ public class AddWordFragment extends Fragment {
                     View child = background.getChildAt(i);
                     child.setEnabled(false);
                 }
-                dialog.setVisibility(dialog.VISIBLE);
+                dialog.setVisibility(View.VISIBLE);
             }
         });
 
@@ -84,7 +80,7 @@ public class AddWordFragment extends Fragment {
                     }
                 });
 
-                dialog.setVisibility(dialog.INVISIBLE);
+                dialog.setVisibility(View.INVISIBLE);
                 for (int i = 0; i < background.getChildCount(); i++) {
                     View child = background.getChildAt(i);
                     child.setEnabled(true);
@@ -94,10 +90,25 @@ public class AddWordFragment extends Fragment {
             }
         });
 
-        word = view.findViewById(R.id.word_field);
-        translation = view.findViewById(R.id.translation_field);
+        final TextView word = view.findViewById(R.id.word_field);
+        final TextView translation = view.findViewById(R.id.translation_field);
         button = view.findViewById(R.id.add_button);
-        spinner = (Spinner)view.findViewById(R.id.add_word_spinner);
+        spinner = view.findViewById(R.id.add_word_spinner);
+
+        if (getArguments() != null) {
+            final int id = getArguments().getInt("id");
+
+            new AccessExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Word slovo = AppDatabase.getInstance(getContext()).wordDao().loadById(id);
+                    word.setText(slovo.getWord());
+                    translation.setText(slovo.getTranslation());
+                }
+            });
+
+
+        }
 
         updateSourceList();
 

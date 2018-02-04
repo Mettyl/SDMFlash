@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.menu;
+package com.sdm.sdmflash.YourWordsFragment;
 
 
 import android.arch.lifecycle.Observer;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.YourWordsFragment.WordInfoDialog;
-import com.sdm.sdmflash.YourWordsFragment.YourWordsListAdapter;
-import com.sdm.sdmflash.YourWordsFragment.YourWordsViewModel;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.Word;
 import com.sdm.sdmflash.db.structure.WordDao;
+import com.sdm.sdmflash.menu.AddWordFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +35,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         // Required empty public constructor
     }
 
-    ListView listView;
+    private ListView listView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +59,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                 Bundle bundle = new Bundle();
 
-                DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
                 bundle.putString("slovo", word.getWord());
                 bundle.putString("preklad", word.getTranslation());
                 bundle.putString("zdroj", word.getSource());
@@ -97,6 +96,17 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 dao.delete(dao.loadById(id));
             }
         });
+    }
+
+    @Override
+    public void onDialogNegativeClick(int id) {
+        AddWordFragment addWordFragment = new AddWordFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        addWordFragment.setArguments(bundle);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.main_wall, addWordFragment).addToBackStack(null).commit();
+
     }
 
 }

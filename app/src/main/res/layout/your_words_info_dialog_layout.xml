@@ -3,49 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:paddingTop="20dp"
     android:weightSum="2">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingStart="20dp"
         android:paddingLeft="20dp"
         android:layout_weight="1">
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Slovo:" />
+            android:text="@string/word" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Překlad:" />
+            android:text="@string/translation" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Zdroj:" />
+            android:text="@string/source" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Datum přidání:" />
+            android:text="@string/added" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
-            android:text="Poslední zobrazení:" />
+            android:text="@string/last_seen" />
 
     </LinearLayout>
 
@@ -56,37 +58,40 @@
         android:layout_weight="1"
         android:textAlignment="textEnd"
         android:layout_gravity="end"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingEnd="20dp">
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:id="@+id/your_words_info_dialog_slovo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:id="@+id/your_words_info_dialog_preklad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:id="@+id/your_words_info_dialog_zdroj"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:id="@+id/your_words_info_dialog_datum_pridani"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:ellipsize="end" />
 
         <TextView
+            style="@style/YourWordsDialogStyle"
             android:id="@+id/your_words_info_dialog_datum_zmeny"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:ellipsize="end" />
 
     </LinearLayout>
 

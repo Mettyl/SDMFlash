@@ -17,4 +17,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="YourWordsDialogStyle" parent="AppTheme.NoActionBar">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/Black</item>
+    </style>
+
 </resources>
