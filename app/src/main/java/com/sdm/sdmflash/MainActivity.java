@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,8 +18,15 @@ import com.sdm.sdmflash.menu.AddWordFragment;
 import com.sdm.sdmflash.menu.MainFragment;
 import com.sdm.sdmflash.menu.StudyFragment;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static String TAG = "debug";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +47,37 @@ public class MainActivity extends AppCompatActivity
         MainFragment mainFragment = new MainFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_wall, mainFragment, mainFragment.getTag()).commit();
 
+        StringBuilder text = new StringBuilder();
+
+        try {
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+                Scanner s = new Scanner(line).useDelimiter("\\t");
+                if (s.hasNext()) {
+                    Log.i(TAG, s.next() + " - " + s.next());
+
+                }
+                s.close();
+
+            }
+            br.close();
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+            Log.i("debug", "error");
+
+        }
+
+
+
+
         new DbTest().test(getApplicationContext());
     }
+
 
     @Override
     public void onBackPressed() {

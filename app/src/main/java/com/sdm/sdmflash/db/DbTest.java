@@ -49,7 +49,7 @@ public class DbTest {
                         new Word(Language.EN, "jump", "skočit", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "slyšet", "hear", "book", new Date(), new Date(), WordFile.FILE_1)
                 );
-
+                //vytvoří instanci databáze (konečná)
                 db.wordDao().changeWordFile("work", WordFile.FILE_5);
                 //db.wordDao().changeDate(3, new Date(0));
                 for (WordsTuple word : FlashCards.getInstance(db).getMonthlyWords(10)) Log.d("debug", word.word);
