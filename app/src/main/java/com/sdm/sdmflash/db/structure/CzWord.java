@@ -5,17 +5,18 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 /**
- * Created by mety on 8.2.18.
+ * Created by mety on 10.2.18.
  */
-@Entity(tableName = "enWords")
-public class EnWord {
+
+@Entity(tableName = "czWords")
+public class CzWord {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     @ColumnInfo(name = "word")
     private String word;
 
-    public EnWord(String word) {
+    public CzWord(String word) {
         this.word = word;
     }
 
@@ -39,7 +40,4 @@ public class EnWord {
     public String toString() {
         return super.toString();
     }
-
 }
-
-

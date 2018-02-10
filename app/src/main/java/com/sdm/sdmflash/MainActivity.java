@@ -14,6 +14,10 @@ import android.view.MenuItem;
 
 import com.sdm.sdmflash.YourWordsFragment.YourWordsFragment;
 import com.sdm.sdmflash.db.DbTest;
+import com.sdm.sdmflash.db.structure.AppDatabase;
+import com.sdm.sdmflash.db.structure.CzWord;
+import com.sdm.sdmflash.db.structure.EnCzJoin;
+import com.sdm.sdmflash.db.structure.EnWord;
 import com.sdm.sdmflash.menu.AddWordFragment;
 import com.sdm.sdmflash.menu.MainFragment;
 import com.sdm.sdmflash.menu.StudyFragment;
@@ -47,23 +51,56 @@ public class MainActivity extends AppCompatActivity
         MainFragment mainFragment = new MainFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_wall, mainFragment, mainFragment.getTag()).commit();
 
+        new DbTest().test(getApplicationContext());
+
+
         StringBuilder text = new StringBuilder();
-
         try {
-
+            int i = 0;
             BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null && i < 500) {
                 text.append(line);
                 text.append('\n');
                 Scanner s = new Scanner(line).useDelimiter("\\t");
                 if (s.hasNext()) {
-                    Log.i(TAG, s.next() + " - " + s.next());
+                    final EnWord enWord = new EnWord(s.next());
+                    if (s.hasNext()) {
+                        final CzWord czWord = new CzWord(s.next());
 
+
+                        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
+                        if (enWord.getWord() != null && czWord.getWord() != null) {
+                            int enId = database.enWordDao().findByWord(enWord.getWord());
+
+                            if (enId == 0) {
+                                database.enWordDao().insertAll(enWord);
+                                enWord.setId(database.enWordDao().findByWord(enWord.getWord()));
+                            } else {
+                                enWord.setId(enId);
+                            }
+                            int czId = database.czWordDao().findByWord(czWord.getWord());
+
+                            if (czId == 0) {
+                                database.czWordDao().insertAll(czWord);
+                                czWord.setId(database.czWordDao().findByWord(czWord.getWord()));
+                            } else {
+                                czWord.setId(czId);
+                            }
+
+                            final EnCzJoin join = new EnCzJoin(enWord.getId(), czWord.getId());
+                            database.enCzJoinDao().insert(join);
+                        }
+                    }
                 }
-                s.close();
 
+                i++;
+                if (i % 10000 == 0) {
+                    Log.i(TAG, " " + i);
+                }
             }
+
+            Log.i(TAG, "done");
             br.close();
         } catch (
                 IOException e) {
@@ -71,12 +108,7 @@ public class MainActivity extends AppCompatActivity
             Log.i("debug", "error");
 
         }
-
-
-
-
-        new DbTest().test(getApplicationContext());
-    }
+        }
 
 
     @Override
