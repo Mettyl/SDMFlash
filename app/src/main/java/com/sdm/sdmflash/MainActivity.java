@@ -25,6 +25,7 @@ import com.sdm.sdmflash.menu.StudyFragment;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity
             int i = 0;
             BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
             String line;
-            while ((line = br.readLine()) != null && i < 500) {
+            ArrayList<Integer> radky = new ArrayList<>();
+            while ((line = br.readLine()) != null && i < 220000) {
                 text.append(line);
                 text.append('\n');
                 Scanner s = new Scanner(line).useDelimiter("\\t");
@@ -87,19 +89,25 @@ public class MainActivity extends AppCompatActivity
                             } else {
                                 czWord.setId(czId);
                             }
+                            Log.i(TAG, "En id = " + enWord.getId());
+                            Log.i(TAG, "Cz id = " + czWord.getId());
+
 
                             final EnCzJoin join = new EnCzJoin(enWord.getId(), czWord.getId());
                             database.enCzJoinDao().insert(join);
                         }
                     }
                 }
-
                 i++;
+
                 if (i % 10000 == 0) {
                     Log.i(TAG, " " + i);
                 }
             }
 
+            for (int e = 0; e < radky.size(); e++) {
+                Log.i(TAG, "" + radky.get(e));
+            }
             Log.i(TAG, "done");
             br.close();
         } catch (
@@ -108,7 +116,8 @@ public class MainActivity extends AppCompatActivity
             Log.i("debug", "error");
 
         }
-        }
+
+    }
 
 
     @Override
