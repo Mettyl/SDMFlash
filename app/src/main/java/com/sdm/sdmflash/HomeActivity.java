@@ -1,9 +1,11 @@
 package com.sdm.sdmflash;
 
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.sdm.sdmflash.db.DbTest;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
@@ -32,6 +34,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), CameraActivity.class));
+            }
+        });
 
         //spustí test
         new DbTest().test(getApplicationContext());

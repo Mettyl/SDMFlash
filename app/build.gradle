@@ -28,4 +28,6 @@ dependencies {
 
     implementation "android.arch.persistence.room:runtime:1.0.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
+    compile 'com.rmtheis:tess-two:8.0.0'
 }
