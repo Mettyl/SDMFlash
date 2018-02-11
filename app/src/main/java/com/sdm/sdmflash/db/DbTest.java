@@ -24,9 +24,7 @@ public class DbTest {
 
     public void test(final Context context){
         //vytvoří instanci databáze v mezipaměti (při každém spustění se vytváří nová testovací databáze)
-        db = Room.inMemoryDatabaseBuilder(context,
-                AppDatabase.class)
-                .build();
+        db = AppDatabase.getInstance(context);
 
         //vytvoří instanci databáze (konečná)
         //db = AppDatabase.getInstance(context);
@@ -40,14 +38,14 @@ public class DbTest {
 
                 //zkušební vkládání
                 //přístup k metodám přes db.wordDao().
-                db.wordDao().deleteAll();
-                db.wordDao().insertAll(
+                //db.wordDao().deleteAll();
+                /*db.wordDao().insertAll(
                         new Word(Language.CZ, "Praha", "Prague", "book", new Date(), new Date(), File.FILE_1),
                         new Word(Language.CZ, "Pes", "Dog", "book", new Date(), new Date(), File.FILE_2),
                         new Word(Language.EN, "work", "práce", "book", new Date(), new Date(), File.FILE_1),
                         new Word(Language.EN, "jump", "skočit", "book", new Date(), new Date(), File.FILE_1),
                         new Word(Language.CZ, "slyšet", "hear", "book", new Date(), new Date(), File.FILE_1)
-                );
+                );*/
 
                 //zkouška čtení, vypíše obsah
                 for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
