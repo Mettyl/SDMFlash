@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.ListView;
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.structure.AppDatabase;
-import com.sdm.sdmflash.db.structure.EnWord;
 import com.sdm.sdmflash.db.structure.Word;
 import com.sdm.sdmflash.db.structure.WordDao;
 import com.sdm.sdmflash.menu.AddWordFragment;
@@ -26,8 +24,6 @@ import com.sdm.sdmflash.menu.AddWordFragment;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import static com.sdm.sdmflash.MainActivity.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,30 +81,6 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         };
 
         model.getWords().observe(this, observer);
-        new AccessExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                AppDatabase database = AppDatabase.getInstance(getContext());
-//                List<EnWord> en =  database.enWordDao().getAll();
-//                List<CzWord> cz = database.czWordDao().getAll();
-//                List<EnCzJoin> joins = database.enCzJoinDao().getAll();
-//
-//                for (CzWord word : cz){
-//                    Log.i(TAG, word.getWord());
-//                }
-//                for (EnWord word : en){
-//                    Log.i(TAG, word.getWord());
-//                }
-//                for (EnCzJoin word : joins){
-//                    Log.i(TAG, "Preklady: " + word.getEnWordId() + " + " + word.getCzWordId());
-                //             }
-                List<EnWord> slova = database.enCzJoinDao().translateToEn(database.czWordDao().findByWord("skok"));
-                for (int i = 0; i < slova.size(); i++) {
-                    Log.i(TAG, slova.get(i).getWord());
-                }
-            }
-        });
-
 
         return view;
     }

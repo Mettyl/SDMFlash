@@ -14,26 +14,40 @@ import java.util.List;
 @Dao
 public interface EnWordDao {
 
+    /**
+     * Vrací všechny slova z databáze
+     *
+     * @return List EnWord
+     */
     @Query("SELECT * FROM enWords")
     List<EnWord> getAll();
 
+    /**
+     * Vrací všechny slova shodná nebo podobná
+     * parametru
+     * @param param lze zadat s %, aby byla naleze slova podobná
+     * @return List EnWord
+     */
     @Query("SELECT * FROM enWords WHERE word LIKE :param")
     List<EnWord> findWord(String param);
 
+    /**
+     * Vrací id slova shodného s atributem
+     * @param word hledané slovo
+     * @return int id
+     */
     @Query("SELECT id FROM enWords WHERE word = :word")
-    int findByWord(String word);
+    int findIdByWord(String word);
 
     /**
      * vloží slovíčka
-     *
-     * @param words Objekty string
+     * @param words Objekty EnWord
      */
     @Insert
     void insertAll(EnWord... words);
 
     /**
      * maže slovíčka
-     *
      * @param word Slovíčko ke smazání
      */
     @Delete

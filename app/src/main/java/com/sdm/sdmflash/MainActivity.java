@@ -14,8 +14,8 @@ import android.view.MenuItem;
 
 import com.sdm.sdmflash.YourWordsFragment.YourWordsFragment;
 import com.sdm.sdmflash.db.DbTest;
-import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.CzWord;
+import com.sdm.sdmflash.db.structure.DictionaryDatabase;
 import com.sdm.sdmflash.db.structure.EnCzJoin;
 import com.sdm.sdmflash.db.structure.EnWord;
 import com.sdm.sdmflash.menu.AddWordFragment;
@@ -25,7 +25,6 @@ import com.sdm.sdmflash.menu.StudyFragment;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -54,70 +53,10 @@ public class MainActivity extends AppCompatActivity
 
         new DbTest().test(getApplicationContext());
 
-
-        StringBuilder text = new StringBuilder();
-        try {
-            int i = 0;
-            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
-            String line;
-            ArrayList<Integer> radky = new ArrayList<>();
-            while ((line = br.readLine()) != null && i < 220000) {
-                text.append(line);
-                text.append('\n');
-                Scanner s = new Scanner(line).useDelimiter("\\t");
-                if (s.hasNext()) {
-                    final EnWord enWord = new EnWord(s.next());
-                    if (s.hasNext()) {
-                        final CzWord czWord = new CzWord(s.next());
-
-
-                        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
-                        if (enWord.getWord() != null && czWord.getWord() != null) {
-                            int enId = database.enWordDao().findByWord(enWord.getWord());
-
-                            if (enId == 0) {
-                                database.enWordDao().insertAll(enWord);
-                                enWord.setId(database.enWordDao().findByWord(enWord.getWord()));
-                            } else {
-                                enWord.setId(enId);
-                            }
-                            int czId = database.czWordDao().findByWord(czWord.getWord());
-
-                            if (czId == 0) {
-                                database.czWordDao().insertAll(czWord);
-                                czWord.setId(database.czWordDao().findByWord(czWord.getWord()));
-                            } else {
-                                czWord.setId(czId);
-                            }
-                            Log.i(TAG, "En id = " + enWord.getId());
-                            Log.i(TAG, "Cz id = " + czWord.getId());
-
-
-                            final EnCzJoin join = new EnCzJoin(enWord.getId(), czWord.getId());
-                            database.enCzJoinDao().insert(join);
-                        }
-                    }
-                }
-                i++;
-
-                if (i % 10000 == 0) {
-                    Log.i(TAG, " " + i);
-                }
-            }
-
-            for (int e = 0; e < radky.size(); e++) {
-                Log.i(TAG, "" + radky.get(e));
-            }
-            Log.i(TAG, "done");
-            br.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-            Log.i("debug", "error");
-
-        }
-
+        //Načte slovník do databáze
+        // loadDictionary();
     }
+
 
 
     @Override
@@ -190,5 +129,60 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void loadDictionary() {
+        StringBuilder text = new StringBuilder();
+        //K omezení počtu načtených slov při testování
+        int i = 0;
+        try {
+            //Načte soubor z assets složky
+            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
+            Scanner scanner = null;
+            //Instance databáze
+            DictionaryDatabase database = DictionaryDatabase.getInstance(getApplicationContext());
+            String line;
+            while ((line = br.readLine()) != null && i < 220000) {
+                text.append(line);
+                text.append('\n');
+
+                //Rozdělí soubor podle tabulátoru
+                scanner = new Scanner(line).useDelimiter("\\t");
+                //Kontrola jestli jsou na řádku dvě slova (často nejsou)
+                if (scanner.hasNext()) {
+                    String enWord = scanner.next();
+                    if (scanner.hasNext()) {
+                        String czWord = scanner.next();
+                        //Kontrola jestli dané slovo už v databázi není
+                        int enId = database.enWordDao().findIdByWord(enWord);
+                        if (enId == 0) {
+                            //Pokud ne, přidá se nové slovo do databáze a vrátí se jeho id
+                            database.enWordDao().insertAll(new EnWord(enWord));
+                            enId = database.enWordDao().findIdByWord(enWord);
+                        }
+                        int czId = database.czWordDao().findIdByWord(czWord);
+                        if (czId == 0) {
+                            database.czWordDao().insertAll(new CzWord(czWord));
+                            czId = database.czWordDao().findIdByWord(czWord);
+                        }
+                        //Vytvoření relací mezi slovami
+                        final EnCzJoin join = new EnCzJoin(enId, czId);
+                        database.enCzJoinDao().insert(join);
+                    }
+                }
+                if (i % 10000 == 0) {
+                    Log.i(TAG, "Načteno: " + i);
+                }
+                i++;
+            }
+            Log.i(TAG, "Načítaní dokončeno");
+
+            scanner.close();
+            br.close();
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+            Log.i("debug", "Chyba při čtení ze souboru");
+        }
     }
 }

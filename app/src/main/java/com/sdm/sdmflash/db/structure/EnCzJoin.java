@@ -2,6 +2,8 @@ package com.sdm.sdmflash.db.structure;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+import android.support.annotation.NonNull;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -22,11 +24,18 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                         entity = CzWord.class,
                         parentColumns = "id",
                         childColumns = "czWordId",
-                        onDelete = CASCADE)}
+                        onDelete = CASCADE)},
+        indices = {
+                @Index(value = "enWordId"),
+                @Index(value = "czWordId")
+        }
 )
 public class EnCzJoin {
+    //spojovací tabulka pro CzWorda a EnWord
 
+    @NonNull
     private final int enWordId;
+    @NonNull
     private final int czWordId;
 
     public EnCzJoin(int enWordId, int czWordId) {
