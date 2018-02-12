@@ -5,12 +5,18 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraDevice;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +37,24 @@ public class CameraActivity extends AppCompatActivity {
     private final String TAG = "debug";
     private String dataPath = "";
 
+
+    private Camera camera;
+    private FrameLayout cameraLayout;
+    private CameraView cameraView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        dataPath = getFilesDir()+ "/tesseract/";
+        cameraLayout = findViewById(R.id.camera_view);
+
+        camera = Camera.open();
+
+        cameraView = new CameraView(this, camera);
+        cameraLayout.addView(cameraView);
+
+        /*dataPath = getFilesDir()+ "/tesseract/";
 
         //make sure training data has been copied
         checkFile(new File(dataPath + "tessdata/"));
@@ -52,8 +70,9 @@ public class CameraActivity extends AppCompatActivity {
         }else
             launchCamera();
 
-        //startOCR(image);
+        //startOCR(image);*/
     }
+
 
     private void startOCR(Bitmap bitmap) {
         //Bitmap bitmap = BitmapFactory.decodeFile(DATA_PATH + "/card.jpg");
@@ -137,8 +156,8 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
             Bundle extras = data.getExtras();
             Bitmap photo = (Bitmap)extras.get("data");
-            ImageView imageView = findViewById(R.id.imageView);
-            imageView.setImageBitmap(photo);
+            //ImageView imageView = findViewById(R.id.imageView);
+            //imageView.setImageBitmap(photo);
             startOCR(photo);
         }
     }

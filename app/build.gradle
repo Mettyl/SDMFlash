@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -30,4 +34,6 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 
     compile 'com.rmtheis:tess-two:8.0.0'
+
+    implementation 'com.github.daolq3012:AssetSQLiteOpenHelper:1.0'
 }

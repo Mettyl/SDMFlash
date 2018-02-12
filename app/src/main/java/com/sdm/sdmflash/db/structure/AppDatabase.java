@@ -6,6 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
+import com.fstyle.library.helper.AssetSQLiteOpenHelperFactory;
 import com.sdm.sdmflash.db.dataTypes.Converters;
 
 /**
@@ -32,12 +33,15 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     //! pouze v RAM
-                    /*INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "SDMdatabase")
-                            .build();*/
-                    INSTANCE = Room.inMemoryDatabaseBuilder(context,
-                            AppDatabase.class)
+                    INSTANCE = Room.databaseBuilder(context,
+                            AppDatabase.class,
+                            "SDMdatabase")
+                            .openHelperFactory(new AssetSQLiteOpenHelperFactory())
                             .build();
+
+                    /*INSTANCE = Room.inMemoryDatabaseBuilder(context,
+                            AppDatabase.class)
+                            .build();*/
                 }
             }
         }

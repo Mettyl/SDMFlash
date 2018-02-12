@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.util.Log;
 
+
 import com.sdm.sdmflash.db.dataTypes.File;
 import com.sdm.sdmflash.db.dataTypes.Language;
 import com.sdm.sdmflash.db.structure.AccessExecutor;
@@ -19,38 +20,29 @@ import java.util.Date;
 
 public class DbTest {
 
-    //pouze pro testovací databazi v mezipaměti
-    private AppDatabase db;
-
     public void test(final Context context){
-        //vytvoří instanci databáze v mezipaměti (při každém spustění se vytváří nová testovací databáze)
-        db = Room.inMemoryDatabaseBuilder(context,
-                AppDatabase.class)
-                .build();
-
-        //vytvoří instanci databáze (konečná)
-        //db = AppDatabase.getInstance(context);
 
         final AccessExecutor accessExecutor = new AccessExecutor();
         accessExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                //vytvoří instanci databáze (konečná)
-                //AppDatabase db = AppDatabase.getInstance(context);
+
+                AppDatabase db = AppDatabase.getInstance(context);
 
                 //zkušební vkládání
                 //přístup k metodám přes db.wordDao().
-                db.wordDao().deleteAll();
-                db.wordDao().insertAll(
-                        new Word(Language.CZ, "Praha", "Prague", "book", new Date(), new Date(), File.FILE_1),
-                        new Word(Language.CZ, "Pes", "Dog", "book", new Date(), new Date(), File.FILE_2),
-                        new Word(Language.EN, "work", "práce", "book", new Date(), new Date(), File.FILE_1),
-                        new Word(Language.EN, "jump", "skočit", "book", new Date(), new Date(), File.FILE_1),
-                        new Word(Language.CZ, "slyšet", "hear", "book", new Date(), new Date(), File.FILE_1)
-                );
+                /*db.wordDao().deleteAll();*/
+//                db.wordDao().insertAll(
+//                        new Word(Language.CZ, "Praha", "Prague", "book", new Date(), new Date(), File.FILE_1),
+//                        new Word(Language.CZ, "Pes", "Dog", "book", new Date(), new Date(), File.FILE_2),
+//                        new Word(Language.EN, "work", "práce", "book", new Date(), new Date(), File.FILE_1),
+//                        new Word(Language.EN, "jump", "skočit", "book", new Date(), new Date(), File.FILE_1),
+//                        new Word(Language.CZ, "slyšet", "hear", "book", new Date(), new Date(), File.FILE_1)
+//                );
 
                 //zkouška čtení, vypíše obsah
                 for (Word word : db.wordDao().getAll()) Log.d("debug", word.toString());
+
             }
         });
     }

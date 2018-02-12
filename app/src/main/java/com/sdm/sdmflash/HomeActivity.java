@@ -12,9 +12,13 @@ import com.sdm.sdmflash.db.structure.AccessExecutor;
 import com.sdm.sdmflash.db.dataTypes.DatesTuple;
 import com.sdm.sdmflash.db.structure.AppDatabase;
 import com.sdm.sdmflash.db.structure.Word;
-import com.sdm.sdmflash.db.dataTypes.File;
-import com.sdm.sdmflash.db.dataTypes.Language;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity {
@@ -36,5 +40,4 @@ public class HomeActivity extends AppCompatActivity {
         //spustí test
         new DbTest().test(getApplicationContext());
     }
-
 }
