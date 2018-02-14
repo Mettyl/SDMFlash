@@ -2,10 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sdm.sdmflash.YourWordsFragment.YourWordsFragment">
+    tools:context="com.sdm.sdmflash.fragmentYourWords.YourWordsFragment">
 
-    <ListView
-        android:id="@+id/your_words_list"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_your_words"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+
 </LinearLayout>

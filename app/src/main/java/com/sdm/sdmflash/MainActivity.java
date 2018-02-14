@@ -12,15 +12,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.sdm.sdmflash.YourWordsFragment.YourWordsFragment;
-import com.sdm.sdmflash.db.DbTest;
-import com.sdm.sdmflash.db.structure.CzWord;
-import com.sdm.sdmflash.db.structure.DictionaryDatabase;
-import com.sdm.sdmflash.db.structure.EnCzJoin;
-import com.sdm.sdmflash.db.structure.EnWord;
-import com.sdm.sdmflash.menu.AddWordFragment;
+import com.sdm.sdmflash.databases.DbTest;
+import com.sdm.sdmflash.databases.structure.CzWord;
+import com.sdm.sdmflash.databases.structure.DictionaryDatabase;
+import com.sdm.sdmflash.databases.structure.EnCzJoin;
+import com.sdm.sdmflash.databases.structure.EnWord;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentStudy.StudyFragment;
+import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.MainFragment;
-import com.sdm.sdmflash.menu.StudyFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity
 
         new DbTest().test(getApplicationContext());
 
+
         //Načte slovník do databáze
         // loadDictionary();
     }
-
 
 
     @Override
@@ -185,4 +185,5 @@ public class MainActivity extends AppCompatActivity
             Log.i("debug", "Chyba při čtení ze souboru");
         }
     }
+
 }
