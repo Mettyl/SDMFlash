@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Home Screen" />
+        <item
+            android:id="@+id/nav_study"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Study" />
+        <item
+            android:id="@+id/nav_games"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Games" />
+        <item
+            android:id="@+id/nav_add_word"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Add Word" />
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Statistics" />
+        <item
+            android:id="@+id/nav_your_words"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Your words" />
+    </group>
+
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_menu_share"
+                android:title="About" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Help" />
+        </menu>
+    </item>
+
+</menu>
