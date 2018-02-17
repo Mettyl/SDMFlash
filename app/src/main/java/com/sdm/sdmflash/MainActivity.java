@@ -5,9 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +18,16 @@ import com.sdm.sdmflash.databases.structure.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
 import com.sdm.sdmflash.fragmentStudy.StudyFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
-import com.sdm.sdmflash.menu.MainFragment;
+import com.sdm.sdmflash.menu.HomeFragment;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -32,32 +35,62 @@ public class MainActivity extends AppCompatActivity
 
     public static String TAG = "debug";
 
+    private static void copyFileUsingFileStreams(File source, File dest)
+            throws IOException {
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = new FileInputStream(source);
+            output = new FileOutputStream(dest);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = input.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } catch (Exception e) {
+            Log.e("AndroidRuntime", Log.getStackTraceString(e));
+        } finally {
+            input.close();
+            output.close();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.drawer_layout);
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        //   ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        //           this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //   drawer.addDrawerListener(toggle);
+        //   toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        MainFragment mainFragment = new MainFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_wall, mainFragment, mainFragment.getTag()).commit();
+        HomeFragment homeFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
         new DbTest().test(getApplicationContext());
 
+//        File database = getDatabasePath("SDMdictionarydatabase");
+//        Log.i("debug", database.getAbsolutePath());
+//        Log.i("debug", getExternalFilesDir(null).getAbsolutePath());
+//
+//        try {
+//            File out = new File(getExternalFilesDir(null).getPath() + "/SDMdictionarydatabase");
+//            copyFileUsingFileStreams(out, database);
+//        } catch (IOException e) {
+//            Log.e("AndroidRuntime", Log.getStackTraceString(e));
+//        }
+
 
         //Načte slovník do databáze
+
         // loadDictionary();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -72,7 +105,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_activity_toolbar, menu);
         return true;
     }
 
@@ -98,27 +131,27 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            MainFragment mainFragment = new MainFragment();
+            HomeFragment homeFragment = new HomeFragment();
             FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.main_wall, mainFragment, mainFragment.getTag()).commit();
+            manager.beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
         } else if (id == R.id.nav_study) {
             StudyFragment studyFragment = new StudyFragment();
             FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.main_wall, studyFragment, studyFragment.getTag()).commit();
+            manager.beginTransaction().replace(R.id.content_frame, studyFragment, studyFragment.getTag()).commit();
 
         } else if (id == R.id.nav_games) {
 
         } else if (id == R.id.nav_add_word) {
             AddWordFragment addWordFragment = new AddWordFragment();
             FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.main_wall, addWordFragment, addWordFragment.getTag()).commit();
+            manager.beginTransaction().replace(R.id.content_frame, addWordFragment, addWordFragment.getTag()).commit();
 
         } else if (id == R.id.nav_stats) {
 
         } else if (id == R.id.nav_your_words) {
             YourWordsFragment yourWordsFragment = new YourWordsFragment();
             FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.main_wall, yourWordsFragment, yourWordsFragment.getTag()).commit();
+            manager.beginTransaction().replace(R.id.content_frame, yourWordsFragment, yourWordsFragment.getTag()).commit();
 
         } else if (id == R.id.nav_about) {
 

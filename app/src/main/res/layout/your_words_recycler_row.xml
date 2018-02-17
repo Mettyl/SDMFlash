@@ -2,21 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:weightSum="2"
-    android:background="?android:attr/selectableItemBackground">
+    android:weightSum="2">
 
     <TextView
         android:id="@+id/recycler_adapter_word_your_words"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="start"
+        android:layout_weight="1"
+        android:paddingLeft="20dp"
         android:text="TextView"
         android:textAlignment="textStart"
-        android:paddingLeft="20dp"
-        android:textSize="24sp"
-        android:textColor="@color/Black" />
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/recycler_adapter_translation_your_words"
@@ -24,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_weight="1"
+        android:paddingRight="20dp"
         android:text="TextView"
         android:textAlignment="textEnd"
-        android:paddingRight="20dp"
-        android:textSize="24sp"
-        android:textColor="@color/Black" />
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 </LinearLayout>

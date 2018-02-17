@@ -17,5 +17,7 @@
     <string name="source">Source:</string>
     <string name="added">Added:</string>
     <string name="last_seen">Last seen:</string>
+    <string name="all_words">All words:</string>
+    <string name="add_new_word">Add new word</string>
 
 </resources>
