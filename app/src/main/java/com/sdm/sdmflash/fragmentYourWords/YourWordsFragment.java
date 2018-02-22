@@ -8,11 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,10 +47,11 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_your_words, container, false);
-
-        Toolbar toolbar = view.findViewById(R.id.toolbar_your_words);
-        toolbar.setTitle("Your words");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//
+//        Toolbar toolbar = view.findViewById(R.id.your_words_toolbar);
+//        toolbar.setTitle("Your words");
+//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//
 
         // Instance of ViewModel
         YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);

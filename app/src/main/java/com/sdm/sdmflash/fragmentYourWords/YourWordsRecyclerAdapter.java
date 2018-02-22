@@ -38,7 +38,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     public List<Word> rearangeList(List<Word> list) {
         List<Word> newList = new ArrayList<>();
         char lett = ' ';
-        boolean first = true;
+        boolean first = false;
         for (int i = 0; i < list.size(); i++) {
             if (first) {
                 first = false;
