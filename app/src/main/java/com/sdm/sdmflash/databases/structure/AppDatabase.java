@@ -20,8 +20,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
-    public abstract WordDao wordDao();
-    public abstract SourceDao sourceDao();
     /**
      * Vrací instaci databáze, pokud neexistuje, vytvoří novou.
      * @param context context aplikace (getApplicationContext())
@@ -36,11 +34,15 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "SDMdatabase")
                             .build();*/
                     INSTANCE = Room.inMemoryDatabaseBuilder(context,
-                            AppDatabase.class).allowMainThreadQueries()
+                            AppDatabase.class)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
+    public abstract WordDao wordDao();
+
+    public abstract SourceDao sourceDao();
 }

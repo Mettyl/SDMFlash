@@ -44,7 +44,7 @@ public class DbTest {
                 db.wordDao().insertAll(
                         new Word(Language.CZ, "araha", "Prague", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "bes", "Dog", "book", new Date(), new Date(), WordFile.FILE_2),
-                        new Word(Language.EN, "cork", "práce", "book", new Date(), new Date(), WordFile.FILE_1),
+                        new Word(Language.EN, "cork", "práce", "book", new Date(), null, WordFile.FILE_1),
                         new Word(Language.EN, "dump", "skočit", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "asdf", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "dss", "hear", "book", new Date(), new Date(), WordFile.FILE_1),

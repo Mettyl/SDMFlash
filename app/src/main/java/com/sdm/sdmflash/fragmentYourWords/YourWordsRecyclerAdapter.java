@@ -1,12 +1,9 @@
 package com.sdm.sdmflash.fragmentYourWords;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
@@ -29,31 +26,34 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private final int WORD = 1;
     private final int HEADER = 2;
     private List<Word> wordList;
-    private int letterNum = 0;
+    private OnNotTestedWordListener notTestedListener;
 
-    public YourWordsRecyclerAdapter(List<Word> wordList) {
+    public YourWordsRecyclerAdapter(List<Word> wordList, OnNotTestedWordListener listener) {
+        this.notTestedListener = listener;
+        this.wordList = rearangeList(wordList);
+    }
+
+    public void setWordList(List<Word> wordList) {
         this.wordList = rearangeList(wordList);
     }
 
     public List<Word> rearangeList(List<Word> list) {
         List<Word> newList = new ArrayList<>();
         char lett = ' ';
-        boolean first = false;
+        int notTested = 0;
         for (int i = 0; i < list.size(); i++) {
-            if (first) {
-                first = false;
-                newList.add(new Word(null, null, null, null, null, null, null));
-                i--;
-                letterNum++;
-            } else if (list.get(i).getWord().charAt(0) == lett) {
+            if (list.get(i).getChange_date() == null) {
+                notTested++;
+            }
+            if (list.get(i).getWord().charAt(0) == lett) {
                 newList.add(list.get(i));
             } else {
                 newList.add(new Word(null, String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase(), null, null, null, null, null));
                 lett = list.get(i).getWord().charAt(0);
                 i--;
-                letterNum++;
             }
         }
+        notTestedListener.onNotTestedWord(notTested);
         return newList;
     }
 
@@ -67,9 +67,6 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             case LETTER:
                 View viewL = inflater.inflate(R.layout.your_words_recycler_letter_row, parent, false);
                 return new LetterViewHolder(viewL);
-            case HEADER:
-                View viewH = inflater.inflate(R.layout.your_words_recycler_head, parent, false);
-                return new HeaderViewHolder(viewH);
             default:
                 View view = inflater.inflate(R.layout.your_words_recycler_row, parent, false);
                 return new WordViewHolder(view);
@@ -78,9 +75,8 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Word word = wordList.get(position);
-        Log.i("debug", "Position: " + position);
         switch (holder.getItemViewType()) {
             case WORD:
                 WordViewHolder wordViewHolder = (WordViewHolder) holder;
@@ -92,18 +88,11 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         onClickSubject.onNext(word);
                     }
                 });
-                Log.i("debug", "WORD");
                 break;
 
             case LETTER:
                 LetterViewHolder letterViewHolder = (LetterViewHolder) holder;
                 letterViewHolder.letter.setText(word.getWord());
-                Log.i("debug", "LETTER");
-                break;
-            case HEADER:
-                HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-                headerViewHolder.wordCount.setText(String.valueOf(wordList.size() - letterNum));
-                Log.i("debug", "HEADER");
                 break;
         }
     }
@@ -115,20 +104,21 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public int getItemViewType(int position) {
         int viewType = 0;
-        if (wordList.get(position).getWord() == null) {
-            viewType = HEADER;
-        } else if (wordList.get(position).getLanguage() != null) {
+        if (wordList.get(position).getLanguage() != null) {
             viewType = WORD;
         } else {
             viewType = LETTER;
         }
-        Log.i("debug", "ViewType: " + viewType);
         return viewType;
     }
 
     @Override
     public int getItemCount() {
         return wordList.size();
+    }
+
+    public interface OnNotTestedWordListener {
+        void onNotTestedWord(int words);
     }
 
     private class WordViewHolder extends RecyclerView.ViewHolder {
@@ -152,26 +142,6 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView wordCount, leftText, rightText;
-        private Button addWord, filer, asc, switcher;
-        private ImageView leftImage, rightImage;
-
-        private HeaderViewHolder(View itemView) {
-            super(itemView);
-            wordCount = itemView.findViewById(R.id.your_words_recycler_header_words_count_tv);
-            rightText = itemView.findViewById(R.id.your_words_recycler_header_right_tv);
-            leftText = itemView.findViewById(R.id.your_words_recycler_header_left_tv);
-            filer = itemView.findViewById(R.id.your_words_recycler_header_filter_words_button);
-            addWord = itemView.findViewById(R.id.your_words_recycler_header_add_word_button);
-            asc = itemView.findViewById(R.id.your_words_recycler_header_asc_button);
-            switcher = itemView.findViewById(R.id.your_words_recycler_header_switch_button);
-            leftImage = itemView.findViewById(R.id.your_words_recycler_header_left_iv);
-            rightImage = itemView.findViewById(R.id.your_words_recycler_header_rigth_iv);
-        }
-
-    }
 
 
 }

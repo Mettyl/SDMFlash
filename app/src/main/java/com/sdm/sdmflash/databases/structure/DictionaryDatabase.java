@@ -19,12 +19,6 @@ public abstract class DictionaryDatabase extends RoomDatabase {
 
     private static volatile DictionaryDatabase DICINSTANCE;
 
-    public abstract EnWordDao enWordDao();
-
-    public abstract CzWordDao czWordDao();
-
-    public abstract EnCzJoinDao enCzJoinDao();
-
     /**
      * Vrací instaci databáze, pokud neexistuje, vytvoří novou.
      *
@@ -36,7 +30,7 @@ public abstract class DictionaryDatabase extends RoomDatabase {
             synchronized (DictionaryDatabase.class) {
                 if (DICINSTANCE == null) {
                     DICINSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            DictionaryDatabase.class, "SDMdictionarydatabase").allowMainThreadQueries()
+                            DictionaryDatabase.class, "SDMdictionarydatabase")
                             .build();
                     //! pouze v RAM
 //                    DICINSTANCE = Room.inMemoryDatabaseBuilder(context,
@@ -47,5 +41,11 @@ public abstract class DictionaryDatabase extends RoomDatabase {
         }
         return DICINSTANCE;
     }
+
+    public abstract EnWordDao enWordDao();
+
+    public abstract CzWordDao czWordDao();
+
+    public abstract EnCzJoinDao enCzJoinDao();
 }
 

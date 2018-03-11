@@ -2,13 +2,14 @@ package com.sdm.sdmflash;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.CzWord;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static String TAG = "debug";
+    public DrawerLayout drawer;
+    private Fragment fragmentToSet = null;
 
     private static void copyFileUsingFileStreams(File source, File dest)
             throws IOException {
@@ -61,11 +64,34 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.drawer_layout);
 
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        //   ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        //           this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //   drawer.addDrawerListener(toggle);
-        //   toggle.syncState();
+        drawer = findViewById(R.id.drawer_layout);
+
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                //Set your new fragment here
+                if (fragmentToSet != null) {
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.content_frame, fragmentToSet)
+                            .commit();
+                    fragmentToSet = null;
+                }
+            }
+        });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -130,36 +156,22 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            HomeFragment homeFragment = new HomeFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
-        } else if (id == R.id.nav_study) {
-            StudyFragment studyFragment = new StudyFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.content_frame, studyFragment, studyFragment.getTag()).commit();
 
-        } else if (id == R.id.nav_games) {
-
-        } else if (id == R.id.nav_add_word) {
-            AddWordFragment addWordFragment = new AddWordFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.content_frame, addWordFragment, addWordFragment.getTag()).commit();
-
-        } else if (id == R.id.nav_stats) {
-
-        } else if (id == R.id.nav_your_words) {
-            YourWordsFragment yourWordsFragment = new YourWordsFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.content_frame, yourWordsFragment, yourWordsFragment.getTag()).commit();
-
-        } else if (id == R.id.nav_about) {
-
-        } else if (id == R.id.nav_help) {
-
+        switch (id) {
+            case R.id.nav_home:
+                fragmentToSet = new HomeFragment();
+                break;
+            case R.id.nav_study:
+                fragmentToSet = new StudyFragment();
+                break;
+            case R.id.nav_add_word:
+                fragmentToSet = new AddWordFragment();
+                break;
+            case R.id.nav_your_words:
+                fragmentToSet = new YourWordsFragment();
+                break;
         }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

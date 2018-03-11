@@ -8,9 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.AppDatabase;
@@ -35,23 +41,33 @@ import io.reactivex.disposables.Disposable;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class YourWordsFragment extends Fragment implements WordInfoDialog.WordInfoDialogListener, SearchView.OnQueryTextListener {
+public class YourWordsFragment extends Fragment implements WordInfoDialog.WordInfoDialogListener, SearchView.OnQueryTextListener, YourWordsRecyclerAdapter.OnNotTestedWordListener {
 
 
+    private RecyclerView recyclerView;
+    private TextView notTestedWordsTV;
     public YourWordsFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_your_words, container, false);
-//
-//        Toolbar toolbar = view.findViewById(R.id.your_words_toolbar);
-//        toolbar.setTitle("Your words");
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-//
+        final View view = inflater.inflate(R.layout.fragment_your_words, container, false);
+
+        Toolbar toolbar = view.findViewById(R.id.your_words_toolbar);
+        toolbar.setTitle("Your words");
+        DrawerLayout drawer = ((MainActivity) getActivity()).drawer;
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeButtonEnabled(true);
+
 
         // Instance of ViewModel
         YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
@@ -60,53 +76,62 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         fragment.setTargetFragment(this, 0);
 
 
-
+        notTestedWordsTV = view.findViewById(R.id.your_words_recycler_header_not_tested_words_count_tv);
         //Setting up RecyclerView
-        final RecyclerView recyclerView = view.findViewById(R.id.recycler_view_your_words);
+        recyclerView = view.findViewById(R.id.recycler_view_your_words);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
+        final io.reactivex.Observer<Word> wordObserver = new io.reactivex.Observer<Word>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Word word) {
+                Bundle bundle = new Bundle();
+
+                DateFormat df = DateFormat.getDateInstance();
+                bundle.putString("slovo", word.getWord());
+                bundle.putString("preklad", word.getTranslation());
+                bundle.putString("zdroj", word.getSource());
+                bundle.putString("datum_pridani", df.format(word.getAdd_date()));
+                if (word.getChange_date() == null) {
+                    bundle.putString("datum_zmeny", "Never");
+                } else {
+                    bundle.putString("datum_zmeny", df.format(word.getChange_date()));
+                }
+                bundle.putInt("ID", word.getId());
+
+                fragment.setArguments(bundle);
+                fragment.show(getFragmentManager(), "showDialog");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
         //Creating LiveData Observer
         final Observer<List<Word>> observer = new Observer<List<Word>>() {
             @Override
             public void onChanged(@Nullable List<Word> words) {
-                YourWordsRecyclerAdapter adapter = new YourWordsRecyclerAdapter(words);
-
-                io.reactivex.Observer<Word> wordObserver = new io.reactivex.Observer<Word>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Word word) {
-                        Bundle bundle = new Bundle();
-
-                        DateFormat df = DateFormat.getDateTimeInstance();
-                        bundle.putString("slovo", word.getWord());
-                        bundle.putString("preklad", word.getTranslation());
-                        bundle.putString("zdroj", word.getSource());
-                        bundle.putString("datum_pridani", df.format(word.getAdd_date()));
-                        bundle.putString("datum_zmeny", df.format(word.getChange_date()));
-                        bundle.putInt("ID", word.getId());
-
-                        fragment.setArguments(bundle);
-                        fragment.show(getFragmentManager(), "showDialog");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                };
-                adapter.getPositionClicks().subscribe(wordObserver);
-                recyclerView.setAdapter(adapter);
+                if (recyclerView.getAdapter() != null) {
+                    YourWordsRecyclerAdapter adapter = (YourWordsRecyclerAdapter) recyclerView.getAdapter();
+                    adapter.setWordList(words);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    YourWordsRecyclerAdapter adapter = new YourWordsRecyclerAdapter(words, YourWordsFragment.this);
+                    adapter.getPositionClicks().subscribe(wordObserver);
+                    recyclerView.setAdapter(adapter);
+                }
+                TextView number = view.findViewById(R.id.your_words_recycler_header_words_count_tv);
+                number.setText(String.valueOf(words.size()));
             }
         };
 
@@ -138,6 +163,8 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
     public boolean onQueryTextChange(String s) {
         return false;
     }
+
+
     @Override
     public void onDialogNeutralClick(final int id) {
         new AccessExecutor().execute(new Runnable() {
@@ -149,6 +176,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         });
     }
 
+
     @Override
     public void onDialogNegativeClick(int id) {
         AddWordFragment addWordFragment = new AddWordFragment();
@@ -158,5 +186,10 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         FragmentManager manager = getActivity().getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_frame, addWordFragment).addToBackStack(null).commit();
 
+    }
+
+    @Override
+    public void onNotTestedWord(int words) {
+        notTestedWordsTV.setText(String.valueOf(words));
     }
 }

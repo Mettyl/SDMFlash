@@ -19,21 +19,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            app:contentScrim="@android:color/transparent"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:titleEnabled="false">
 
             <include
                 android:id="@+id/your_words_header"
                 layout="@layout/your_words_recycler_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="?attr/actionBarSize"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/your_words_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:stateListAnimator="@animator/toolbar_elevated"
                 app:layout_collapseMode="pin" />
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
