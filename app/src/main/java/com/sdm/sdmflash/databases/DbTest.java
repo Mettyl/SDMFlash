@@ -13,6 +13,7 @@ import com.sdm.sdmflash.databases.structure.Word;
 import com.sdm.sdmflash.fragmentStudy.FlashCards;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  * testovací třída
@@ -53,7 +54,7 @@ public class DbTest {
                         new Word(Language.CZ, "arhar", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "gdtza", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "eshn", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "ncbt", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
+                        new Word(Language.CZ, "ncbt", "hear", "book", new Date(), null, WordFile.FILE_1),
                         new Word(Language.CZ, "arhav", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "jzzfd", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "ehtcv", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
@@ -68,12 +69,25 @@ public class DbTest {
                         new Word(Language.CZ, "cgiciz", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "czckcz", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "cmhmz", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "xzuzs", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
+                        new Word(Language.CZ, "xzuzs", "hear", "book", new Date(), null, WordFile.FILE_1),
                         new Word(Language.CZ, "xzmx", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "srtujsy", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
                         new Word(Language.CZ, "nxtjs", "hear", "book", new Date(), new Date(), WordFile.FILE_1)
 
                 );
+                Random rnd = new Random();
+                String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                chars = chars.toLowerCase();
+                //just for testing
+//                for (int i = 0; i < 1000; i++){
+//                    char c = chars.charAt(rnd.nextInt(chars.length()));
+//                    String a = "adawuias";
+//                    a = a.replace('a', c);
+//                    char d = chars.charAt(rnd.nextInt(chars.length()));
+//                    String b = "oimiohuy";
+//                    b = b.replace('o', d);
+//                    db.wordDao().insertAll(new Word(Language.CZ, a, b,"random", new Date(), null, WordFile.FILE_1));
+//                }
                 //vytvoří instanci databáze (konečná)
                 db.wordDao().changeWordFile("work", WordFile.FILE_5);
                 //db.wordDao().changeDate(3, new Date(0));

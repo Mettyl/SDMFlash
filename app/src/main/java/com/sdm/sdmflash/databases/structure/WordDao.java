@@ -97,7 +97,7 @@ public interface WordDao {
     String[] loadTranslationColumn(Language language);
 
     /**
-     * Vrací objekt DatesTuple, který obsahuje datum přidání a poslední změny
+     * Vrací objekt DatesTuple,how to find out if lis empty který obsahuje datum přidání a poslední změny
      * @param word hledané slovo
      * @return DatesTuple(add_date, change_date)
      */
@@ -155,4 +155,13 @@ public interface WordDao {
     // TEMP!!!
     @Query("UPDATE words SET add_date = :date WHERE id = :id")
     int changeDate(int id, Date date);
+
+
+    @Query("SELECT COUNT(*) FROM words WHERE change_date IS NULL")
+    int notTestedWords();
+
+    @Query("SELECT COUNT(*) FROM words")
+    int countWords();
+
+
 }

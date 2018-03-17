@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.CzWord;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static String TAG = "debug";
-    public DrawerLayout drawer;
+    private DrawerLayout drawerLayout;
+    private FrameLayout frameLayout;
     private Fragment fragmentToSet = null;
 
     private static void copyFileUsingFileStreams(File source, File dest)
@@ -64,12 +66,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.drawer_layout);
 
 
-        drawer = findViewById(R.id.drawer_layout);
-
-
-        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        frameLayout = findViewById(R.id.content_frame);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
+                float moveFactor = 0;
+                moveFactor = (drawerView.getWidth() * slideOffset);
+
+                frameLayout.setTranslationX(moveFactor);
             }
 
             @Override
@@ -231,4 +236,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    public FrameLayout getFrameLayout() {
+        return frameLayout;
+    }
 }

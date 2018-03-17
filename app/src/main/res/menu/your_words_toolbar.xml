@@ -4,8 +4,22 @@
 
     <item
         android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white"
         android:title="Search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/your_words_toolbar_menu_select_items"
+        android:title="Select items"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/your_words_toolbar_menu_help"
+        android:title="Help"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/your_words_toolbar_menu_settings"
+        android:title="Settings"
+        app:showAsAction="never" />
 
 </menu>

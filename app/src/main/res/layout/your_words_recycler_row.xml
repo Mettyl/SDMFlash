@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recycler_adapter_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
@@ -20,6 +21,14 @@
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="24sp" />
+
+    <CheckBox
+        android:id="@+id/recycler_adapter_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="invisible" />
+
 
     <TextView
         android:id="@+id/recycler_adapter_translation_your_words"
