@@ -2,7 +2,7 @@ package com.sdm.sdmflash.fragmentStudy;
 
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
-import com.sdm.sdmflash.databases.structure.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 
 import java.util.Calendar;
 import java.util.LinkedList;

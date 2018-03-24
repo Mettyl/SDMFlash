@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
-import com.sdm.sdmflash.databases.structure.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 
 public class FlashCardsActivity extends AppCompatActivity{
 

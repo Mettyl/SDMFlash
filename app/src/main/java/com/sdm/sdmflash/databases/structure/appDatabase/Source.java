@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.appDatabase;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

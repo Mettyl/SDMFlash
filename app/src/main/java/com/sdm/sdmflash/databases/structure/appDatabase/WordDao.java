@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.appDatabase;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -26,7 +26,7 @@ public interface WordDao {
      * Vrací celý obsah databáze
      * @return List objektů Word
      */
-    @Query("SELECT * FROM words ORDER BY LOWER(words.word) ASC")
+    @Query("SELECT * FROM words ORDER BY LOWER(word) ASC")
     LiveData<List<Word>> getAll();
 
     /**

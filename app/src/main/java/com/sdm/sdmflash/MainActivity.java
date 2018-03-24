@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.sdm.sdmflash.databases.DbTest;
-import com.sdm.sdmflash.databases.structure.CzWord;
-import com.sdm.sdmflash.databases.structure.DictionaryDatabase;
-import com.sdm.sdmflash.databases.structure.EnCzJoin;
-import com.sdm.sdmflash.databases.structure.EnWord;
+import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
+import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
+import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
+import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
 import com.sdm.sdmflash.fragmentStudy.StudyFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;

@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.dictionaryDatabase;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -12,23 +12,23 @@ import java.util.List;
  */
 
 @Dao
-public interface EnWordDao {
+public interface CzWordDao {
 
     /**
      * Vrací všechny slova z databáze
      *
-     * @return List EnWord
+     * @return List CzWord
      */
-    @Query("SELECT * FROM enWords")
-    List<EnWord> getAll();
+    @Query("SELECT * FROM czWords")
+    List<CzWord> getAll();
 
     /**
      * Vrací všechny slova shodná nebo podobná
      * parametru
-     * @param param lze zadat s %, aby byla naleze slova podobná
-     * @return List EnWord
+     * @param param lze zadat s % aby byla naleze slova podobná
+     * @return List CzWord
      */
-    @Query("SELECT word FROM enWords WHERE word LIKE :param ORDER BY LENGTH(word), word ASC LIMIT 0,:numberOfResults")
+    @Query("SELECT word FROM czWords WHERE word LIKE :param ORDER BY LENGTH(word), word ASC LIMIT 0,:numberOfResults")
     List<String> findWord(String param, int numberOfResults);
 
     /**
@@ -36,22 +36,31 @@ public interface EnWordDao {
      * @param word hledané slovo
      * @return int id
      */
-    @Query("SELECT id FROM enWords WHERE word = :word")
+    @Query("SELECT id FROM czWords WHERE word = :word")
     int findIdByWord(String word);
 
     /**
+     * Vrací id slova shodného s atributem
+     *
+     * @param id hledané id
+     * @return CzWord slovo
+     */
+    @Query("SELECT * FROM czWords WHERE id = :id")
+    CzWord findWordById(int id);
+
+
+    /**
      * vloží slovíčka
-     * @param words Objekty EnWord
+     * @param words Objekty CzWord
      */
     @Insert
-    void insertAll(EnWord... words);
+    void insertAll(CzWord... words);
 
     /**
      * maže slovíčka
      * @param word Slovíčko ke smazání
      */
     @Delete
-    void delete(EnWord word);
-
+    void delete(CzWord word);
 
 }

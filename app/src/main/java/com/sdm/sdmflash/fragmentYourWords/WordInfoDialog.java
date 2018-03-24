@@ -3,11 +3,13 @@ package com.sdm.sdmflash.fragmentYourWords;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
@@ -17,12 +19,6 @@ import com.sdm.sdmflash.R;
  */
 
 public class WordInfoDialog extends DialogFragment {
-
-    public interface WordInfoDialogListener {
-        void onDialogNeutralClick(int id);
-
-        void onDialogNegativeClick(int id);
-    }
 
     WordInfoDialogListener dialogListener;
 
@@ -50,6 +46,7 @@ public class WordInfoDialog extends DialogFragment {
         TextView zdroj = view.findViewById(R.id.your_words_info_dialog_zdroj);
         TextView datumPridani = view.findViewById(R.id.your_words_info_dialog_datum_pridani);
         TextView datumZmeny = view.findViewById(R.id.your_words_info_dialog_datum_zmeny);
+        ImageView kartoteka = view.findViewById(R.id.your_words_info_dialog_file_iv);
 
         slovo.setText(getArguments().getString("slovo"));
         preklad.setText(getArguments().getString("preklad"));
@@ -58,6 +55,12 @@ public class WordInfoDialog extends DialogFragment {
         datumZmeny.setText(getArguments().getString("datum_zmeny"));
 
         final int ID = getArguments().getInt("ID");
+        final int file = getArguments().getInt("kartoteka");
+
+        Resources res = getResources();
+        String mDrawableName = "file" + String.valueOf(file);
+        int resID = res.getIdentifier(mDrawableName, "drawable", getActivity().getPackageName());
+        kartoteka.setImageResource(resID);
 
         builder.setView(view)
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
@@ -78,6 +81,12 @@ public class WordInfoDialog extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public interface WordInfoDialogListener {
+        void onDialogNeutralClick(int id);
+
+        void onDialogNegativeClick(int id);
     }
 
 }

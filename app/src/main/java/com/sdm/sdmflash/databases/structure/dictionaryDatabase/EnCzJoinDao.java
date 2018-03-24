@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.dictionaryDatabase;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

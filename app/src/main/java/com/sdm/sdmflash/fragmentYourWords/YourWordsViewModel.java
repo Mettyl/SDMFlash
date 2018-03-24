@@ -6,8 +6,8 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.sdm.sdmflash.databases.structure.AppDatabase;
-import com.sdm.sdmflash.databases.structure.Word;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

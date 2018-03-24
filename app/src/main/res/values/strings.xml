@@ -16,8 +16,11 @@
     <string name="translation">Translation:</string>
     <string name="source">Source:</string>
     <string name="added">Added:</string>
-    <string name="last_seen">Tested:</string>
+    <string name="tested">Tested:</string>
+    <string name="difficulty">Difficulty:</string>
     <string name="all_words">All words:</string>
     <string name="add_new_word">Add new word</string>
+    <string name="deleteBtInToolbar">Delete (</string>
+    <string name="word_detail">Word detail</string>
 
 </resources>

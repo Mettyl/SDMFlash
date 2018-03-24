@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.appDatabase;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -60,60 +60,60 @@ public class Word {
         return id;
     }
 
-    public Language getLanguage() {
-        return language;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public String getTranslation() {
-        return translation;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public Date getAdd_date() {
-        return add_date;
-    }
-
-    public Date getChange_date() {
-        return change_date;
-    }
-
-    public WordFile getFile() {
-        return file;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
     public void setLanguage(Language language) {
         this.language = language;
     }
 
+    public String getWord() {
+        return word;
+    }
+
     public void setWord(String word) {
         this.word = word;
+    }
+
+    public String getTranslation() {
+        return translation;
     }
 
     public void setTranslation(String translation) {
         this.translation = translation;
     }
 
+    public String getSource() {
+        return source;
+    }
+
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Date getAdd_date() {
+        return add_date;
     }
 
     public void setAdd_date(Date add_date) {
         this.add_date = add_date;
     }
 
+    public Date getChange_date() {
+        return change_date;
+    }
+
     public void setChange_date(Date change_date) {
         this.change_date = change_date;
+    }
+
+    public WordFile getFile() {
+        return file;
     }
 
     public void setFile(WordFile file) {

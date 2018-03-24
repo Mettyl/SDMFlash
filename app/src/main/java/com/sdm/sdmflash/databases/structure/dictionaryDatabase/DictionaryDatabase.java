@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.databases.structure;
+package com.sdm.sdmflash.databases.structure.dictionaryDatabase;
 
 /**
  * Created by mety on 11.2.18.

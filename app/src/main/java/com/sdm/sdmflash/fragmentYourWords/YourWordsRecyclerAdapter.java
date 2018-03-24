@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.databases.structure.Word;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +34,19 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private final int LETTER = 0;
     private final int WORD = 1;
-    public List<AdapterRow> adapterRows;
-    private List<Integer> selectedItemsID;
+
+    private List<AdapterRow> adapterRows;
     private List<AdapterRow> adapterRowsCopy;
+    private List<Integer> selectedItemsID;
 
     private boolean selectable = false;
     private boolean allSelected = false;
     private boolean searching = false;
+
     private AdapterToFragment adapterToFragmentInterface;
 
-    public YourWordsRecyclerAdapter(List<Word> wordList, Context context, AdapterToFragment adapterToFragmentInterface) {
+    YourWordsRecyclerAdapter(List<Word> wordList, Context context, AdapterToFragment adapterToFragmentInterface) {
+
         this.adapterRows = rearangeList(wordList, true);
         this.adapterRowsCopy = rearangeList(wordList, false);
         this.context = context;
@@ -51,48 +54,60 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         selectedItemsID = new ArrayList<>();
     }
 
-    public void setAdapterRowsAndRearange(List<Word> adapterRows) {
+    void setAdapterRowsAndRearange(List<Word> adapterRows) {
         this.adapterRows = rearangeList(adapterRows, !searching);
         this.adapterRowsCopy = rearangeList(adapterRows, false);
     }
 
-    public List<AdapterRow> rearangeList(List<Word> list, boolean withLetters) {
+    private List<AdapterRow> rearangeList(List<Word> list, boolean withLetters) {
+
         List<AdapterRow> newList = new ArrayList<>();
+
         char lett = ' ';
         for (int i = 0; i < list.size(); i++) {
+
             if (!withLetters || list.get(i).getWord().charAt(0) == lett) {
                 newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+
             } else {
                 newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
                 lett = list.get(i).getWord().charAt(0);
                 i--;
+
             }
         }
         return newList;
     }
 
-    public void addLetters() {
+    void addLetters() {
+
         List<AdapterRow> newList = new ArrayList<>();
+
         char lett = ' ';
         for (int i = 0; i < adapterRows.size(); i++) {
+
             if (adapterRows.get(i).getWord().charAt(0) == lett) {
                 newList.add(new AdapterRow(adapterRows.get(i).getWord(), adapterRows.get(i).getTranslation(), adapterRows.get(i).getId(), Type.WORD, false));
+
             } else {
                 newList.add(new AdapterRow(String.valueOf(adapterRows.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
                 lett = adapterRows.get(i).getWord().charAt(0);
                 i--;
+
             }
         }
         adapterRows = newList;
     }
 
-    public void removeLetters() {
+    void removeLetters() {
         adapterRows = adapterRowsCopy;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+
         switch (viewType) {
             case WORD:
                 View viewW = inflater.inflate(R.layout.your_words_recycler_row, parent, false);
@@ -109,13 +124,19 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
         final AdapterRow adapterRow = adapterRows.get(position);
+
         switch (holder.getItemViewType()) {
+
             case WORD:
+
                 final WordViewHolder wordViewHolder = (WordViewHolder) holder;
+
                 wordViewHolder.word.setText(adapterRow.getWord());
                 wordViewHolder.translation.setText(adapterRow.getTranslation());
-                if (selectable) {
+
+                if (getSelectable()) {
                     wordViewHolder.checkBox.setVisibility(View.VISIBLE);
                     wordViewHolder.checkBox.setOnCheckedChangeListener(null);
                     wordViewHolder.checkBox.setChecked(adapterRow.isSelected());
@@ -123,39 +144,60 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             adapterRow.setSelected(b);
+
+                            if (isAllSelected()) {
+                                allSelected = false;
+                            }
                             if (b) {
                                 wordViewHolder.word.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                                 wordViewHolder.translation.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+
                                 selectedItemsID.add(adapterRow.getId());
                                 adapterToFragmentInterface.updateToolbarButton(selectedItemsID.size());
+
+                                if (selectedItemsID.size() == adapterRowsCopy.size()) {
+                                    allSelected = true;
+                                }
+
                             } else {
+
                                 wordViewHolder.word.setTextColor(ContextCompat.getColor(context, R.color.black));
                                 wordViewHolder.translation.setTextColor(ContextCompat.getColor(context, R.color.black));
+
                                 selectedItemsID.remove(selectedItemsID.indexOf(adapterRow.getId()));
                                 adapterToFragmentInterface.updateToolbarButton(selectedItemsID.size());
                             }
                         }
                     });
+
                     if (adapterRow.isSelected()) {
+
                         wordViewHolder.word.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
                         wordViewHolder.translation.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
+
                     } else {
+
                         wordViewHolder.word.setTextColor(ContextCompat.getColor(context, R.color.black));
                         wordViewHolder.translation.setTextColor(ContextCompat.getColor(context, R.color.black));
+
                     }
                 } else {
+
                     adapterRow.setSelected(false);
                     wordViewHolder.checkBox.setVisibility(View.INVISIBLE);
                     wordViewHolder.word.setTextColor(ContextCompat.getColor(context, R.color.black));
                     wordViewHolder.translation.setTextColor(ContextCompat.getColor(context, R.color.black));
                 }
+
                 wordViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onClickSubject.onNext(adapterRow.getId());
                     }
                 });
+
                 break;
+
 
             case LETTER:
                 LetterViewHolder letterViewHolder = (LetterViewHolder) holder;
@@ -164,7 +206,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public Observable<Integer> getPositionClicks() {
+    Observable<Integer> getPositionClicks() {
         return onClickSubject;
     }
 
@@ -179,72 +221,64 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         return viewType;
     }
 
+
+    //Getters
     @Override
     public int getItemCount() {
         return adapterRows.size();
     }
 
-    public boolean getSelectable() {
+    boolean getSelectable() {
         return selectable;
     }
 
-    public void setSelectable(boolean selectable) {
+    //Setters
+    void setSelectable(boolean selectable) {
         this.selectable = selectable;
         selectedItemsID = new ArrayList<>();
         allSelected = false;
     }
 
-    public boolean isAllSelected() {
+    boolean isAllSelected() {
         return allSelected;
     }
 
-    public void setAllSelected(boolean allSelected) {
+    void setAllSelected(boolean allSelected) {
         this.allSelected = allSelected;
+        if (allSelected) {
+            for (AdapterRow r : adapterRows) {
+                if (r.getType() == Type.WORD) {
+                    selectedItemsID.add(r.getId());
+                    r.setSelected(true);
+                }
+            }
+        } else {
+            selectedItemsID.clear();
+            for (AdapterRow r : adapterRows) {
+                if (r.getType() == Type.WORD) {
+                    r.setSelected(false);
+                }
+            }
+        }
     }
 
-    public List<Integer> getSelectedItemsID() {
+    List<Integer> getSelectedItemsID() {
         return selectedItemsID;
     }
 
-    public void selectAllWords() {
-        allSelected = true;
-        for (AdapterRow r : adapterRows) {
-            if (r.type == Type.WORD && !r.isSelected()) {
-                r.setSelected(true);
-                selectedItemsID.add(r.getId());
-            }
-        }
-        notifyDataSetChanged();
-        adapterToFragmentInterface.updateToolbarButton(selectedItemsID.size());
-    }
-
-    public void unselectAllWords() {
-        allSelected = false;
-        selectedItemsID.clear();
-        for (AdapterRow r : adapterRows) {
-            if (r.type == Type.WORD) {
-                r.setSelected(false);
-            }
-        }
-        notifyDataSetChanged();
-    }
-
-    public List<AdapterRow> getAdapterRows() {
-        return adapterRows;
-    }
-
-    public void setAdapterRows(List<AdapterRow> adapterRows) {
-        this.adapterRows = adapterRows;
-    }
-
-    public boolean isSearching() {
+    boolean isSearching() {
         return searching;
     }
 
-    public void setSearching(boolean searching) {
+    void setSearching(boolean searching) {
         this.searching = searching;
     }
 
+    List<AdapterRow> getAdapterRowsCopy() {
+        return adapterRowsCopy;
+    }
+
+    //Upravi list podle hledaneho slova
     @Override
     public Filter getFilter() {
 

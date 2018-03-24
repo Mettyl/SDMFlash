@@ -1,7 +1,6 @@
 package com.sdm.sdmflash.fragmentAddWord;
 
 
-
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,10 +22,10 @@ import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
-import com.sdm.sdmflash.databases.structure.AppDatabase;
-import com.sdm.sdmflash.databases.structure.DictionaryDatabase;
-import com.sdm.sdmflash.databases.structure.Source;
-import com.sdm.sdmflash.databases.structure.Word;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.Source;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
+import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 
 import java.util.Date;
 import java.util.List;
@@ -37,10 +36,7 @@ import java.util.List;
 public class AddWordFragment extends Fragment implements TranslationsDialog.TranslationsDialogListener {
 
 
-    public AddWordFragment() {
-        // Required empty public constructor
-    }
-
+    TextView translation;
     //    private EditText word;
 //    private EditText translation;
     private Button button;
@@ -48,8 +44,11 @@ public class AddWordFragment extends Fragment implements TranslationsDialog.Tran
     private RelativeLayout dialog;
     private RelativeLayout background;
     private EditText sourceText;
-    TextView translation;
     private Language wordLanguage;
+
+    public AddWordFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
