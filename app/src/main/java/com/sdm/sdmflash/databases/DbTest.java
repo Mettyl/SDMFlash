@@ -43,36 +43,36 @@ public class DbTest {
                 //přístup k metodám přes db.wordDao();
                 db.wordDao().deleteAll();
                 db.wordDao().insertAll(
-                        new Word(Language.CZ, "araha", "Prague", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "bes", "Dog", "book", new Date(), new Date(), WordFile.FILE_2),
-                        new Word(Language.EN, "cork", "práce", "book", new Date(), null, WordFile.FILE_1),
-                        new Word(Language.EN, "dump", "skočit", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "asdf", "hear", "book", new Date(), new Date(), WordFile.FILE_4),
-                        new Word(Language.CZ, "dss", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "asdf", "hear", "book", new Date(), new Date(), WordFile.FILE_5),
-                        new Word(Language.CZ, "bstn", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "arhar", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "gdtza", "hear", "book", new Date(), new Date(), WordFile.FILE_3),
-                        new Word(Language.CZ, "eshn", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "ncbt", "hear", "book", new Date(), null, WordFile.FILE_5),
-                        new Word(Language.CZ, "arhav", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "jzzfd", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "ehtcv", "hear", "book", new Date(), new Date(), WordFile.FILE_2),
-                        new Word(Language.CZ, "btyey", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "tjby", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "yeryvhy", "hear", "book", new Date(), new Date(), WordFile.FILE_4),
-                        new Word(Language.CZ, "ytytryr", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "awetyfd", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "bvxn", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "ltufiv", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "lztjkc", "hear", "book", new Date(), new Date(), WordFile.FILE_3),
-                        new Word(Language.CZ, "cgiciz", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "czckcz", "hear", "book", new Date(), new Date(), WordFile.FILE_2),
-                        new Word(Language.CZ, "cmhmz", "hear", "book", new Date(), new Date(), WordFile.FILE_5),
-                        new Word(Language.CZ, "xzuzs", "hear", "book", new Date(), null, WordFile.FILE_1),
-                        new Word(Language.CZ, "xzmx", "hear", "book", new Date(), new Date(), WordFile.FILE_1),
-                        new Word(Language.CZ, "srtujsy", "hear", "book", new Date(), new Date(), WordFile.FILE_2),
-                        new Word(Language.CZ, "nxtjs", "hear", "book", new Date(), new Date(), WordFile.FILE_1)
+                        new Word(Language.CZ, "araha", "Prague", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "bes", "Dog", "book", new Date(1462095200000L), new Date(), WordFile.file2),
+                        new Word(Language.EN, "cork", "práce", "web", new Date(1445095200000L), null, WordFile.file1),
+                        new Word(Language.EN, "dump", "skočit", "book", new Date(1342095200000L), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "asdf", "hear", "wordbook", new Date(1492095200000L), new Date(), WordFile.file4),
+                        new Word(Language.CZ, "dss", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "asdf", "hear", "book", new Date(), new Date(), WordFile.file5),
+                        new Word(Language.CZ, "bstn", "hear", "book", new Date(14420235200000L), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "arhar", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "gdtza", "hear", "book", new Date(14420941500000L), new Date(), WordFile.file3),
+                        new Word(Language.CZ, "eshn", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "ncbt", "hear", "book", new Date(1442195200000L), null, WordFile.file5),
+                        new Word(Language.CZ, "arhav", "hear", "camera", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "jzzfd", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "ehtcv", "hear", "wordbook", new Date(1442425200000L), new Date(), WordFile.file2),
+                        new Word(Language.CZ, "btyey", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "tjby", "hear", "book", new Date(1403595200000L), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "yeryvhy", "hear", "web", new Date(), new Date(), WordFile.file4),
+                        new Word(Language.CZ, "ytytryr", "hear", "book", new Date(14424595200000L), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "awetyfd", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "bvxn", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "ltufiv", "hear", "camera", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "lztjkc", "hear", "book", new Date(), new Date(), WordFile.file3),
+                        new Word(Language.CZ, "cgiciz", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "czckcz", "hear", "camera", new Date(1442095200000L), new Date(), WordFile.file2),
+                        new Word(Language.CZ, "cmhmz", "hear", "book", new Date(), new Date(), WordFile.file5),
+                        new Word(Language.CZ, "xzuzs", "hear", "web", new Date(1442095200000L), null, WordFile.file1),
+                        new Word(Language.CZ, "xzmx", "hear", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "srtujsy", "hear", "web", new Date(), new Date(), WordFile.file2),
+                        new Word(Language.CZ, "nxtjs", "hear", "book", new Date(), new Date(), WordFile.file1)
 
                 );
                 Random rnd = new Random();
@@ -86,10 +86,10 @@ public class DbTest {
 //                    char d = chars.charAt(rnd.nextInt(chars.length()));
 //                    String b = "oimiohuy";
 //                    b = b.replace('o', d);
-//                    db.wordDao().insertAll(new Word(Language.CZ, a, b,"random", new Date(), null, WordFile.FILE_1));
+//                    db.wordDao().insertAll(new Word(Language.CZ, a, b,"random", new Date(), null, WordFile.file1));
 //                }
                 //vytvoří instanci databáze (konečná)
-                db.wordDao().changeWordFile("work", WordFile.FILE_5);
+                db.wordDao().changeWordFile("work", WordFile.file5);
                 //db.wordDao().changeDate(3, new Date(0));
                 for (WordsTuple word : FlashCards.getInstance(db).getMonthlyWords(10)) Log.d("debug", word.word);
 

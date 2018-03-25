@@ -24,13 +24,27 @@ public interface WordDao {
 
     /**
      * Vrací celý obsah databáze
+     *
      * @return List objektů Word
      */
     @Query("SELECT * FROM words ORDER BY LOWER(word) ASC")
     LiveData<List<Word>> getAll();
 
+    @Query("SELECT * FROM words ORDER BY file ASC")
+    LiveData<List<Word>> getAllByFile();
+
+    @Query("SELECT * FROM words ORDER BY change_date ASC")
+    LiveData<List<Word>> getAllByChanged();
+
+    @Query("SELECT * FROM words ORDER BY add_date ASC")
+    LiveData<List<Word>> getAllByAdded();
+
+    @Query("SELECT * FROM words ORDER BY source ASC")
+    LiveData<List<Word>> getAllSource();
+
     /**
      * Vrací slovíčka podle id
+     *
      * @param wordIds pole id
      * @return List objektů Word
      */
@@ -39,6 +53,7 @@ public interface WordDao {
 
     /**
      * Vrací slovíčko podle id
+     *
      * @param id id slovíčka
      * @return hledaný objekt {@link Word}
      */
@@ -47,6 +62,7 @@ public interface WordDao {
 
     /**
      * vloží slovíčka
+     *
      * @param words Objekty Word
      */
     @Insert
@@ -54,6 +70,7 @@ public interface WordDao {
 
     /**
      * maže slovíčka
+     *
      * @param word Slovíčko ke smazání
      */
     @Delete
@@ -68,6 +85,7 @@ public interface WordDao {
 
     /**
      * Vrací sloupec word z tabulky
+     *
      * @return Pole slov
      */
     @Query("SELECT word FROM words")
@@ -75,6 +93,7 @@ public interface WordDao {
 
     /**
      * Vrací sloupec translation z tabulky
+     *
      * @return Pole překladů
      */
     @Query("SELECT translation FROM words")
@@ -82,6 +101,7 @@ public interface WordDao {
 
     /**
      * Vrací sloupec word z tabulky
+     *
      * @param language jazyk filtru
      * @return pole slov
      */
@@ -90,6 +110,7 @@ public interface WordDao {
 
     /**
      * Vrací sloupec translation z tabulky
+     *
      * @param language jazyk filtru
      * @return Pole překladů
      */
@@ -98,6 +119,7 @@ public interface WordDao {
 
     /**
      * Vrací objekt DatesTuple,how to find out if lis empty který obsahuje datum přidání a poslední změny
+     *
      * @param word hledané slovo
      * @return DatesTuple(add_date, change_date)
      */
@@ -105,7 +127,6 @@ public interface WordDao {
     DatesTuple loadDatesByWord(String word);
 
     /**
-     *
      * @param word slovo pro změnu kartotéky
      * @param file nová kartotéka
      * @return pocet změněných řádků
@@ -114,8 +135,7 @@ public interface WordDao {
     int changeWordFile(String word, WordFile file);
 
     /**
-     *
-     * @param id ID slova pro změnu kartotéky
+     * @param id   ID slova pro změnu kartotéky
      * @param file nová kartotéka
      * @return pocet změněných řádků
      */
@@ -124,7 +144,8 @@ public interface WordDao {
 
     /**
      * Vybírá z celkové kartokéky
-     * @param file kartoréka k zobrazení
+     *
+     * @param file  kartoréka k zobrazení
      * @param limit počet zobrazených slov
      * @return dvojice slov z kartotéky
      */
@@ -133,8 +154,9 @@ public interface WordDao {
 
     /**
      * Vybírá od data
-     * @param file kartoréka k zobrazení
-     * @param limit počet zobrazených slov
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
      * @param fromDate od tohoto data
      * @return dvojice slov z kartotéky
      */
@@ -143,10 +165,11 @@ public interface WordDao {
 
     /**
      * Vybírá od data do data
-     * @param file kartoréka k zobrazení
-     * @param limit počet zobrazených slov
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
      * @param fromDate od tohoto data
-     * @param toDate do tohoto data
+     * @param toDate   do tohoto data
      * @return dvojice slov z kartotéky
      */
     @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate AND add_date <= :toDate ORDER BY change_date ASC LIMIT :limit")

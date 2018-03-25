@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -13,7 +15,18 @@
         android:layout_gravity="center"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:visibility="visible"
+        tools:text="A" />
+
+    <ImageView
+        android:id="@+id/recycler_letter_iv"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/file5" />
 
     <View
         android:layout_width="match_parent"

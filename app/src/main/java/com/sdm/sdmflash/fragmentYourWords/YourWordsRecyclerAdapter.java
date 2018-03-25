@@ -1,8 +1,10 @@
 package com.sdm.sdmflash.fragmentYourWords;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +12,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -35,10 +40,13 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private final int LETTER = 0;
     private final int WORD = 1;
 
+    private int headerType;
+
     private List<AdapterRow> adapterRows;
     private List<AdapterRow> adapterRowsCopy;
     private List<Integer> selectedItemsID;
 
+    private boolean canOpenDialog = true;
     private boolean selectable = false;
     private boolean allSelected = false;
     private boolean searching = false;
@@ -46,10 +54,10 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private AdapterToFragment adapterToFragmentInterface;
 
     YourWordsRecyclerAdapter(List<Word> wordList, Context context, AdapterToFragment adapterToFragmentInterface) {
-
+        headerType = R.id.your_words_popup_item_alphabet;
+        this.context = context;
         this.adapterRows = rearangeList(wordList, true);
         this.adapterRowsCopy = rearangeList(wordList, false);
-        this.context = context;
         this.adapterToFragmentInterface = adapterToFragmentInterface;
         selectedItemsID = new ArrayList<>();
     }
@@ -59,27 +67,90 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.adapterRowsCopy = rearangeList(adapterRows, false);
     }
 
-    private List<AdapterRow> rearangeList(List<Word> list, boolean withLetters) {
+    private List<AdapterRow> rearangeList(List<Word> list, boolean withHeaders) {
 
         List<AdapterRow> newList = new ArrayList<>();
 
+        DateFormat fmt = DateFormat.getDateInstance();
+        Resources res = context.getResources();
         char lett = ' ';
+        Date date = new Date(0);
+        String source = " ";
+        int file = 0;
+        boolean once = true;
         for (int i = 0; i < list.size(); i++) {
+            switch (headerType) {
+                case R.id.your_words_popup_item_alphabet:
+                    if (!withHeaders || list.get(i).getWord().charAt(0) == lett) {
 
-            if (!withLetters || list.get(i).getWord().charAt(0) == lett) {
-                newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
 
-            } else {
-                newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
-                lett = list.get(i).getWord().charAt(0);
-                i--;
+                    } else {
+                        newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
+                        lett = list.get(i).getWord().charAt(0);
+                        i--;
+                    }
+                    break;
+                case R.id.your_words_popup_item_difficulty:
 
+                    if (!withHeaders || list.get(i).getFile().getId() == file) {
+                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+
+                    } else {
+                        newList.add(new AdapterRow(res.getIdentifier(list.get(i).getFile().name(), "drawable", context.getPackageName())));
+                        Log.i("debug", list.get(i).getFile().name());
+                        file = list.get(i).getFile().getId();
+                        i--;
+                    }
+                    break;
+                case R.id.your_words_popup_item_tested:
+
+                    if (withHeaders && list.get(i).getChange_date() == null) {
+                        if (once) {
+                            once = false;
+                            newList.add(new AdapterRow("Never", null, 0, Type.LETTER, false));
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                            i--;
+                        } else {
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                        }
+                    } else {
+                        if (!withHeaders || fmt.format(list.get(i).getChange_date()).equals(fmt.format(date))) {
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                        } else {
+                            newList.add(new AdapterRow(fmt.format(list.get(i).getChange_date()), null, 0, Type.LETTER, false));
+                            date = list.get(i).getChange_date();
+                            i--;
+                        }
+                    }
+                    break;
+                case R.id.your_words_popup_item_added:
+
+                    if (!withHeaders || fmt.format(list.get(i).getAdd_date()).equals(fmt.format(date))) {
+                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                    } else {
+                        newList.add(new AdapterRow(fmt.format(list.get(i).getAdd_date()), null, 0, Type.LETTER, false));
+                        date = list.get(i).getAdd_date();
+                        i--;
+                    }
+                    break;
+                case R.id.your_words_popup_item_source:
+
+                    if (!withHeaders || list.get(i).getSource().equals(source)) {
+                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+
+                    } else {
+                        newList.add(new AdapterRow(String.valueOf(list.get(i).getSource().charAt(0)).toUpperCase() + list.get(i).getSource().substring(1)));
+                        source = list.get(i).getSource();
+                        i--;
+                    }
+                    break;
             }
         }
         return newList;
     }
 
-    void addLetters() {
+    void addHeaders() {
 
         List<AdapterRow> newList = new ArrayList<>();
 
@@ -99,7 +170,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         adapterRows = newList;
     }
 
-    void removeLetters() {
+    void removeHeaders() {
         adapterRows = adapterRowsCopy;
     }
 
@@ -136,7 +207,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 wordViewHolder.word.setText(adapterRow.getWord());
                 wordViewHolder.translation.setText(adapterRow.getTranslation());
 
-                if (getSelectable()) {
+                if (isSelectable()) {
                     wordViewHolder.checkBox.setVisibility(View.VISIBLE);
                     wordViewHolder.checkBox.setOnCheckedChangeListener(null);
                     wordViewHolder.checkBox.setChecked(adapterRow.isSelected());
@@ -192,7 +263,10 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 wordViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onClickSubject.onNext(adapterRow.getId());
+                        if (canOpenDialog) {
+                            canOpenDialog = false;
+                            onClickSubject.onNext(adapterRow.getId());
+                        }
                     }
                 });
 
@@ -201,7 +275,17 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
             case LETTER:
                 LetterViewHolder letterViewHolder = (LetterViewHolder) holder;
-                letterViewHolder.letter.setText(adapterRow.getWord());
+                if (adapterRow.hasImage()) {
+                    letterViewHolder.letter.setVisibility(View.GONE);
+                    letterViewHolder.imageView.setVisibility(View.VISIBLE);
+                    letterViewHolder.imageView.setImageResource(adapterRow.getImageSource());
+                    Log.i("debug", "image");
+                } else {
+                    letterViewHolder.imageView.setVisibility(View.GONE);
+                    letterViewHolder.letter.setVisibility(View.VISIBLE);
+                    letterViewHolder.letter.setText(adapterRow.getWord());
+                    Log.i("debug", "letter");
+                }
                 break;
         }
     }
@@ -215,7 +299,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         int viewType = 0;
         if (adapterRows.get(position).getType() == Type.WORD) {
             viewType = Type.WORD.num;
-        } else {
+        } else if (adapterRows.get(position).getType() == Type.LETTER) {
             viewType = Type.LETTER.num;
         }
         return viewType;
@@ -228,7 +312,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         return adapterRows.size();
     }
 
-    boolean getSelectable() {
+    boolean isSelectable() {
         return selectable;
     }
 
@@ -237,6 +321,18 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.selectable = selectable;
         selectedItemsID = new ArrayList<>();
         allSelected = false;
+    }
+
+    public boolean getCanOpenDialog() {
+        return canOpenDialog;
+    }
+
+    public void setCanOpenDialog(boolean canOpenDialog) {
+        this.canOpenDialog = canOpenDialog;
+    }
+
+    List<AdapterRow> getAdapterRowsCopy() {
+        return adapterRowsCopy;
     }
 
     boolean isAllSelected() {
@@ -274,8 +370,12 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.searching = searching;
     }
 
-    List<AdapterRow> getAdapterRowsCopy() {
-        return adapterRowsCopy;
+    int getHeaderType() {
+        return headerType;
+    }
+
+    public void setHeaderType(int headerType) {
+        this.headerType = headerType;
     }
 
     //Upravi list podle hledaneho slova
@@ -343,10 +443,12 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private class LetterViewHolder extends RecyclerView.ViewHolder {
 
         private TextView letter;
+        private ImageView imageView;
 
         private LetterViewHolder(View itemView) {
             super(itemView);
             letter = itemView.findViewById(R.id.recycler_letter_text_view);
+            imageView = itemView.findViewById(R.id.recycler_letter_iv);
         }
     }
 
@@ -354,13 +456,20 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private class AdapterRow {
 
         private String word, translation;
-        private int id;
-        private boolean selected;
+        private int id, imageSource;
+        private boolean selected, hasImage;
         private YourWordsRecyclerAdapter.Type type;
 
-        public AdapterRow(String letter, YourWordsRecyclerAdapter.Type type) {
-            this.word = letter;
-            this.type = type;
+        public AdapterRow(int imageSource) {
+            this.imageSource = imageSource;
+            this.type = Type.LETTER;
+            this.hasImage = true;
+        }
+
+        public AdapterRow(String headerText) {
+            this.word = headerText;
+            this.type = Type.LETTER;
+            this.hasImage = false;
         }
 
         public AdapterRow(String word, String translation, int id, YourWordsRecyclerAdapter.Type type, boolean selected) {
@@ -369,6 +478,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             this.id = id;
             this.selected = selected;
             this.type = type;
+            this.hasImage = false;
         }
 
         public String getWord() {
@@ -397,6 +507,22 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
         public int getId() {
             return id;
+        }
+
+        public int getImageSource() {
+            return imageSource;
+        }
+
+        public void setImageSource(int imageSource) {
+            this.imageSource = imageSource;
+        }
+
+        public boolean hasImage() {
+            return hasImage;
+        }
+
+        public void setHasImage(boolean hasImage) {
+            this.hasImage = hasImage;
         }
     }
 

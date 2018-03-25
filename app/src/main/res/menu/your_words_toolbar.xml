@@ -5,21 +5,25 @@
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white"
-        android:title="Search"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/your_words_toolbar_menu_select_items"
-        android:title="Select items"
+        android:title="@string/un_select_words"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/your_words_toolbar_menu_select_all_items"
+        android:title="@string/un_select_all_words"
         app:showAsAction="never" />
     <item
         android:id="@+id/your_words_toolbar_menu_help"
-        android:title="Help"
+        android:title="@string/help"
         app:showAsAction="never" />
     <item
         android:id="@+id/your_words_toolbar_menu_settings"
-        android:title="Settings"
+        android:title="@string/settings"
         app:showAsAction="never" />
 
 </menu>

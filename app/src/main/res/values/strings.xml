@@ -22,5 +22,19 @@
     <string name="add_new_word">Add new word</string>
     <string name="deleteBtInToolbar">Delete (</string>
     <string name="word_detail">Word detail</string>
+    <string name="un_select_words">(Un)Select words</string>
+    <string name="un_select_all_words">(Un)Select all words</string>
+    <string name="search">Search</string>
+    <string name="help">Help</string>
+    <string name="settings">Settings</string>
+    <string name="alphabet">Alphabet</string>
+    <string name="last_test">Last test</string>
+    <string name="toast_your_words_deleted_all">You have deleted all words.</string>
+    <string name="toast_your_words_you_have_deleted">You have deleted</string>
+    <string name="toast_your_words_words">words.</string>
+    <string name="you_do_not_have_any_words_yet">You do not have any words yet :(</string>
+    <string name="item_difficulty">Difficulty</string>
+    <string name="item_added">Added</string>
+    <string name="item_source">Source</string>
 
 </resources>

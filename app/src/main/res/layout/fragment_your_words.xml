@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="You do not have any words yet :("
+            android:text="@string/you_do_not_have_any_words_yet"
             android:textAlignment="center"
             android:textSize="20sp" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Add new word" />
+            android:text="@string/add_new_word" />
     </LinearLayout>
 
     <android.support.design.widget.AppBarLayout

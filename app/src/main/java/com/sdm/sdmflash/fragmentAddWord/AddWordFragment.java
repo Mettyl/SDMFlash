@@ -190,7 +190,7 @@ public class AddWordFragment extends Fragment implements TranslationsDialog.Tran
                                     (String) spinner.getSelectedItem(),
                                     new Date(),
                                     new Date(),
-                                    WordFile.FILE_1));
+                                    WordFile.file1));
                             view.post(new Runnable() {
                                 @Override
                                 public void run() {

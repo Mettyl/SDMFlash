@@ -35,7 +35,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
@@ -57,11 +59,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private Button selectAllBt;
     private ConstraintLayout flexibleSpaceLayout;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private CoordinatorLayout coordinatorLayout;
 
     private boolean appBarCollapsed = false;
     private boolean blankList = false;
@@ -151,7 +151,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         bundle.putString("preklad", word.getTranslation());
                         bundle.putString("zdroj", word.getSource());
                         bundle.putString("datum_pridani", df.format(word.getAdd_date()));
-                        bundle.putInt("kartoteka", word.getFile().getId());
+                        bundle.putString("kartoteka", word.getFile().name());
                         bundle.putInt("ID", word.getId());
 
                         if (word.getChange_date() == null) {
@@ -187,23 +187,24 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
             }
         };
 
+
         //RecyclerHeader views
         final TextView number = view.findViewById(R.id.your_words_recycler_header_words_count_tv);
         final TextView notTestedWords = view.findViewById(R.id.your_words_recycler_header_not_tested_words_count_tv);
 
-        selectAllBt = view.findViewById(R.id.your_words_recycler_header_select_all_button);
 
         appBarLayout = view.findViewById(R.id.your_words_app_bar_layout);
+
+        //Slouží k z jištění jestli je appbar collapse nebo ne (mohlo by se hodit)
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
                 appBarCollapsed = Math.abs(verticalOffset) + toolbar.getHeight() - appBarLayout.getTotalScrollRange() >= 0;
             }
         });
+
         flexibleSpaceLayout = view.findViewById(R.id.your_words_header);
         collapsingToolbarLayout = view.findViewById(R.id.collapsingToolbar);
-        coordinatorLayout = view.findViewById(R.id.your_words_coordinator_layout);
 
         if (appBarLayout.getLayoutParams() != null) {
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -216,6 +217,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
             });
             layoutParams.setBehavior(appBarLayoutBehaviour);
         }
+
 
         //Setting up RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view_your_words);
@@ -239,13 +241,11 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         }
 
-
         //Vytváření LiveData Observer, zavolá se při změně dat v databázi
         final Observer<List<Word>> observer = new Observer<List<Word>>() {
 
             @Override
             public void onChanged(@Nullable List<Word> words) {
-
                 //kdyby uživatel odstranil všechny slova, zobrazí se blank layout
                 if (words.size() == 0) {
 
@@ -294,8 +294,55 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         };
 
         // Instance ViewModelu
-        YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
-        model.getWords().observe(this, observer);
+        final YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
+        model.getWordsByAlphabet().observe(this, observer);
+
+        //Nastavení filtrování slov
+        final Button popup = view.findViewById(R.id.your_words_recycler_header_filter_words_button);
+
+        popup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Context wrapper = new ContextThemeWrapper(getActivity(), R.style.ThemeOverlay_AppCompat_Dark);
+
+                PopupMenu menu = new PopupMenu(wrapper, popup);
+
+                menu.getMenuInflater().inflate(R.menu.your_words_filter_popup, menu.getMenu());
+
+                menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    public boolean onMenuItemClick(MenuItem item) {
+
+                        ((YourWordsRecyclerAdapter) recyclerView.getAdapter()).setHeaderType(item.getItemId());
+
+                        switch (item.getItemId()) {
+                            case R.id.your_words_popup_item_alphabet:
+                                model.getWordsByAlphabet().observe(YourWordsFragment.this, observer);
+                                break;
+                            case R.id.your_words_popup_item_difficulty:
+                                Log.i("debug", "clicked");
+                                model.getWordsByDifficulty().observe(YourWordsFragment.this, observer);
+                                break;
+                            case R.id.your_words_popup_item_tested:
+                                model.getWordsByTest().observe(YourWordsFragment.this, observer);
+                                break;
+                            case R.id.your_words_popup_item_added:
+                                model.getWordsByAdded().observe(YourWordsFragment.this, observer);
+                                break;
+                            case R.id.your_words_popup_item_source:
+                                model.getWordsBySource().observe(YourWordsFragment.this, observer);
+                                break;
+                        }
+
+                        return true;
+                    }
+                });
+
+                menu.show();
+
+            }
+        });
 
         return view;
     }
@@ -329,12 +376,12 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                 YourWordsRecyclerAdapter adapter = ((YourWordsRecyclerAdapter) recyclerView.getAdapter());
 
-                if (adapter.getSelectable()) {
+                if (adapter.isSelectable()) {
                     setRecyclerSelectable(false);
                 }
 
                 adapter.setSearching(true);
-                adapter.removeLetters();
+                adapter.removeHeaders();
                 adapter.notifyDataSetChanged();
             }
         });
@@ -354,7 +401,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 YourWordsRecyclerAdapter adapter = ((YourWordsRecyclerAdapter) recyclerView.getAdapter());
 
                 adapter.setSearching(false);
-                adapter.addLetters();
+                adapter.addHeaders();
 
 
                 return false;
@@ -374,14 +421,37 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        final YourWordsRecyclerAdapter adapter = ((YourWordsRecyclerAdapter) recyclerView.getAdapter());
+
         switch (item.getItemId()) {
 
             case R.id.your_words_toolbar_menu_select_items:
 
-                setRecyclerSelectable(!((YourWordsRecyclerAdapter) recyclerView.getAdapter()).getSelectable());
+                setRecyclerSelectable(!adapter.isSelectable());
 
                 break;
 
+            case R.id.your_words_toolbar_menu_select_all_items:
+
+                if (adapter.isSelectable()) {
+
+                    if (adapter.isAllSelected()) {
+
+                        adapter.setAllSelected(false);
+                        updateToolbarButton(0);
+                    } else {
+
+                        adapter.setAllSelected(true);
+                        updateToolbarButton(adapter.getAdapterRowsCopy().size());
+                    }
+                } else {
+
+                    setRecyclerSelectable(true);
+                    adapter.setAllSelected(true);
+                    updateToolbarButton(adapter.getAdapterRowsCopy().size());
+                }
+
+                adapter.notifyDataSetChanged();
         }
         return true;
     }
@@ -425,6 +495,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                             if (adapter.isAllSelected()) {
                                 dao.deleteAll();
+                                Toast.makeText(getContext(), R.string.toast_your_words_deleted_all, Toast.LENGTH_SHORT).show();
                             } else {
 
                                 List<Integer> toDelete = adapter.getSelectedItemsID();
@@ -432,7 +503,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                                 for (int i = 0; i < toDelete.size(); i++) {
                                     dao.delete(dao.loadById(toDelete.get(i)));
                                 }
-
+                                Toast.makeText(getContext(), getString(R.string.toast_your_words_you_have_deleted) + String.valueOf(toDelete.size()) + getString(R.string.toast_your_words_words), Toast.LENGTH_SHORT).show();
                                 adapter.getSelectedItemsID().clear();
                             }
                             return null;
@@ -451,52 +522,14 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
             toolbar.addView(bt, 0);
 
-            selectAllBt.setOnClickListener(new View.OnClickListener() {
-
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onClick(View view) {
-
-                    if (adapter.isAllSelected()) {
-
-                        adapter.setAllSelected(false);
-                        updateToolbarButton(0);
-                    } else {
-
-                        adapter.setAllSelected(true);
-                        updateToolbarButton(adapter.getAdapterRowsCopy().size());
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            });
-
-
-            selectAllBt.setVisibility(View.VISIBLE);
-
-            if (appBarCollapsed) {
-                setAppBarOffset(toolbar.getHeight());
-            } else {
-                appBarLayout.setExpanded(true, false);
-            }
 
         } else {
+
             toolbar.removeViewAt(0);
-            selectAllBt.setVisibility(View.GONE);
-
-            if (!appBarCollapsed) {
-                appBarLayout.setExpanded(true, false);
-            }
-
         }
-        Log.i("debug", appBarCollapsed + "");
+
 
         adapter.notifyDataSetChanged();
-    }
-
-    private void setAppBarOffset(int offset) {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-        behavior.onNestedPreScroll(coordinatorLayout, appBarLayout, null, 0, offset, new int[]{0, 0}, 0);
     }
 
 
@@ -581,5 +614,12 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
     }
 
+    /**
+     * Zabraňuje, aby aplikace spadla z důvodu rychlého mačknání dvou slov najednou.
+     */
+    @Override
+    public void onDialogDismiss() {
 
+        ((YourWordsRecyclerAdapter) recyclerView.getAdapter()).setCanOpenDialog(true);
+    }
 }

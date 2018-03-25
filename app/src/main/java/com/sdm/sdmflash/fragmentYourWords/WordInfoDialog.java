@@ -55,11 +55,9 @@ public class WordInfoDialog extends DialogFragment {
         datumZmeny.setText(getArguments().getString("datum_zmeny"));
 
         final int ID = getArguments().getInt("ID");
-        final int file = getArguments().getInt("kartoteka");
 
         Resources res = getResources();
-        String mDrawableName = "file" + String.valueOf(file);
-        int resID = res.getIdentifier(mDrawableName, "drawable", getActivity().getPackageName());
+        int resID = res.getIdentifier(getArguments().getString("kartoteka"), "drawable", getActivity().getPackageName());
         kartoteka.setImageResource(resID);
 
         builder.setView(view)
@@ -83,10 +81,17 @@ public class WordInfoDialog extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        dialogListener.onDialogDismiss();
+        super.onDismiss(dialog);
+    }
+
     public interface WordInfoDialogListener {
         void onDialogNeutralClick(int id);
 
         void onDialogNegativeClick(int id);
-    }
 
+        void onDialogDismiss();
+    }
 }

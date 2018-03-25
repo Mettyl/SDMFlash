@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/your_words_popup_item_alphabet"
+        android:title="@string/alphabet" />
+    <item
+        android:id="@+id/your_words_popup_item_difficulty"
+        android:title="@string/item_difficulty" />
+    <item
+        android:id="@+id/your_words_popup_item_tested"
+        android:title="@string/last_test" />
+    <item
+        android:id="@+id/your_words_popup_item_added"
+        android:title="@string/item_added" />
+    <item
+        android:id="@+id/your_words_popup_item_source"
+        android:title="@string/item_source" />
+
+</menu>
