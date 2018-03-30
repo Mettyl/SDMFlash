@@ -19,33 +19,59 @@ import java.util.concurrent.ExecutionException;
 public class YourWordsViewModel extends AndroidViewModel {
 
     private LiveData<List<Word>> words;
+    private int wordsType = 1;
 
     public YourWordsViewModel(@NonNull Application application) {
         super(application);
     }
 
     public LiveData<List<Word>> getWordsByAlphabet() {
-        words = loadWords(1);
+        int type = 1;
+        if (words == null || wordsType != type) {
+            words = loadWords(type);
+            wordsType = type;
+            return words;
+        }
         return words;
     }
 
     public LiveData<List<Word>> getWordsByDifficulty() {
-        words = loadWords(2);
+        int type = 2;
+        if (words == null || wordsType != type) {
+            words = loadWords(type);
+            wordsType = type;
+            return words;
+        }
         return words;
     }
 
     public LiveData<List<Word>> getWordsByTest() {
-        words = loadWords(3);
+        int type = 3;
+        if (words == null || wordsType != type) {
+            words = loadWords(type);
+            wordsType = type;
+            return words;
+        }
         return words;
     }
 
     public LiveData<List<Word>> getWordsByAdded() {
-        words = loadWords(4);
+        int type = 4;
+        if (words == null || wordsType != type) {
+            words = loadWords(type);
+            wordsType = type;
+            return words;
+        }
         return words;
     }
 
     public LiveData<List<Word>> getWordsBySource() {
-        words = loadWords(5);
+        int type = 5;
+        if (words == null || wordsType != type) {
+            words = loadWords(type);
+            wordsType = type;
+            return words;
+        }
         return words;
     }
 

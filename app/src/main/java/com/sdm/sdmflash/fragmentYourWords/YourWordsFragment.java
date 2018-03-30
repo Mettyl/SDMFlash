@@ -261,8 +261,10 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                     //pokud je zapnuto  vyhledávání, zobrazí se znovu vyhledané slova (například když je nějaké odstraněno)
                     if (adapter.isSearching()) {
-
+                        adapter.setCurrentList(adapter.getAdapterRowsWithoutHeaders());
                         adapter.getFilter().filter(currentQuery);
+                    } else {
+                        adapter.setCurrentList(adapter.getAdapterRowsWithHeaders());
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -381,7 +383,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 }
 
                 adapter.setSearching(true);
-                adapter.removeHeaders();
+                adapter.setCurrentList(adapter.getAdapterRowsWithoutHeaders());
                 adapter.notifyDataSetChanged();
             }
         });
@@ -401,7 +403,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 YourWordsRecyclerAdapter adapter = ((YourWordsRecyclerAdapter) recyclerView.getAdapter());
 
                 adapter.setSearching(false);
-                adapter.addHeaders();
+                adapter.setCurrentList(adapter.getAdapterRowsWithHeaders());
 
 
                 return false;
@@ -442,13 +444,13 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                     } else {
 
                         adapter.setAllSelected(true);
-                        updateToolbarButton(adapter.getAdapterRowsCopy().size());
+                        updateToolbarButton(adapter.getAdapterRowsWithoutHeaders().size());
                     }
                 } else {
 
                     setRecyclerSelectable(true);
                     adapter.setAllSelected(true);
-                    updateToolbarButton(adapter.getAdapterRowsCopy().size());
+                    updateToolbarButton(adapter.getAdapterRowsWithoutHeaders().size());
                 }
 
                 adapter.notifyDataSetChanged();

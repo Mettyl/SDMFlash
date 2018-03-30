@@ -42,8 +42,10 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private int headerType;
 
-    private List<AdapterRow> adapterRows;
-    private List<AdapterRow> adapterRowsCopy;
+    private List<AdapterRow> adapterRowsWithHeaders;
+    private List<AdapterRow> adapterRowsWithoutHeaders;
+    private List<AdapterRow> currentList;
+
     private List<Integer> selectedItemsID;
 
     private boolean canOpenDialog = true;
@@ -54,17 +56,21 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private AdapterToFragment adapterToFragmentInterface;
 
     YourWordsRecyclerAdapter(List<Word> wordList, Context context, AdapterToFragment adapterToFragmentInterface) {
+
         headerType = R.id.your_words_popup_item_alphabet;
+
         this.context = context;
-        this.adapterRows = rearangeList(wordList, true);
-        this.adapterRowsCopy = rearangeList(wordList, false);
+        this.adapterRowsWithHeaders = rearangeList(wordList, true);
+        this.adapterRowsWithoutHeaders = rearangeList(wordList, false);
         this.adapterToFragmentInterface = adapterToFragmentInterface;
+
         selectedItemsID = new ArrayList<>();
+        currentList = adapterRowsWithHeaders;
     }
 
     void setAdapterRowsAndRearange(List<Word> adapterRows) {
-        this.adapterRows = rearangeList(adapterRows, !searching);
-        this.adapterRowsCopy = rearangeList(adapterRows, false);
+        this.adapterRowsWithHeaders = rearangeList(adapterRows, true);
+        this.adapterRowsWithoutHeaders = rearangeList(adapterRows, false);
     }
 
     private List<AdapterRow> rearangeList(List<Word> list, boolean withHeaders) {
@@ -84,9 +90,8 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     if (!withHeaders || list.get(i).getWord().charAt(0) == lett) {
 
                         newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
-
                     } else {
-                        newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
+                        newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase()));
                         lett = list.get(i).getWord().charAt(0);
                         i--;
                     }
@@ -94,11 +99,11 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 case R.id.your_words_popup_item_difficulty:
 
                     if (!withHeaders || list.get(i).getFile().getId() == file) {
+                        Log.i("debug", "word added");
                         newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
 
                     } else {
                         newList.add(new AdapterRow(res.getIdentifier(list.get(i).getFile().name(), "drawable", context.getPackageName())));
-                        Log.i("debug", list.get(i).getFile().name());
                         file = list.get(i).getFile().getId();
                         i--;
                     }
@@ -108,7 +113,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     if (withHeaders && list.get(i).getChange_date() == null) {
                         if (once) {
                             once = false;
-                            newList.add(new AdapterRow("Never", null, 0, Type.LETTER, false));
+                            newList.add(new AdapterRow("Never"));
                             newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
                             i--;
                         } else {
@@ -118,7 +123,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         if (!withHeaders || fmt.format(list.get(i).getChange_date()).equals(fmt.format(date))) {
                             newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
                         } else {
-                            newList.add(new AdapterRow(fmt.format(list.get(i).getChange_date()), null, 0, Type.LETTER, false));
+                            newList.add(new AdapterRow(fmt.format(list.get(i).getChange_date())));
                             date = list.get(i).getChange_date();
                             i--;
                         }
@@ -129,7 +134,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     if (!withHeaders || fmt.format(list.get(i).getAdd_date()).equals(fmt.format(date))) {
                         newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
                     } else {
-                        newList.add(new AdapterRow(fmt.format(list.get(i).getAdd_date()), null, 0, Type.LETTER, false));
+                        newList.add(new AdapterRow(fmt.format(list.get(i).getAdd_date())));
                         date = list.get(i).getAdd_date();
                         i--;
                     }
@@ -145,34 +150,22 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         i--;
                     }
                     break;
+                default:
+                    if (!withHeaders || list.get(i).getWord().charAt(0) == lett) {
+
+                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+
+                    } else {
+                        newList.add(new AdapterRow(String.valueOf(list.get(i).getWord().charAt(0)).toUpperCase()));
+                        lett = list.get(i).getWord().charAt(0);
+                        i--;
+                    }
+                    break;
             }
         }
         return newList;
     }
 
-    void addHeaders() {
-
-        List<AdapterRow> newList = new ArrayList<>();
-
-        char lett = ' ';
-        for (int i = 0; i < adapterRows.size(); i++) {
-
-            if (adapterRows.get(i).getWord().charAt(0) == lett) {
-                newList.add(new AdapterRow(adapterRows.get(i).getWord(), adapterRows.get(i).getTranslation(), adapterRows.get(i).getId(), Type.WORD, false));
-
-            } else {
-                newList.add(new AdapterRow(String.valueOf(adapterRows.get(i).getWord().charAt(0)).toUpperCase(), null, 0, Type.LETTER, false));
-                lett = adapterRows.get(i).getWord().charAt(0);
-                i--;
-
-            }
-        }
-        adapterRows = newList;
-    }
-
-    void removeHeaders() {
-        adapterRows = adapterRowsCopy;
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -196,7 +189,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        final AdapterRow adapterRow = adapterRows.get(position);
+        final AdapterRow adapterRow = currentList.get(position);
 
         switch (holder.getItemViewType()) {
 
@@ -226,7 +219,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                                 selectedItemsID.add(adapterRow.getId());
                                 adapterToFragmentInterface.updateToolbarButton(selectedItemsID.size());
 
-                                if (selectedItemsID.size() == adapterRowsCopy.size()) {
+                                if (selectedItemsID.size() == adapterRowsWithoutHeaders.size()) {
                                     allSelected = true;
                                 }
 
@@ -279,12 +272,10 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     letterViewHolder.letter.setVisibility(View.GONE);
                     letterViewHolder.imageView.setVisibility(View.VISIBLE);
                     letterViewHolder.imageView.setImageResource(adapterRow.getImageSource());
-                    Log.i("debug", "image");
                 } else {
                     letterViewHolder.imageView.setVisibility(View.GONE);
                     letterViewHolder.letter.setVisibility(View.VISIBLE);
                     letterViewHolder.letter.setText(adapterRow.getWord());
-                    Log.i("debug", "letter");
                 }
                 break;
         }
@@ -297,26 +288,24 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public int getItemViewType(int position) {
         int viewType = 0;
-        if (adapterRows.get(position).getType() == Type.WORD) {
+        if (currentList.get(position).getType() == Type.WORD) {
             viewType = Type.WORD.num;
-        } else if (adapterRows.get(position).getType() == Type.LETTER) {
+        } else if (currentList.get(position).getType() == Type.LETTER) {
             viewType = Type.LETTER.num;
         }
         return viewType;
     }
 
 
-    //Getters
     @Override
     public int getItemCount() {
-        return adapterRows.size();
+        return currentList.size();
     }
 
     boolean isSelectable() {
         return selectable;
     }
 
-    //Setters
     void setSelectable(boolean selectable) {
         this.selectable = selectable;
         selectedItemsID = new ArrayList<>();
@@ -331,9 +320,22 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.canOpenDialog = canOpenDialog;
     }
 
-    List<AdapterRow> getAdapterRowsCopy() {
-        return adapterRowsCopy;
+    List<AdapterRow> getAdapterRowsWithoutHeaders() {
+        return adapterRowsWithoutHeaders;
     }
+
+    List<AdapterRow> getAdapterRowsWithHeaders() {
+        return adapterRowsWithHeaders;
+    }
+
+    List<AdapterRow> getCurrentList() {
+        return currentList;
+    }
+
+    public void setCurrentList(List<AdapterRow> currentList) {
+        this.currentList = currentList;
+    }
+
 
     boolean isAllSelected() {
         return allSelected;
@@ -342,7 +344,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     void setAllSelected(boolean allSelected) {
         this.allSelected = allSelected;
         if (allSelected) {
-            for (AdapterRow r : adapterRows) {
+            for (AdapterRow r : currentList) {
                 if (r.getType() == Type.WORD) {
                     selectedItemsID.add(r.getId());
                     r.setSelected(true);
@@ -350,7 +352,7 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             }
         } else {
             selectedItemsID.clear();
-            for (AdapterRow r : adapterRows) {
+            for (AdapterRow r : currentList) {
                 if (r.getType() == Type.WORD) {
                     r.setSelected(false);
                 }
@@ -386,26 +388,26 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
-                adapterRows = adapterRowsCopy;
+                currentList = adapterRowsWithoutHeaders;
                 if (!charString.isEmpty()) {
                     List<AdapterRow> filteredList = new ArrayList<>();
-                    for (AdapterRow adapterRow : adapterRows) {
+                    for (AdapterRow adapterRow : adapterRowsWithoutHeaders) {
                         if (adapterRow.getType() == Type.WORD) {
                             if (adapterRow.getWord().toLowerCase().contains(charString) || adapterRow.getTranslation().toLowerCase().contains(charString)) {
                                 filteredList.add(adapterRow);
                             }
                         }
                     }
-                    adapterRows = filteredList;
+                    currentList = filteredList;
                 }
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = adapterRows;
+                filterResults.values = currentList;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                adapterRows = (ArrayList<AdapterRow>) filterResults.values;
+                currentList = (ArrayList<AdapterRow>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
