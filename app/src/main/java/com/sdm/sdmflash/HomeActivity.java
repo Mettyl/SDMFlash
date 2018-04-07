@@ -33,7 +33,7 @@ public class HomeActivity extends AppCompatActivity {
         findViewById(R.id.camera_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CameraActivity.class));
+                startActivity(new Intent(getApplicationContext(), Camera2Activity.class));
             }
         });
 
