@@ -1,6 +1,7 @@
 package com.sdm.sdmflash;
 
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.sdm.sdmflash.databases.DbTest;
+import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
@@ -40,25 +42,6 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout frameLayout;
     private Fragment fragmentToSet = null;
 
-    private static void copyFileUsingFileStreams(File source, File dest)
-            throws IOException {
-        InputStream input = null;
-        OutputStream output = null;
-        try {
-            input = new FileInputStream(source);
-            output = new FileOutputStream(dest);
-            byte[] buf = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = input.read(buf)) > 0) {
-                output.write(buf, 0, bytesRead);
-            }
-        } catch (Exception e) {
-            Log.e("AndroidRuntime", Log.getStackTraceString(e));
-        } finally {
-            input.close();
-            output.close();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,21 +84,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        HomeFragment homeFragment = new HomeFragment();
+        AddWordFragment homeFragment = new AddWordFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
         new DbTest().test(getApplicationContext());
-
-//        File database = getDatabasePath("SDMdictionarydatabase");
-//        Log.i("debug", database.getAbsolutePath());
-//        Log.i("debug", getExternalFilesDir(null).getAbsolutePath());
-//
-//        try {
-//            File out = new File(getExternalFilesDir(null).getPath() + "/SDMdictionarydatabase");
-//            copyFileUsingFileStreams(out, database);
-//        } catch (IOException e) {
-//            Log.e("AndroidRuntime", Log.getStackTraceString(e));
-//        }
 
 
         //Načte slovník do databáze
@@ -180,6 +152,9 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
 
     private void loadDictionary() {
         StringBuilder text = new StringBuilder();
