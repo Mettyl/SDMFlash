@@ -1,5 +1,7 @@
 package com.sdm.sdmflash;
 
+import android.content.Intent;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.sdm.sdmflash.camera.CameraActivity;
 import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/camera"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sdm.sdmflash.camera.CameraActivity">
+
+    <com.wonderkiln.camerakit.CameraView
+        android:id="@+id/camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        app:ckFocus="tapWithMarker"
+        app:ckMethod="still" />
+
+    <View
+        android:id="@+id/textRestrict"
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="180dp"
+        android:filterTouchesWhenObscured="false"
+        android:background="@drawable/border">
+    </View>
+
+
+    <TextView
+        android:id="@+id/ocrOutput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="100dp"
+        android:background="@color/black"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/white" />
+
+    <com.sdm.sdmflash.camera.BottomPanel
+        android:id="@+id/bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimaryDark"/>
+
+</FrameLayout>
