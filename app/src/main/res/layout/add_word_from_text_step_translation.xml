@@ -4,42 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose translation"/>
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/add_word_recycler_view"
+        android:id="@+id/add_word_translation_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:clipToPadding="false"
         android:orientation="horizontal"
-        android:scrollbars="horizontal" />
+        android:scrollbars="none" />
+
+    <TextView
+        android:id="@+id/add_word_translation_not_found_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:text="No translations found."
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Write your own translation"/>
+        android:layout_marginTop="5dp"
+        android:text="Or write your own translation" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/store_til"
-        android:layout_width="300dp"
+
+    <EditText
+        android:id="@+id/add_word_translation_et"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp">
+        android:hint="Enter translation"
+        android:inputType="text"
+        android:maxLines="1">
 
-        <EditText
-            android:id="@+id/add_word_from_text_autocomplete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter translation">
-
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
-
+    </EditText>
 
 
 </LinearLayout>

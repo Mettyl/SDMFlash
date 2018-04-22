@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,6 +47,7 @@ import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.sdm.sdmflash.databases.structure.appDatabase.WordDao;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFromText;
 
 import java.text.DateFormat;
 import java.util.Collections;
@@ -371,6 +373,15 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 adapter.setAdapterRowsAndRearange(list);
                 adapter.setCurrentList(adapter.getAdapterRowsWithHeaders());
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        Button addWord = view.findViewById(R.id.your_words_recycler_header_add_word_button);
+        addWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AddWordFromText.class);
+                startActivity(intent);
             }
         });
 

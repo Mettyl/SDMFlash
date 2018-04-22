@@ -9,7 +9,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,13 +52,14 @@ public class AddWordFragment extends Fragment implements CardAdapter.OnCardClick
 
     /**
      * Open activities acording to card click
+     *
      * @param position card number
      */
     @Override
     public void onClick(int position) {
         switch (position) {
             case 0:
-                Intent intent = new Intent(getContext(),AddWordFromText.class);
+                Intent intent = new Intent(getContext(), AddWordFromText.class);
                 startActivity(intent);
                 break;
         }

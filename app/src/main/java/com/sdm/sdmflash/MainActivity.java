@@ -1,7 +1,6 @@
 package com.sdm.sdmflash;
 
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.sdm.sdmflash.databases.DbTest;
-import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
@@ -25,13 +22,8 @@ import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -87,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         AddWordFragment homeFragment = new AddWordFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        new DbTest().test(getApplicationContext());
+        //     new DbTest().test(getApplicationContext());
 
 
         //Načte slovník do databáze

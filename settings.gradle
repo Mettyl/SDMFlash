@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':vertical-stepper-form'
+project(':vertical-stepper-form').projectDir = new File('libs/vertical-stepper-form-master/vertical-stepper-form')

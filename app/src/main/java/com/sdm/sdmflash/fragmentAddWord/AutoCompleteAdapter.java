@@ -2,7 +2,6 @@ package com.sdm.sdmflash.fragmentAddWord;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.dataTypes.Language;
-import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 
 import java.util.ArrayList;
@@ -23,6 +21,8 @@ public class AutoCompleteAdapter extends ArrayAdapter {
 
     private List<AutoCompleteRow> dataList;
     private int itemLayout;
+    private Language searchedLanguage;
+    private int numberOfResults = 5;
 
     private AutoCompleteAdapter.ListFilter listFilter = new AutoCompleteAdapter.ListFilter();
 
@@ -51,10 +51,10 @@ public class AutoCompleteAdapter extends ArrayAdapter {
                     .inflate(itemLayout, parent, false);
         }
 
-        TextView word = (TextView) view.findViewById(R.id.add_word_from_text_autocomplete_row_word);
+        TextView word = view.findViewById(R.id.add_word_from_text_autocomplete_row_word);
         word.setText(getItem(position));
 
-        ImageView flag = (ImageView) view.findViewById(R.id.add_word_from_text_autocomplete_row_image);
+        ImageView flag = view.findViewById(R.id.add_word_from_text_autocomplete_row_image);
         if (dataList.get(position).getLanguage() == Language.CZ) {
             flag.setImageResource(R.drawable.cz_flag);
         } else {
@@ -70,7 +70,16 @@ public class AutoCompleteAdapter extends ArrayAdapter {
         return listFilter;
     }
 
+    public Language getSearchedLanguage() {
+        return searchedLanguage;
+    }
+
+    public void setSearchedLanguage(Language searchedLanguage) {
+        this.searchedLanguage = searchedLanguage;
+    }
+
     public class ListFilter extends Filter {
+
         private final Object lock = new Object();
 
         @Override
@@ -86,13 +95,17 @@ public class AutoCompleteAdapter extends ArrayAdapter {
                 final String search = prefix.toString().toLowerCase();
 
                 List<AutoCompleteRow> autoCompleteRows = new ArrayList<>();
-                List<String> words =  DictionaryDatabase.getInstance(getContext()).czWordDao().findWord(search + "%", 5);
-                for (String s : words) {
-                    autoCompleteRows.add(new AutoCompleteRow(s, Language.CZ));
-                }
-                words =  DictionaryDatabase.getInstance(getContext()).enWordDao().findWord(search + "%", 5);
-                for (String s : words) {
-                    autoCompleteRows.add(new AutoCompleteRow(s, Language.EN));
+
+                if (searchedLanguage == Language.CZ) {
+                    List<String> words = DictionaryDatabase.getInstance(getContext()).czWordDao().findWord(search + "%", numberOfResults);
+                    for (String s : words) {
+                        autoCompleteRows.add(new AutoCompleteRow(s, Language.CZ));
+                    }
+                } else {
+                    List<String> words = DictionaryDatabase.getInstance(getContext()).enWordDao().findWord(search + "%", numberOfResults);
+                    for (String s : words) {
+                        autoCompleteRows.add(new AutoCompleteRow(s, Language.EN));
+                    }
                 }
 
                 results.values = autoCompleteRows;
@@ -118,31 +131,31 @@ public class AutoCompleteAdapter extends ArrayAdapter {
         }
 
     }
-
 }
-     class AutoCompleteRow{
 
-        private String word;
-        private Language language;
+class AutoCompleteRow {
 
-        public AutoCompleteRow(String word, Language language) {
-            this.word = word;
-            this.language = language;
-        }
+    private String word;
+    private Language language;
 
-        public String getWord() {
-            return word;
-        }
-
-        public void setWord(String word) {
-            this.word = word;
-        }
-
-        public Language getLanguage() {
-            return language;
-        }
-
-        public void setLanguage(Language language) {
-            this.language = language;
-        }
+    public AutoCompleteRow(String word, Language language) {
+        this.word = word;
+        this.language = language;
     }
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+}
