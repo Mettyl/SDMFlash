@@ -4,20 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Write description (another meaning):" />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/store_til"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/add_word_aditional_options_description_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter description"
+        android:inputType="text"></EditText>
 
-        <EditText
-            android:id="@+id/add_word_from_text_autocomplete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter description">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Write tag (e.g. Book, Test, Dictionary):" />
 
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
+
+    <EditText
+        android:id="@+id/add_word_aditional_options_tag_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter tag "
+        android:inputType="textCapWords"></EditText>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="5dp"
+        android:text="Choose dificulty (default recommended):" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -53,8 +53,9 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
     private AutoCompleteTextView autoCompleteTextView;
     private TextView notFoundTV;
     private EditText enterTranslation;
-    private String writtenWord = "";
-    private String writtenTranslation = "";
+    private String addedWord = "";
+    private String addedTranslation = "";
+    private boolean translationChosen = false;
 
     public AddWordFromText() {
 
@@ -74,7 +75,6 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
         // Nasteveni nadpisu, podnadpisu a barev v stepperu
         String[] mySteps = {"Word", "Translation", "Additional options"};
-        String[] subtitles = {"Write your word manualy", "Choose or add translation", "Describe your word"};
         int colorPrimary = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
 
@@ -87,7 +87,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 .displayBottomNavigation(true)
                 .materialDesignInDisabledSteps(true)
                 .showVerticalLineWhenStepsAreCollapsed(true)
-                .stepsSubtitles(subtitles)
+                .stepsSubtitles(new String[]{"Unknown", "Unknown", "Default"})
                 .init();
 
     }
@@ -148,13 +148,27 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     autoCompleteTextView.setText("");
 
                 } else {
-                    writtenWord = charSequence.toString().toLowerCase().replaceAll("\\s+$", "");
+                    addedWord = charSequence.toString().toLowerCase().replaceAll("\\s+$", "");
 
                     if (translationsRecycler.getAdapter().getItemCount() > 0) {
 
-                        ((TranslationAdapter) translationsRecycler.getAdapter()).unselectAll();
-                        ((TranslationAdapter) translationsRecycler.getAdapter()).getData().clear();
-                        translationsRecycler.getAdapter().notifyDataSetChanged();
+                        TranslationAdapter translationAdapter = ((TranslationAdapter) translationsRecycler.getAdapter());
+
+                        if (translationAdapter.isSelected()) {
+
+                            if (!enterTranslation.getText().toString().isEmpty()) {
+                                addedTranslation = enterTranslation.getText().toString().toLowerCase().replaceAll("\\s+$", "");
+                                verticalStepperForm.setStepSubtitle(1, addedTranslation);
+                                enterTranslation.setTextColor(getResources().getColor(R.color.colorPrimary));
+                            } else {
+                                addedTranslation = "";
+                                verticalStepperForm.setStepSubtitle(1, "Unknown");
+                                verticalStepperForm.setStepAsUncompleted(1, "Choose or add translation!");
+                            }
+                        }
+                        translationAdapter.unselectAll();
+                        translationAdapter.getData().clear();
+                        translationAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -202,8 +216,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
-                    if (!writtenWord.isEmpty()) {
-                        new FindTranslation().execute(writtenWord);
+                    if (!addedWord.isEmpty()) {
+                        new FindTranslation().execute(addedWord);
                     }
                 }
             }
@@ -276,7 +290,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 }
 
                 ((TranslationAdapter) translationsRecycler.getAdapter()).unselectAll();
-                new FindTranslation().execute(writtenWord);
+                new FindTranslation().execute(addedWord);
             }
         });
 
@@ -291,6 +305,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         translationsRecycler = layout.findViewById(R.id.add_word_translation_recycler_view);
         notFoundTV = layout.findViewById(R.id.add_word_translation_not_found_tv);
         enterTranslation = layout.findViewById(R.id.add_word_translation_et);
+        enterTranslation.setHighlightColor(getResources().getColor(R.color.colorPrimary));
 
         // inicializace recycleru pro zobrazeni dostupnych prekladu
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -305,10 +320,13 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
                 if (b) {
                     ((TranslationAdapter) translationsRecycler.getAdapter()).unselectAll();
+                    addedTranslation = enterTranslation.getText().toString().toLowerCase().replaceAll("\\s+$", "");
+                    enterTranslation.setTextColor(getResources().getColor(R.color.colorPrimary));
                     checkTrranslation();
                 }
             }
         });
+
 
         enterTranslation.addTextChangedListener(new TextWatcher() {
             @Override
@@ -325,7 +343,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                         enterTranslation.setText("");
 
                     } else {
-                        writtenTranslation = charSequence.toString().toLowerCase().replaceAll("\\s+$", "");
+                        addedTranslation = charSequence.toString().toLowerCase().replaceAll("\\s+$", "");
                         checkTrranslation();
                     }
                 }
@@ -336,6 +354,20 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
             }
         });
+
+        enterTranslation.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            enterTranslation.clearFocus();
+                            dismisKeyboard();
+                        }
+
+                        return true;
+                    }
+                });
 
         InputFilter filter = new InputFilter() {
             @Override
@@ -406,24 +438,20 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 checkWord();
                 //
                 if (verticalStepperForm.isStepCompleted(1)) {
-                    verticalStepperForm.setStepSubtitle(1, writtenTranslation.isEmpty() ?
-                            ((TranslationAdapter) translationsRecycler.getAdapter()).getSelectedTranslation() :
-                            writtenTranslation);
+                    verticalStepperForm.setStepSubtitle(1, addedTranslation);
                 }
                 break;
             case 1:
                 //zabranuje pokracovat dokud se nevybere nebo nenapise preklad + nastavi popisek na zadany preklad
                 verticalStepperForm.setStepAsUncompleted(1, "");
-                verticalStepperForm.setStepSubtitle(0, writtenWord);
+                verticalStepperForm.setStepSubtitle(0, addedWord);
 
                 //zkontroluje, jestli zadane slovo vyhovuje podminkam, pokud ano, zpristupni tlacitko continue
                 checkTrranslation();
                 break;
             case 2:
                 verticalStepperForm.setStepAsCompleted(2);
-                verticalStepperForm.setStepSubtitle(1, writtenTranslation.isEmpty() ?
-                        ((TranslationAdapter) translationsRecycler.getAdapter()).getSelectedTranslation() :
-                        writtenTranslation);
+                verticalStepperForm.setStepSubtitle(1, addedTranslation);
                 break;
         }
 
@@ -431,10 +459,10 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
     public void checkWord() {
 
-        if (writtenWord.length() > 50) {
+        if (addedWord.length() > 50) {
             verticalStepperForm.setActiveStepAsUncompleted("Word is too long!");
 
-        } else if (writtenWord.isEmpty()) {
+        } else if (addedWord.isEmpty()) {
             verticalStepperForm.setActiveStepAsUncompleted("Add some word!");
 
         } else {
@@ -444,46 +472,15 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
     public void checkTrranslation() {
 
-        class WordsExist extends AsyncTask<String, Void, Boolean> {
-
-            @Override
-            protected Boolean doInBackground(String... strings) {
-
-                List<Word> listA = AppDatabase.getInstance(getApplicationContext()).wordDao().loadByWord(writtenWord);
-                List<Word> listB = AppDatabase.getInstance(getApplicationContext()).wordDao().loadByTranslation(writtenWord);
-
-                for (Word w : listA) {
-                    if (w.getTranslation().equals(strings[0])) {
-                        return true;
-                    }
-                }
-                for (Word t : listB) {
-                    if (t.getTranslation().equals(strings[0])) {
-                        return true;
-                    }
-                }
-                return false;
-
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                if (aBoolean) {
-                    verticalStepperForm.setActiveStepAsUncompleted("This translation of word already exists!");
-                } else {
-                    verticalStepperForm.setActiveStepAsCompleted();
-                }
-            }
-        }
         TranslationAdapter adapter = (TranslationAdapter) translationsRecycler.getAdapter();
 
         if (!enterTranslation.getText().toString().isEmpty()) {
 
-            new WordsExist().execute(writtenTranslation);
+            new WordsExist().execute(addedTranslation);
 
         } else if (adapter.isSelected()) {
 
-            new WordsExist().execute(writtenTranslation);
+            new WordsExist().execute(addedTranslation);
 
         } else {
             verticalStepperForm.setActiveStepAsUncompleted("Choose or add translation!");
@@ -497,15 +494,10 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                if (writtenTranslation.isEmpty()) {
-                    AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
-                            new Word(Language.EN, writtenWord, ((TranslationAdapter) translationsRecycler.getAdapter()).getSelectedTranslation(), "add word", new Date(),
-                                    null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
-                } else {
-                    AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
-                            new Word(Language.EN, writtenWord, writtenTranslation, "add word", new Date(),
-                                    null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
-                }
+
+                AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
+                        new Word(Language.EN, addedWord, addedTranslation, "add word", new Date(),
+                                null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
                 finish();
             }
         });
@@ -520,7 +512,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
     @Override
     public void onItemclick(int id) {
         enterTranslation.clearFocus();
-        writtenTranslation = "";
+        addedTranslation = ((TranslationAdapter) translationsRecycler.getAdapter()).getSelectedTranslation();
+        enterTranslation.setTextColor(getResources().getColor(R.color.black));
         dismisKeyboard();
         checkTrranslation();
     }
@@ -560,6 +553,38 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 translationsRecycler.getAdapter().notifyDataSetChanged();
                 translationsRecycler.setVisibility(View.VISIBLE);
                 notFoundTV.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    class WordsExist extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+
+            List<Word> listA = AppDatabase.getInstance(getApplicationContext()).wordDao().loadByWord(addedWord);
+            List<Word> listB = AppDatabase.getInstance(getApplicationContext()).wordDao().loadByTranslation(addedWord);
+
+            for (Word w : listA) {
+                if (w.getTranslation().equals(strings[0])) {
+                    return true;
+                }
+            }
+            for (Word t : listB) {
+                if (t.getTranslation().equals(strings[0])) {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean) {
+                verticalStepperForm.setActiveStepAsUncompleted("This translation of word already exists!");
+            } else {
+                verticalStepperForm.setActiveStepAsCompleted();
             }
         }
     }
