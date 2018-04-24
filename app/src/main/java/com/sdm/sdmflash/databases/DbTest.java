@@ -86,7 +86,7 @@ public class DbTest {
 //                    char d = chars.charAt(rnd.nextInt(chars.length()));
 //                    String b = "oimiohuy";
 //                    b = b.replace('o', d);
-//                    db.wordDao().insertAll(new Word(Language.CZ, a, b,"random", new Date(), null, WordFile.file1));
+//                    db.wordDao().insertAll(new Word(CameraLanguage.CZ, a, b,"random", new Date(), null, WordFile.file1));
 //                }
                 //vytvoří instanci databáze (konečná)
                 db.wordDao().changeWordFile("work", WordFile.file5);

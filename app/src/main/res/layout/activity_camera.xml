@@ -2,18 +2,19 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/camera"
+    android:id="@+id/camera_live"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sdm.sdmflash.camera.CameraActivity">
+    tools:context="com.sdm.sdmflash.camera.activities.CameraActivity">
 
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="100dp"
         app:ckFocus="tapWithMarker"
-        app:ckMethod="still" />
+        app:ckMethod="still"
+        app:ckFlash="auto"
+        android:layout_marginBottom="100dp"/>
 
     <View
         android:id="@+id/textRestrict"
@@ -37,7 +38,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white" />
 
-    <com.sdm.sdmflash.camera.BottomPanel
+    <com.sdm.sdmflash.camera.BottomPanelLive
         android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="100dp"

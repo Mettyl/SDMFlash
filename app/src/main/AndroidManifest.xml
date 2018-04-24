@@ -32,8 +32,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".camera.CameraActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".camera.activities.CameraActivity" />
+        <activity android:name=".camera.activities.MarkerEditActivity"></activity>
     </application>
 
 </manifest>

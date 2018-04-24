@@ -23,12 +23,15 @@ package com.sdm.sdmflash.camera;
         import java.io.InputStream;
         import java.io.OutputStream;
         import java.nio.ByteBuffer;
+        import java.util.ArrayList;
+        import java.util.List;
 
 public class OCR {
 
     private TessBaseAPI tessBaseAPI;
     private final String TAG = "debug";
     private String dataPath = "";
+    private final String[] languages = {"ces", "eng"};
 
     private Rect boundingRect;
 
@@ -36,6 +39,18 @@ public class OCR {
         dataPath = App.getContext().getFilesDir() + "/tesseract/";
         //make sure training data has been copied
         checkFile(new File(dataPath + "tessdata/"));
+        //inicializace OCR
+        try {
+            tessBaseAPI = new TessBaseAPI();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        StringBuilder initLanguage = new StringBuilder();
+        for (String language : languages){
+            initLanguage.append(language).append("+");
+        }
+        initLanguage.deleteCharAt(initLanguage.length()-1);
+        tessBaseAPI.init(dataPath, initLanguage.toString());
     }
 
 
@@ -43,18 +58,23 @@ public class OCR {
 //    public synchronized Bitmap askForBitmap(){
 
     //    }
-    public void start(){
-        try {
-            tessBaseAPI = new TessBaseAPI();
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-        tessBaseAPI.init(dataPath, "eng");
+    public synchronized void start(){
+//        try {
+//            tessBaseAPI = new TessBaseAPI();
+//        } catch (Exception e) {
+//            Log.e(TAG, e.getMessage());
+//        }
+//        StringBuilder initLanguage = new StringBuilder();
+//        for (String language : languages){
+//            initLanguage.append(language).append("+");
+//        }
+//        initLanguage.deleteCharAt(initLanguage.length()-1);
+//        tessBaseAPI.init(dataPath, initLanguage.toString());
     }
 
     //        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
-    public void pause(){
-        tessBaseAPI.end();
+    public synchronized void pause(){
+        //tessBaseAPI.end();
     }
 
     //        buffer.get(bytes);
@@ -71,15 +91,15 @@ public class OCR {
     }
 
     //        byte[] bytes = new byte[buffer.capacity()];
-    private void copyFiles() {
+    private void copyFiles(String language) {
         try {
             //location we want the file to be at
-            String filepath = dataPath + "/tessdata/eng.traineddata";
+            String filepath = dataPath + "/tessdata/"+language+".traineddata";
 
             //get access to AssetManager
 
             //open byte streams for reading/writing
-            InputStream instream = App.getContext().getAssets().open("tessdata/eng.traineddata");
+            InputStream instream = App.getContext().getAssets().open("tessdata/"+language+".traineddata");
             OutputStream outstream = new FileOutputStream(filepath);
 
             //copy the file to the location specified by filepath
@@ -103,14 +123,18 @@ public class OCR {
     private void checkFile(File dir) {
         //directory does not exist, but we can successfully create it
         if (!dir.exists() && dir.mkdirs()) {
-            copyFiles();
+            for (String language : languages){
+                copyFiles(language);
+            }
         }
         //The directory exists, but there is no data file in it
         if (dir.exists()) {
-            String datafilepath = dataPath + "/tessdata/eng.traineddata";
-            File datafile = new File(datafilepath);
-            if (!datafile.exists()) {
-                copyFiles();
+            for (String language: languages) {
+                String datafilepath = dataPath + "/tessdata/"+language+".traineddata";
+                File datafile = new File(datafilepath);
+                if (!datafile.exists()) {
+                    copyFiles(language);
+                }
             }
         }
     }
