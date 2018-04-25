@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.dataTypes.Language;
@@ -53,9 +54,13 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
     private AutoCompleteTextView autoCompleteTextView;
     private TextView notFoundTV;
     private EditText enterTranslation;
+    private final int maxTextLength = 50;
+    private EditText descriptionET;
     private String addedWord = "";
     private String addedTranslation = "";
-    private boolean translationChosen = false;
+    private EditText tagET;
+    private String addedDescription = "";
+    private String addedTag = "";
 
     public AddWordFromText() {
 
@@ -69,12 +74,12 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
         // Nastaveni toolbaru
         Toolbar toolbar = findViewById(R.id.toolbar_add_word_from_text);
-        toolbar.setTitle("Add word manualy");
+        toolbar.setTitle(R.string.add_word_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Nasteveni nadpisu, podnadpisu a barev v stepperu
-        String[] mySteps = {"Word", "Translation", "Additional options"};
+        String[] mySteps = {getString(R.string.add_word_word), getString(R.string.add_word_translation), getString(R.string.add_word_options)};
         int colorPrimary = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
 
@@ -87,7 +92,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 .displayBottomNavigation(true)
                 .materialDesignInDisabledSteps(true)
                 .showVerticalLineWhenStepsAreCollapsed(true)
-                .stepsSubtitles(new String[]{"Unknown", "Unknown", "Default"})
+                .stepsSubtitles(new String[]{getResources().getString(R.string.add_word_unknown), getResources().getString(R.string.add_word_unknown), " "})
                 .init();
 
     }
@@ -162,8 +167,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                                 enterTranslation.setTextColor(getResources().getColor(R.color.colorPrimary));
                             } else {
                                 addedTranslation = "";
-                                verticalStepperForm.setStepSubtitle(1, "Unknown");
-                                verticalStepperForm.setStepAsUncompleted(1, "Choose or add translation!");
+                                verticalStepperForm.setStepSubtitle(1, getString(R.string.add_word_unknown));
+                                verticalStepperForm.setStepAsUncompleted(1, getResources().getString(R.string.add_word_choose_or_add));
                             }
                         }
                         translationAdapter.unselectAll();
@@ -411,6 +416,65 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.add_word_from_text_step_options, null, false);
 
+        descriptionET = layout.findViewById(R.id.add_word_aditional_options_description_et);
+        tagET = layout.findViewById(R.id.add_word_aditional_options_tag_et);
+
+        descriptionET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().startsWith(" ")) {
+                    descriptionET.setText("");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        tagET.setOnEditorActionListener(
+                new EditText.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            tagET.clearFocus();
+                            dismisKeyboard();
+                        }
+
+                        return true;
+                    }
+                });
+
+        tagET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().startsWith(" ")) {
+                    tagET.setText("");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
         difficultyRecycler = layout.findViewById(R.id.add_word_aditional_options_recycler_view);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -457,33 +521,35 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
     }
 
+    // zkontroluje jestli zadane slovo vyhovuje pozadavkum
     public void checkWord() {
 
         if (addedWord.length() > 50) {
-            verticalStepperForm.setActiveStepAsUncompleted("Word is too long!");
+            verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_too_long));
 
         } else if (addedWord.isEmpty()) {
-            verticalStepperForm.setActiveStepAsUncompleted("Add some word!");
+            verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_add_some));
 
         } else {
             verticalStepperForm.setActiveStepAsCompleted();
         }
     }
 
+    // zkontroluje jestli zadany preklad vyhovuje pozadavkum
     public void checkTrranslation() {
 
         TranslationAdapter adapter = (TranslationAdapter) translationsRecycler.getAdapter();
 
-        if (!enterTranslation.getText().toString().isEmpty()) {
+        if (!adapter.isSelected() && !enterTranslation.getText().toString().isEmpty() && addedTranslation.length() > 50) {
 
-            new WordsExist().execute(addedTranslation);
+            verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_translation_long));
 
-        } else if (adapter.isSelected()) {
-
+        } else if (!enterTranslation.getText().toString().isEmpty() || adapter.isSelected()) {
+            // kontroluje zda zadane slovni spojeni uz existuje v databazi, jestli ano, zakaze pridani
             new WordsExist().execute(addedTranslation);
 
         } else {
-            verticalStepperForm.setActiveStepAsUncompleted("Choose or add translation!");
+            verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_choose_or_add));
         }
 
     }
@@ -496,19 +562,28 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
             public void run() {
 
                 AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
-                        new Word(Language.EN, addedWord, addedTranslation, "add word", new Date(),
+                        new Word(Language.EN, addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""),
+                                tagET.getText().toString().replaceAll("\\s+$", ""), new Date(),
                                 null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
+
+                Toast.makeText(getApplicationContext(), R.string.add_word_successfully_added, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
     }
 
+    //pri zmacknuti sipky zpet se aktivita zavre
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
 
+    /**
+     * Zavola se pokud uzivatel klikne na preklad v recycleru
+     *
+     * @param id
+     */
     @Override
     public void onItemclick(int id) {
         enterTranslation.clearFocus();
@@ -518,6 +593,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         checkTrranslation();
     }
 
+    //schova klavesnici
     public void dismisKeyboard() {
         View view = getCurrentFocus();
         if (view != null) {
@@ -530,6 +606,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         }
     }
 
+    //hleda preklady v databazi
     class FindTranslation extends AsyncTask<String, Void, List<String>> {
 
         @Override
@@ -546,6 +623,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         protected void onPostExecute(List<String> strings) {
 
             if (strings.size() == 0) {
+                //pokud zadne preklady nejsou, recycler se schova a zobrazi se text s oznamenim
                 translationsRecycler.setVisibility(View.GONE);
                 notFoundTV.setVisibility(View.VISIBLE);
             } else {
@@ -557,6 +635,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         }
     }
 
+    //kontroluje duplikaty
     class WordsExist extends AsyncTask<String, Void, Boolean> {
 
         @Override
@@ -582,7 +661,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
-                verticalStepperForm.setActiveStepAsUncompleted("This translation of word already exists!");
+                verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_translation_exists));
             } else {
                 verticalStepperForm.setActiveStepAsCompleted();
             }

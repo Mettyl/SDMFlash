@@ -161,7 +161,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         bundle.putInt("ID", word.getId());
 
                         if (word.getChange_date() == null) {
-                            bundle.putString("datum_zmeny", "Never");
+                            bundle.putString("datum_zmeny", getString(R.string.your_words_never));
                         } else {
                             bundle.putString("datum_zmeny", df.format(word.getChange_date()));
 

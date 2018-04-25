@@ -4,34 +4,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--DummyView - For keeping focus -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Write description (another meaning):" />
+        android:text="@string/add_word_write_description" />
 
     <EditText
         android:id="@+id/add_word_aditional_options_description_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter description"
-        android:inputType="text"></EditText>
+        android:hint="@string/add_word_enter_description"
+        android:inputType="text"
+        android:maxLines="1" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Write tag (e.g. Book, Test, Dictionary):" />
+        android:text="@string/add_word_write_tag" />
 
 
     <EditText
         android:id="@+id/add_word_aditional_options_tag_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter tag "
-        android:inputType="textCapWords"></EditText>
+        android:hint="@string/add_word_enter_tag"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:maxLines="1" />
 
 
     <TextView
@@ -39,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="5dp"
-        android:text="Choose dificulty (default recommended):" />
+        android:text="@string/add_word_choose_difficulty" />
 
     <RelativeLayout
         android:layout_width="match_parent"

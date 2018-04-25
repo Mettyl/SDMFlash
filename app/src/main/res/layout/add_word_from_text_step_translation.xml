@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Found translations:" />
+        android:text="@string/add_word_found_translations" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/add_word_translation_recycler_view"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         android:layout_marginTop="2dp"
-        android:text="Any translations for given word."
+        android:text="@string/add_word_any_translations"
         android:textColor="@color/colorAccent"
         android:textSize="16sp"
         android:visibility="gone" />
@@ -36,14 +36,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Write your own translation" />
+        android:text="@string/add_word_write_your_own" />
 
 
     <EditText
         android:id="@+id/add_word_translation_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter translation"
+        android:hint="@string/add_word_enter_transltaions"
         android:inputType="text"
         android:maxLines="1">
 

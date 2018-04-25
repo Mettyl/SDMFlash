@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:completionThreshold="2"
-            android:hint="Type here"
+            android:hint="@string/add_word_type_here"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1">
