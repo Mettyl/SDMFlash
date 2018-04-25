@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        //new DbTest().test(getApplicationContext());
+        new DbTest().test(getApplicationContext());
 
 //        File database = getDatabasePath("SDMdictionarydatabase");
 //        Log.i("debug", database.getAbsolutePath());

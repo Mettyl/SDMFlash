@@ -19,7 +19,6 @@
     <string name="tested">Tested:</string>
     <string name="difficulty">Difficulty:</string>
     <string name="all_words">All words:</string>
-    <string name="add_new_word">Add new word</string>
     <string name="deleteBtInToolbar">Delete (</string>
     <string name="word_detail">Word detail</string>
     <string name="un_select_words">(Un)Select words</string>
@@ -36,5 +35,7 @@
     <string name="item_difficulty">Difficulty</string>
     <string name="item_added">Added</string>
     <string name="item_source">Source</string>
+    <string name="add_new_word">Add new word</string>
+    <string name="daily_test">Daily Test</string>
 
 </resources>

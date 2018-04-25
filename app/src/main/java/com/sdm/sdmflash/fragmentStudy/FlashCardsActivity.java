@@ -25,7 +25,7 @@ public class FlashCardsActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flash_cards);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         new AccessExecutor().execute(new Runnable() {
             @Override
