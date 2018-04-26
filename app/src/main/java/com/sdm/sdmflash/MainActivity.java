@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        ocrInit();
         new DbTest().test(getApplicationContext());
 
 //        File database = getDatabasePath("SDMdictionarydatabase");
@@ -124,12 +123,6 @@ public class MainActivity extends AppCompatActivity
         //Načte slovník do databáze
 
         // loadDictionary();
-    }
-
-    public void ocrInit(){
-        CameraActivity.setWorkerThread(new CameraWorker(
-                "Camera_worker_thread",
-                HandlerThread.NORM_PRIORITY));
     }
 
     @Override

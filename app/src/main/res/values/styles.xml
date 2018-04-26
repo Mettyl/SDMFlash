@@ -13,5 +13,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <!-- Splash screen theme -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_screen</item>
+    </style>
 
 </resources>
