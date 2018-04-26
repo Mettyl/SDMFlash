@@ -1,6 +1,7 @@
 package com.sdm.sdmflash;
 
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.sdm.sdmflash.camera.CameraWorker;
+import com.sdm.sdmflash.camera.activities.CameraActivity;
 import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
+        ocrInit();
         new DbTest().test(getApplicationContext());
 
 //        File database = getDatabasePath("SDMdictionarydatabase");
@@ -120,6 +124,12 @@ public class MainActivity extends AppCompatActivity
         //Načte slovník do databáze
 
         // loadDictionary();
+    }
+
+    public void ocrInit(){
+        CameraActivity.setWorkerThread(new CameraWorker(
+                "Camera_worker_thread",
+                HandlerThread.NORM_PRIORITY));
     }
 
     @Override

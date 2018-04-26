@@ -3,7 +3,6 @@ package com.sdm.sdmflash.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.camera.activities.CameraActivity;
-import com.sdm.sdmflash.camera.CameraWorker;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,13 +26,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ocrInit();
-    }
-
-    public void ocrInit(){
-        CameraActivity.setWorkerThread(new CameraWorker(
-                "Camera_worker_thread",
-                        HandlerThread.NORM_PRIORITY));
     }
 
     @Override
