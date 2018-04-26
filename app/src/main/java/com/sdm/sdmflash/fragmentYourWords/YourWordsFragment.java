@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -52,6 +53,7 @@ import com.sdm.sdmflash.fragmentAddWord.AddWordFromText;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.disposables.Disposable;
 
@@ -107,9 +109,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         activity.setSupportActionBar(toolbar);
 
-        toolbar.setTitle("Your words");
+        toolbar.setTitle(R.string.your_words);
 
-        blankToolbar.setTitle("Your words");
+        blankToolbar.setTitle(R.string.your_words);
 
         final DrawerLayout drawerLayout = ((MainActivity) activity).getDrawerLayout();
 
@@ -155,17 +157,13 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         Bundle bundle = new Bundle();
                         bundle.putString("slovo", word.getWord());
                         bundle.putString("preklad", word.getTranslation());
-                        bundle.putString("zdroj", word.getSource());
+                        bundle.putString("popis", word.getDescription().isEmpty() ? getString(R.string.add_word_unknown) : word.getDescription());
+                        bundle.putString("zdroj", word.getSource().isEmpty() ? getString(R.string.add_word_unknown) : word.getSource());
                         bundle.putString("datum_pridani", df.format(word.getAdd_date()));
+                        bundle.putString("datum_zmeny", word.getChange_date() == null ? getString(R.string.your_words_never) : df.format(word.getChange_date()));
                         bundle.putString("kartoteka", word.getFile().name());
                         bundle.putInt("ID", word.getId());
 
-                        if (word.getChange_date() == null) {
-                            bundle.putString("datum_zmeny", getString(R.string.your_words_never));
-                        } else {
-                            bundle.putString("datum_zmeny", df.format(word.getChange_date()));
-
-                        }
                         return bundle;
                     }
 
@@ -376,12 +374,29 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
             }
         });
 
+        ImageView flagL = view.findViewById(R.id.your_words_recycler_header_left_iv);
+        ImageView flagR = view.findViewById(R.id.your_words_recycler_header_right_iv);
+
+        if (Locale.getDefault().getLanguage().equals("en")) {
+
+            flagL.setImageResource(R.drawable.cz_flag);
+            flagR.setImageResource(R.drawable.gb_flag);
+        } else {
+            flagL.setImageResource(R.drawable.gb_flag);
+            flagR.setImageResource(R.drawable.cz_flag);
+        }
+
         Button addWord = view.findViewById(R.id.your_words_recycler_header_add_word_button);
         addWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), AddWordFromText.class);
-                startActivity(intent);
+
+                AddWordFragment addWord = new AddWordFragment();
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame, addWord).addToBackStack(null).commit();
+
+
             }
         });
 
@@ -651,15 +666,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
     @Override
     public void onDialogNegativeClick(int id) {
 
-        AddWordFragment addWordFragment = new AddWordFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        addWordFragment.setArguments(bundle);
-
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_frame, addWordFragment).addToBackStack(null).commit();
-
+        Intent intent = new Intent(getContext(), AddWordFromText.class);
+        intent.putExtra("your_words", id);
+        startActivity(intent);
     }
 
     /**

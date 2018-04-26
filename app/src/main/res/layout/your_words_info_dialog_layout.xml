@@ -57,7 +57,14 @@
                 style="@style/YourWordsDialogStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/source"
+                android:text="@string/description"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/YourWordsDialogStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tag:"
                 android:textStyle="bold" />
 
             <TextView
@@ -94,27 +101,62 @@
             <TextView
                 android:id="@+id/your_words_info_dialog_slovo"
                 style="@style/YourWordsDialogStyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textAlignment="textEnd"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAlignment="textStart"
                 tools:text="Ahoj" />
 
             <TextView
                 android:id="@+id/your_words_info_dialog_preklad"
                 style="@style/YourWordsDialogStyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textAlignment="textEnd" />
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAlignment="textStart"
+                tools:text="Hello" />
+
+            <TextView
+                android:id="@+id/your_words_info_dialog_popis"
+                style="@style/YourWordsDialogStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAlignment="textStart"
+                tools:text="Good bye" />
 
             <TextView
                 android:id="@+id/your_words_info_dialog_zdroj"
                 style="@style/YourWordsDialogStyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:textAlignment="textEnd" />
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textAlignment="textStart"
+                tools:text="Net" />
 
             <TextView
                 android:id="@+id/your_words_info_dialog_datum_pridani"
@@ -123,7 +165,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:ellipsize="end"
-                android:textAlignment="textEnd" />
+                android:maxLines="1"
+                android:textAlignment="textEnd"
+                tools:text="15.1.2015" />
 
             <TextView
                 android:id="@+id/your_words_info_dialog_datum_zmeny"
@@ -132,6 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:ellipsize="end"
+                android:maxLines="1"
                 android:textAlignment="textEnd"
                 tools:text="Never" />
 

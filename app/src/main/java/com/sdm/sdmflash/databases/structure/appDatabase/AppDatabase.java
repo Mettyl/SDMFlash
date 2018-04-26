@@ -32,7 +32,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "SDMdatabase")
-                            .fallbackToDestructiveMigration().build();
+                            .build();
 //                    INSTANCE = Room.inMemoryDatabaseBuilder(context,
 //                            AppDatabase.class)
 //                            .build();

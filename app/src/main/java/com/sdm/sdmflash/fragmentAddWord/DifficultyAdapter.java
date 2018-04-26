@@ -50,6 +50,13 @@ public class DifficultyAdapter extends RecyclerView.Adapter<DifficultyAdapter.Im
 
     }
 
+    public void setSelectedItem(int selectedItem) {
+        int s = this.selectedItem;
+        this.selectedItem = selectedItem;
+        notifyItemChanged(s);
+        notifyItemChanged(selectedItem);
+    }
+
     @Override
     public int getItemCount() {
         return 5;

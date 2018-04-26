@@ -62,6 +62,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
     private String addedDescription = "";
     private String addedTag = "";
 
+    private Word intentWord;
+
     public AddWordFromText() {
 
     }
@@ -83,6 +85,18 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         int colorPrimary = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
 
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().getInt("your_words") != -1) {
+
+                new AccessExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        intentWord = AppDatabase.getInstance(getApplicationContext()).wordDao().loadById(getIntent().getExtras().getInt("your_words"));
+                    }
+                });
+
+            }
+        }
         // Sestaveni stepperu
         verticalStepperForm = findViewById(R.id.add_word_from_text_vertical_stepper);
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, this)
@@ -94,6 +108,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 .showVerticalLineWhenStepsAreCollapsed(true)
                 .stepsSubtitles(new String[]{getResources().getString(R.string.add_word_unknown), getResources().getString(R.string.add_word_unknown), " "})
                 .init();
+
 
     }
 
@@ -139,6 +154,10 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         final AutoCompleteAdapter adapter = new AutoCompleteAdapter(this, R.layout.add_word_from_text_autocomplete_row, new ArrayList<AutoCompleteRow>());
         autoCompleteTextView.setAdapter(adapter);
 
+        if (intentWord != null) {
+            autoCompleteTextView.setText(intentWord.getWord());
+            addedWord = intentWord.getWord();
+        }
         // pri zmene textu zavola metodu checkWord
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
@@ -279,6 +298,11 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
             adapter.setSearchedLanguage(Language.EN);
         }
 
+        if (intentWord != null) {
+            imageView.setImageResource(intentWord.getLanguage() == Language.CZ ? R.drawable.cz_flag : R.drawable.gb_flag);
+            adapter.setSearchedLanguage(intentWord.getLanguage());
+        }
+
         //prohodi obrazek vlajky a informuje autocomplete adapter
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,6 +323,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
             }
         });
 
+
         return layout;
     }
 
@@ -317,6 +342,11 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         translationsRecycler.setLayoutManager(layoutManager);
         translationsRecycler.setItemAnimator(new DefaultItemAnimator());
         translationsRecycler.setAdapter(new TranslationAdapter(getApplicationContext(), new ArrayList<String>(), this));
+
+        if (intentWord != null) {
+            enterTranslation.setText(intentWord.getTranslation());
+            addedTranslation = intentWord.getTranslation();
+        }
 
         // pri kliknuti na text view se unselectne item z recycleru, aby bylo jasne ze uzivatel zadava svuj vlastni preklad
         enterTranslation.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -409,6 +439,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
         enterTranslation.setFilters(new InputFilter[]{filter});
 
+
         return layout;
     }
 
@@ -418,6 +449,11 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
 
         descriptionET = layout.findViewById(R.id.add_word_aditional_options_description_et);
         tagET = layout.findViewById(R.id.add_word_aditional_options_tag_et);
+
+        if (intentWord != null) {
+            descriptionET.setText(intentWord.getDescription());
+            tagET.setText(intentWord.getSource());
+        }
 
         descriptionET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -483,6 +519,10 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         difficultyRecycler.setHasFixedSize(true);
         difficultyRecycler.setAdapter(new DifficultyAdapter(getApplicationContext()));
 
+
+        if (intentWord != null) {
+            ((DifficultyAdapter) difficultyRecycler.getAdapter()).setSelectedItem(intentWord.getFile().getId());
+        }
 
         return layout;
     }
@@ -560,7 +600,20 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
+                if (intentWord != null) {
+                    AppDatabase.getInstance(getApplicationContext()).wordDao().delete(intentWord);
+                }
 
+                if (Locale.getDefault().getLanguage().equals("en") && ((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage() == Language.EN) {
+                    String s = addedWord;
+                    addedWord = addedTranslation;
+                    addedTranslation = s;
+                } else if (Locale.getDefault().getLanguage().equals("cz") && ((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage() == Language.CZ) {
+                    String s = addedWord;
+                    addedWord = addedTranslation;
+                    addedTranslation = s;
+
+                }
                 AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
                         new Word(Language.EN, addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""),
                                 tagET.getText().toString().replaceAll("\\s+$", ""), new Date(),
@@ -661,7 +714,11 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
-                verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_translation_exists));
+                if (intentWord == null) {
+                    verticalStepperForm.setActiveStepAsUncompleted(getString(R.string.add_word_translation_exists));
+                } else {
+                    verticalStepperForm.setActiveStepAsCompleted();
+                }
             } else {
                 verticalStepperForm.setActiveStepAsCompleted();
             }

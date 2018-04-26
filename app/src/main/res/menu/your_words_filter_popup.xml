@@ -15,6 +15,6 @@
         android:title="@string/item_added" />
     <item
         android:id="@+id/your_words_popup_item_source"
-        android:title="@string/item_source" />
+        android:title="@string/tag" />
 
 </menu>

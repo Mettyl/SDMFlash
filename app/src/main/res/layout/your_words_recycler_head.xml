@@ -12,13 +12,16 @@
         android:id="@+id/textView5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="@string/all_words"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/your_words_recycler_header_words_count_tv"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -29,18 +32,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:ellipsize="end"
         android:gravity="end"
+        android:maxLines="1"
         android:textAlignment="textEnd"
         android:textSize="18sp"
-        android:ellipsize="end"
-        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="50" />
+        tools:text="45834" />
 
     <Button
         android:id="@+id/your_words_recycler_header_add_word_button"
@@ -115,7 +115,7 @@
         app:srcCompat="@drawable/cz_flag" />
 
     <ImageView
-        android:id="@+id/your_words_recycler_header_rigth_iv"
+        android:id="@+id/your_words_recycler_header_right_iv"
         android:layout_width="53dp"
         android:layout_height="30dp"
         android:layout_marginEnd="16dp"
@@ -153,14 +153,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
+        android:ellipsize="end"
         android:gravity="end"
+        android:maxLines="1"
         android:textAlignment="textEnd"
         android:textSize="18sp"
-        android:ellipsize="end"
-        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="20" />
+        tools:text="2427" />
 
 </android.support.constraint.ConstraintLayout>

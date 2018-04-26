@@ -14,7 +14,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="word">Word:</string>
     <string name="translation">Translation:</string>
-    <string name="source">Source:</string>
+    <string name="tager">Tag:</string>
     <string name="added">Added:</string>
     <string name="tested">Tested:</string>
     <string name="difficulty">Difficulty:</string>
@@ -58,5 +58,9 @@
     <string name="add_word_enter_transltaions">Enter translation</string>
     <string name="add_word_type_here">Type here</string>
     <string name="your_words_never">Never</string>
+    <string name="description">Description</string>
+    <string name="never">Never</string>
+    <string name="your_words">Your words</string>
+    <string name="tag">Tag</string>
 
 </resources>
