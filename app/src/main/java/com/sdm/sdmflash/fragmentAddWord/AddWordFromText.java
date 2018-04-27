@@ -346,6 +346,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         if (intentWord != null) {
             enterTranslation.setText(intentWord.getTranslation());
             addedTranslation = intentWord.getTranslation();
+            enterTranslation.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
         // pri kliknuti na text view se unselectne item z recycleru, aby bylo jasne ze uzivatel zadava svuj vlastni preklad
@@ -438,6 +439,10 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         };
 
         enterTranslation.setFilters(new InputFilter[]{filter});
+
+        if (intentWord != null) {
+            new FindTranslation().execute(addedWord);
+        }
 
 
         return layout;
@@ -608,7 +613,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     String s = addedWord;
                     addedWord = addedTranslation;
                     addedTranslation = s;
-                } else if (Locale.getDefault().getLanguage().equals("cz") && ((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage() == Language.CZ) {
+                } else if (((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage() == Language.CZ) {
                     String s = addedWord;
                     addedWord = addedTranslation;
                     addedTranslation = s;

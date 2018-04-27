@@ -30,7 +30,6 @@ public class AutoCompleteAdapter extends ArrayAdapter {
         super(context, resource, words);
         dataList = words;
         itemLayout = resource;
-        searchedLanguage = Language.EN;
     }
 
     @Override

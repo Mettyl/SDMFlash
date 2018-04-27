@@ -100,7 +100,7 @@
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/your_words_recycler_header_rigth_iv"
+        app:layout_constraintEnd_toStartOf="@+id/your_words_recycler_header_right_iv"
         app:layout_constraintTop_toBottomOf="@+id/your_words_recycler_header_filter_words_button" />
 
     <ImageView

@@ -64,7 +64,7 @@
                 style="@style/YourWordsDialogStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/tag:"
+                android:text="@string/tager"
                 android:textStyle="bold" />
 
             <TextView

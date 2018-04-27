@@ -376,12 +376,17 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         ImageView flagL = view.findViewById(R.id.your_words_recycler_header_left_iv);
         ImageView flagR = view.findViewById(R.id.your_words_recycler_header_right_iv);
+        TextView leftTV = view.findViewById(R.id.your_words_recycler_header_left_tv);
+        TextView rightTV = view.findViewById(R.id.your_words_recycler_header_right_tv);
 
         if (Locale.getDefault().getLanguage().equals("en")) {
-
+            leftTV.setText("CZ");
+            rightTV.setText("EN");
             flagL.setImageResource(R.drawable.cz_flag);
             flagR.setImageResource(R.drawable.gb_flag);
         } else {
+            leftTV.setText("EN");
+            rightTV.setText("CZ");
             flagL.setImageResource(R.drawable.gb_flag);
             flagR.setImageResource(R.drawable.cz_flag);
         }
