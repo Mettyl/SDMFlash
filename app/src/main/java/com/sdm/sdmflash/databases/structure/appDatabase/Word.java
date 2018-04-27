@@ -29,6 +29,9 @@ public class Word {
     @ColumnInfo(name = "translation")
     private String translation;
 
+    @ColumnInfo(name = "description")
+    private String description;
+
     @ColumnInfo(name = "source")
     private String source;
 
@@ -43,12 +46,13 @@ public class Word {
     private WordFile file;
 
     //Constructor
-    public Word(Language language, String word, String translation,
+    public Word(Language language, String word, String translation, String description,
                 String source, Date add_date, Date change_date,
                 WordFile file) {
         this.language = language;
         this.word = word;
         this.translation = translation;
+        this.description = description;
         this.source = source;
         this.add_date = add_date;
         this.change_date = change_date;
@@ -120,8 +124,16 @@ public class Word {
         this.file = file;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
-    public String toString(){
-        return id + ", " + language + ", " +word + ", " +translation + ", " +source + ", " +add_date + ", " +change_date + ", " +file;
+    public String toString() {
+        return id + ", " + language + ", " + word + ", " + translation + ", " + source + ", " + add_date + ", " + change_date + ", " + file;
     }
 }

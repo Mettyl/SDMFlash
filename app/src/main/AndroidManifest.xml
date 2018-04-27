@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main">
@@ -25,12 +24,14 @@
         <activity
             android:name=".fragmentStudy.FlashCardsActivity"
             android:label="Flash Cards"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".fragmentAddWord.AddWordFromText"></activity>
     </application>
 
 </manifest>

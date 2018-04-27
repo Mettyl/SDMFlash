@@ -5,6 +5,8 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
+
 import java.util.List;
 
 /**
