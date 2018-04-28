@@ -17,9 +17,8 @@ import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabas
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
-import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
-import com.sdm.sdmflash.fragmentStudy.StudyFragment;
 import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
+import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;

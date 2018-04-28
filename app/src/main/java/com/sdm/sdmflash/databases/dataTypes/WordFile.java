@@ -43,15 +43,15 @@ public enum WordFile {
         this.id = id;
     }
 
-    public WordFile increase(){
+    public WordFile increase() {
         id++;
-        if (id > NUM_OF_FILES)id--;
+        if (id > NUM_OF_FILES) id--;
         return this;
     }
 
-    public WordFile decrease(){
+    public WordFile decrease() {
         id--;
-        if (id < 0)id++;
+        if (id < 0) id++;
         return this;
     }
 }

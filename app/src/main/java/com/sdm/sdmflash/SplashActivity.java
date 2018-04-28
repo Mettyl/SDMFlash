@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Vytváří a inicializuje OCR engine
      */
-    private void ocrInit(){
+    private void ocrInit() {
         CameraActivity.setWorkerThread(new CameraWorker(
                 "Camera_worker_thread",
                 HandlerThread.NORM_PRIORITY));

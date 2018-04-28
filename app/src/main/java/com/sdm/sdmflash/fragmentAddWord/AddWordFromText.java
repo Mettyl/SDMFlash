@@ -606,7 +606,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                AppDatabase database =  AppDatabase.getInstance(getApplicationContext());
+                AppDatabase database = AppDatabase.getInstance(getApplicationContext());
 
                 if (intentWord != null) {
                     database.wordDao().delete(intentWord);
@@ -624,7 +624,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 }
                 String tag = tagET.getText().toString().replaceAll("\\s+$", "");
 
-                if(database.sourceDao().findIdBySource(tag) == 0){
+                if (!tag.isEmpty() && database.sourceDao().findIdBySource(tag) == 0) {
                     database.sourceDao().insertAll(new Source(tag));
                 }
 

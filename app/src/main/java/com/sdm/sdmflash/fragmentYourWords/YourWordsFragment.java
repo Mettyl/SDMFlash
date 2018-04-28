@@ -405,6 +405,19 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
             }
         });
 
+        Button addWordBlank = view.findViewById(R.id.your_words_blank_button);
+        addWordBlank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddWordFragment addWord = new AddWordFragment();
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame, addWord).addToBackStack(null).commit();
+
+            }
+        });
+
 
         return view;
     }
@@ -577,7 +590,8 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         @Override
                         protected void onPostExecute(Void aVoid) {
 
-                            if (deletedAll)Toast.makeText(getContext(), R.string.toast_your_words_deleted_all, Toast.LENGTH_SHORT).show();
+                            if (deletedAll)
+                                Toast.makeText(getContext(), R.string.toast_your_words_deleted_all, Toast.LENGTH_SHORT).show();
                             setRecyclerSelectable(false);
 
                         }

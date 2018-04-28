@@ -17,7 +17,6 @@ import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 
-import java.io.File;
 import java.util.Queue;
 
 /**
@@ -25,26 +24,23 @@ import java.util.Queue;
  */
 public class FlashCardsActivity extends AppCompatActivity {
 
+    public static final String TIME = "time";
+    public static final String SOURCE = "resource";
+    private final int WORDS_COUNT = 10;
     //private TextView text;
     private ViewGroup container;
     private Button improveButton;
-//    private int currentWordIndex;
+    //    private int currentWordIndex;
 //    private boolean toggle;
     private FlashCards flashCards;
     private Queue<WordsTuple> words;
     private WordsTuple currentWord;
-    private final int WORDS_COUNT = 10;
-
     //animation properties
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
     private boolean mIsBackVisible = false;
     private View mCardFrontLayout;
     private View mCardBackLayout;
-
-    public static final String TIME = "time";
-    public static final String SOURCE = "resource";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,55 +62,55 @@ public class FlashCardsActivity extends AppCompatActivity {
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
-            //pokud se jedná o test ze všech zdrojů
-            if (getIntent().getStringExtra(SOURCE) == null){
-                switch (getIntent().getIntExtra(TIME, 0)){
-                    case 0:
-                        words = flashCards.getDailyWords(WORDS_COUNT);
-                        break;
-                    case 1:
-                        words = flashCards.getWeeklyWords(WORDS_COUNT);
-                        break;
-                    case 2:
-                        words = flashCards.getMonthlyWords(WORDS_COUNT);
-                        break;
+                //pokud se jedná o test ze všech zdrojů
+                if (getIntent().getStringExtra(SOURCE) == null) {
+                    switch (getIntent().getIntExtra(TIME, 0)) {
+                        case 0:
+                            words = flashCards.getDailyWords(WORDS_COUNT);
+                            break;
+                        case 1:
+                            words = flashCards.getWeeklyWords(WORDS_COUNT);
+                            break;
+                        case 2:
+                            words = flashCards.getMonthlyWords(WORDS_COUNT);
+                            break;
+                    }
                 }
-            }
-            //pokud se jedná o test z jednoho zdroje
-            else {
-                String source = getIntent().getStringExtra(SOURCE);
-                switch (getIntent().getIntExtra(TIME, 0)){
-                    case 0:
-                        words = flashCards.getDailyWordsBySource(WORDS_COUNT, source);
-                        break;
-                    case 1:
-                        words = flashCards.getWeeklyWordsBySource(WORDS_COUNT, source);
-                        break;
-                    case 2:
-                        words = flashCards.getMonthlyWordsBySource(WORDS_COUNT, source);
-                        break;
-                    case 3:
-                        words = flashCards.getYearsWordsBySource(WORDS_COUNT, source);
-                        break;
-                    case 4:
-                        words = flashCards.getAllWordsBySource(WORDS_COUNT, source);
-                        break;
+                //pokud se jedná o test z jednoho zdroje
+                else {
+                    String source = getIntent().getStringExtra(SOURCE);
+                    switch (getIntent().getIntExtra(TIME, 0)) {
+                        case 0:
+                            words = flashCards.getDailyWordsBySource(WORDS_COUNT, source);
+                            break;
+                        case 1:
+                            words = flashCards.getWeeklyWordsBySource(WORDS_COUNT, source);
+                            break;
+                        case 2:
+                            words = flashCards.getMonthlyWordsBySource(WORDS_COUNT, source);
+                            break;
+                        case 3:
+                            words = flashCards.getYearsWordsBySource(WORDS_COUNT, source);
+                            break;
+                        case 4:
+                            words = flashCards.getAllWordsBySource(WORDS_COUNT, source);
+                            break;
+                    }
                 }
-            }
-            //TODO: předělat tak, aby se zobrazovalo už na předchozím fragmentu výběru jako Toast
-            //pokud databáze neobsahuje slova z tohoto zdroje
-            if (words.size() == 0){
-                WordsTuple word = new WordsTuple(getString(R.string.empty_source_error), getString(R.string.empty_source_error));
-                words.add(word);
-            }
-            currentWord = words.poll();
-            words.add(currentWord);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setUpCard(currentWord.word, currentWord.translation);
+                //TODO: předělat tak, aby se zobrazovalo už na předchozím fragmentu výběru jako Toast
+                //pokud databáze neobsahuje slova z tohoto zdroje
+                if (words.size() == 0) {
+                    WordsTuple word = new WordsTuple(getString(R.string.empty_source_error), getString(R.string.empty_source_error));
+                    words.add(word);
                 }
-            });
+                currentWord = words.poll();
+                words.add(currentWord);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setUpCard(currentWord.word, currentWord.translation);
+                    }
+                });
             }
         });
 
@@ -126,7 +122,7 @@ public class FlashCardsActivity extends AppCompatActivity {
                 words.add(currentWord);
 
                 if (!improveButton.isShown())
-                    ((ViewGroup)findViewById(R.id.activity_flashcards_container_all)).addView(improveButton);
+                    ((ViewGroup) findViewById(R.id.activity_flashcards_container_all)).addView(improveButton);
                 //findViewById(R.id.activity_flashcards_improve_button).setEnabled(true);
 
                 mSetLeftIn.addListener(new AnimatorListenerAdapter() {
@@ -139,10 +135,10 @@ public class FlashCardsActivity extends AppCompatActivity {
 
                 //oprava pořadí karet
                 TextView frontText = mCardFrontLayout.findViewById(R.id.activity_flashcards_card_text);
-                if (mIsBackVisible){
+                if (mIsBackVisible) {
                     frontText.setText(currentWord.word);
                     flipCard(view);
-                }else{
+                } else {
                     setUpCard(currentWord.word, currentWord.translation);
                 }
             }
@@ -153,7 +149,7 @@ public class FlashCardsActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (!mIsBackVisible){
+                if (!mIsBackVisible) {
                     TextView backText = mCardBackLayout.findViewById(R.id.activity_flashcards_card_text);
                     backText.setText(currentWord.translation);
                 }
@@ -173,7 +169,7 @@ public class FlashCardsActivity extends AppCompatActivity {
                         database.wordDao().changeWordFile(currentWord.word, currentFile.increase());
                     }
                 });
-                ((ViewGroup)findViewById(R.id.activity_flashcards_container_all)).removeView(v);
+                ((ViewGroup) findViewById(R.id.activity_flashcards_container_all)).removeView(v);
             }
         });
 
@@ -186,7 +182,7 @@ public class FlashCardsActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpCard(String word, String translation){
+    private void setUpCard(String word, String translation) {
         TextView frontText = mCardFrontLayout.findViewById(R.id.activity_flashcards_card_text);
         TextView backText = mCardBackLayout.findViewById(R.id.activity_flashcards_card_text);
         frontText.setText(word);

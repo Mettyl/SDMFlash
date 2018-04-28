@@ -21,7 +21,7 @@ import java.io.OutputStream;
  * Created by mety on 11.2.18.
  */
 
-@Database(entities = {EnWord.class, EnCzJoin.class, CzWord.class}, exportSchema = false, version = 1)
+@Database(entities = {EnWord.class, EnCzJoin.class, CzWord.class}, version = 1)
 
 public abstract class DictionaryDatabase extends RoomDatabase {
 

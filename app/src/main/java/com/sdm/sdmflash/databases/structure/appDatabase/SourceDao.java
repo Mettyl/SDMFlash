@@ -28,10 +28,6 @@ public interface SourceDao {
     @Query("SELECT * FROM sources WHERE id IN (:sourceIds)")
     List<Source> loadAllByIds(int[] sourceIds);
 
-
-    @Query("SELECT id FROM sources WHERE source = :source")
-    int findIdBySource(String source);
-
     /**
      * vloží zdroje
      * @param sources Objekty {@link Source}

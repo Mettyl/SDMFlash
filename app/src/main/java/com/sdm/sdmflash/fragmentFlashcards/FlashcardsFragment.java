@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +83,7 @@ public class FlashcardsFragment extends Fragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                switch (progress){
+                switch (progress) {
                     case 0:
                         timeSign.setText(R.string.todays_words);
                         break;
@@ -147,7 +146,7 @@ public class FlashcardsFragment extends Fragment {
         return view;
     }
 
-    public void onSubmit(){
+    public void onSubmit() {
         Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
         intent.putExtra(FlashCardsActivity.TIME, seekBar.getProgress());
         intent.putExtra(FlashCardsActivity.SOURCE, resourceSpinner.getSelectedItem().toString());
