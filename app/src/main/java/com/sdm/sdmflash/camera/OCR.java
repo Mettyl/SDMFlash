@@ -1,83 +1,79 @@
 package com.sdm.sdmflash.camera;
 /**
  * Created by Dominik on 30.03.2018.
+ * Třída starající se o správu OCR enginu a operace s ním
  */
 
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.Rect;
-        import android.media.Image;
-        import android.media.ImageReader;
-        import android.os.Handler;
-        import android.os.HandlerThread;
-        import android.os.Message;
-        import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.util.Log;
 
-        import com.googlecode.tesseract.android.TessBaseAPI;
-        import com.sdm.sdmflash.app.App;
+import com.googlecode.tesseract.android.TessBaseAPI;
+import com.sdm.sdmflash.app.App;
 
-        import java.io.File;
-        import java.io.FileNotFoundException;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.io.InputStream;
-        import java.io.OutputStream;
-        import java.nio.ByteBuffer;
-        import java.util.ArrayList;
-        import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class OCR {
-
+    /**
+     * OCR engine
+     * zdroj funkce kopírující knihovnu: https://github.com/pethoalpar/AndroidTessTwoOCR
+     */
     private TessBaseAPI tessBaseAPI;
     private final String TAG = "debug";
     private String dataPath = "";
-    private final String[] languages = {"ces", "eng"};
+    /**
+     * jazyky načtené při startu aplikace
+     */
+    private final String[] LANGUAGES = {"ces", "eng"};
 
+    /**
+     * obdélník rozpoznávané části obrazu
+     */
     private Rect boundingRect;
 
+    /**
+     * Je doporučeno vytvářet instanci OCR pouze jednou a to při startu aplikace,
+     * jako součást CameraWorker objektu
+     */
     public OCR() {
+        //cesta k ocrApi uloženému v Assests folder
         dataPath = App.getContext().getFilesDir() + "/tesseract/";
         //make sure training data has been copied
         checkFile(new File(dataPath + "tessdata/"));
-        //inicializace OCR
+        //vytáření OCR
         try {
             tessBaseAPI = new TessBaseAPI();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+        //vytváření parametru pro inicializaci jazyků
         StringBuilder initLanguage = new StringBuilder();
-        for (String language : languages){
+        for (String language : LANGUAGES){
             initLanguage.append(language).append("+");
         }
         initLanguage.deleteCharAt(initLanguage.length()-1);
+        //inicializace OCR
         tessBaseAPI.init(dataPath, initLanguage.toString());
     }
 
-
-
-//    public synchronized Bitmap askForBitmap(){
-
-    //    }
     public synchronized void start(){
-//        try {
-//            tessBaseAPI = new TessBaseAPI();
-//        } catch (Exception e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//        StringBuilder initLanguage = new StringBuilder();
-//        for (String language : languages){
-//            initLanguage.append(language).append("+");
-//        }
-//        initLanguage.deleteCharAt(initLanguage.length()-1);
-//        tessBaseAPI.init(dataPath, initLanguage.toString());
+
     }
 
-    //        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
     public synchronized void pause(){
-        //tessBaseAPI.end();
+
     }
 
-    //        buffer.get(bytes);
+    /**
+     * Získává textový výstup z obrázku
+     * @param bitmap obrázek ze kterého má být rozpoznán text
+     * @return rozpoznaný text
+     */
     public String getText(Bitmap bitmap) {
         tessBaseAPI.setImage(bitmap);
         String retStr = "No result";
@@ -90,19 +86,20 @@ public class OCR {
         return retStr;
     }
 
-    //        byte[] bytes = new byte[buffer.capacity()];
+    /**
+     * kopírování souboru s API z Assest složky do interní složky aplikace - tessdata
+     * (podmínka pro spuštění API)
+     * @param language
+     */
     private void copyFiles(String language) {
         try {
-            //location we want the file to be at
+            //cílová lokace
             String filepath = dataPath + "/tessdata/"+language+".traineddata";
 
-            //get access to AssetManager
-
-            //open byte streams for reading/writing
             InputStream instream = App.getContext().getAssets().open("tessdata/"+language+".traineddata");
             OutputStream outstream = new FileOutputStream(filepath);
 
-            //copy the file to the location specified by filepath
+            //kopírování souboru
             byte[] buffer = new byte[1024];
             int read;
             while ((read = instream.read(buffer)) != -1) {
@@ -119,17 +116,20 @@ public class OCR {
         }
     }
 
-    //        ByteBuffer buffer = currentImage.getPlanes()[0].getBuffer();
+    /**
+     * kontrola zdali je API již překopírováno
+     * @param dir
+     */
     private void checkFile(File dir) {
-        //directory does not exist, but we can successfully create it
+        //složka neexistuje, vytvoříme a překopírujeme soubor pro oba jazyky
         if (!dir.exists() && dir.mkdirs()) {
-            for (String language : languages){
+            for (String language : LANGUAGES){
                 copyFiles(language);
             }
         }
-        //The directory exists, but there is no data file in it
+        //složka existuje ale je prázdná, překopírujeme soubory
         if (dir.exists()) {
-            for (String language: languages) {
+            for (String language: LANGUAGES) {
                 String datafilepath = dataPath + "/tessdata/"+language+".traineddata";
                 File datafile = new File(datafilepath);
                 if (!datafile.exists()) {
@@ -139,10 +139,18 @@ public class OCR {
         }
     }
 
+    /**
+     *
+     * @return obdélník rozpoznávané části obrazu
+     */
     public Rect getBoundingRect() {
         return boundingRect;
     }
 
+    /**
+     *
+     * @param boundingRect obdélník rozpoznávané části obrazu
+     */
     public void setBoundingRect(Rect boundingRect) {
         this.boundingRect = boundingRect;
     }

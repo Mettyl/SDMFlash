@@ -33,7 +33,6 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".camera.activities.CameraActivity" />
-        <activity android:name=".camera.activities.MarkerEditActivity"></activity>
     </application>
 
 </manifest>

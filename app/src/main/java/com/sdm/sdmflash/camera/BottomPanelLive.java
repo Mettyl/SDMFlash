@@ -23,6 +23,8 @@ import io.reactivex.annotations.Nullable;
 
 /**
  * Created by Dominik on 07.04.2018.
+ * Spodní panel CameraView
+ * Zdroj: https://github.com/CameraKit/camerakit-android
  */
 
 public class BottomPanelLive extends LinearLayout {
@@ -54,7 +56,6 @@ public class BottomPanelLive extends LinearLayout {
         });
 
         checkButton = findViewById(R.id.checkButton);
-        //checkButton.setText(CameraActivity.getWorker().getCurrentLanguage().toString());
         checkButton.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -69,22 +70,11 @@ public class BottomPanelLive extends LinearLayout {
                 return onTouchFlashButton(v, event);
             }
         });
-
-        /*if (attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(
-                    attrs,
-                    R.styleable.BottomPanel,
-                    0, 0);
-
-            try {
-                cameraViewId = a.getResourceId(R.styleable.CameraControls_camera, -1);
-                coverViewId = a.getResourceId(R.styleable.CameraControls_cover, -1);
-            } finally {
-                a.recycle();
-            }
-        }*/
     }
 
+    /**
+     * získání mateřské aplikace a cameraView
+     */
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -95,6 +85,12 @@ public class BottomPanelLive extends LinearLayout {
         }
     }
 
+    /**
+     * změna nastavení blesku
+     * @param view
+     * @param motionEvent
+     * @return
+     */
     boolean onTouchFlashButton(View view, MotionEvent motionEvent){
         handleViewTouchFeedback(view, motionEvent);
         switch (motionEvent.getAction()) {
@@ -113,6 +109,12 @@ public class BottomPanelLive extends LinearLayout {
         return true;
     }
 
+    /**
+     * potvrzení textu
+     * @param view
+     * @param motionEvent
+     * @return
+     */
     boolean onTouchCheckButton(View view, MotionEvent motionEvent){
         handleViewTouchFeedback(view, motionEvent);
         switch (motionEvent.getAction()) {
@@ -123,6 +125,7 @@ public class BottomPanelLive extends LinearLayout {
                 handleViewTouchFeedback(view, motionEvent);
                 Intent intent = new Intent(cameraActivity, MainActivity.class);
                 intent.putExtra(CameraActivity.CAMERA_OUTPUT, cameraActivity.getOcrOutput().getText());
+                //start nové aktivity s předáním textu
                 cameraActivity.startActivity(intent);
                 Log.d("debug", "onTouchCheckButton");
                 break;
@@ -131,6 +134,12 @@ public class BottomPanelLive extends LinearLayout {
         return true;
     }
 
+    /**
+     * požadavek na vyfocení odeslaný na UIThread
+     * @param view
+     * @param motionEvent
+     * @return
+     */
     boolean onTouchCapture(View view, MotionEvent motionEvent) {
         handleViewTouchFeedback(view, motionEvent);
         switch (motionEvent.getAction()) {
@@ -138,14 +147,7 @@ public class BottomPanelLive extends LinearLayout {
                 break;
             }
             case MotionEvent.ACTION_UP: {
-                //Request message on UI handler
                 CameraActivity.getUIHandler().sendEmptyMessage(CameraWorker.CAPTURE_REQUEST);
-//                cameraView.captureImage(new CameraKitEventCallback<CameraKitImage>() {
-//                    @Override
-//                    public void callback(CameraKitImage event) {
-//                        imageCaptured(event);
-//                    }
-//                });
                 Log.d("debug", "onTouchCapture: capture");
                 break;
             }
@@ -153,6 +155,12 @@ public class BottomPanelLive extends LinearLayout {
         return true;
     }
 
+    /**
+     * spuštění animací stisknutí
+     * @param view
+     * @param motionEvent
+     * @return
+     */
     boolean handleViewTouchFeedback(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -171,6 +179,10 @@ public class BottomPanelLive extends LinearLayout {
         }
     }
 
+    /**
+     * animace stisknutí
+     * @param view view které má být animováno
+     */
     void touchDownAnimation(View view) {
         view.animate()
                 .scaleX(0.88f)
@@ -180,6 +192,10 @@ public class BottomPanelLive extends LinearLayout {
                 .start();
     }
 
+    /**
+     * animace puštění
+     * @param view view které má být animováno
+     */
     void touchUpAnimation(View view) {
         view.animate()
                 .scaleX(1f)
@@ -189,6 +205,10 @@ public class BottomPanelLive extends LinearLayout {
                 .start();
     }
 
+    /**
+     * animace rotace
+     * @param view view které má být animováno
+     */
     void rotation(View view) {
         view.setRotation(0);
         view.animate()
@@ -198,6 +218,11 @@ public class BottomPanelLive extends LinearLayout {
                 .start();
     }
 
+    /**
+     * animace se změnou ikony
+     * @param imageView
+     * @param resId
+     */
     void changeViewImageResource(final ImageView imageView, @DrawableRes final int resId) {
         imageView.setRotation(0);
         imageView.animate()
@@ -210,22 +235,6 @@ public class BottomPanelLive extends LinearLayout {
             @Override
             public void run() {
                 imageView.setImageResource(resId);
-            }
-        }, 120);
-    }
-
-    void changeViewTextResource(final TextView textView, final String text) {
-        textView.setRotation(0);
-        textView.animate()
-                .rotationBy(360)
-                .setDuration(400)
-                .setInterpolator(new OvershootInterpolator())
-                .start();
-
-        textView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(text);
             }
         }, 120);
     }

@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.camera.activities.CameraActivity;
 import com.sdm.sdmflash.camera.CameraWorker;
+import com.sdm.sdmflash.camera.activities.CameraActivity;
 
 /**
  * A simple {@link Fragment} subclass.

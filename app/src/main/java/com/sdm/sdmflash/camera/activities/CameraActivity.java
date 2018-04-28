@@ -2,19 +2,17 @@ package com.sdm.sdmflash.camera.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.app.App;
-import com.sdm.sdmflash.camera.CameraLanguage;
 import com.sdm.sdmflash.camera.CameraWorker;
-import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitEventCallback;
 import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
@@ -25,11 +23,17 @@ public class CameraActivity extends AppCompatActivity {
     private TextView ocrOutput;
     private Bitmap currentImage;
 
+    /**
+     * statická objekty pro inicializaci ze Splash screenu při startu aplikace
+     */
     private static CameraWorker worker;
     private static Handler UIHandler;
 
     public static final String CAMERA_OUTPUT = "CAMERA_OUTPUT";
 
+    /**
+     * po dokončení fotografie odesílá výsledný obrázek ke zpracování na pracovní vlákno
+     */
     private CameraKitEventCallback<CameraKitImage> captureEvent = new CameraKitEventCallback<CameraKitImage>() {
         @Override
         public void callback(CameraKitImage cameraKitImage) {
@@ -42,6 +46,10 @@ public class CameraActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * inicializuje komunikaci s UIThread
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +62,14 @@ public class CameraActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what){
+                    //požadavek o vytvoření snímku
                     case CameraWorker.CAPTURE_REQUEST:
                         if (cameraView.isStarted()){
                             ocrOutput.setText("...");
                             cameraView.captureImage(captureEvent);
                         }
                         break;
+                    //přijmutí výsledného rozpoznaného textu
                     case CameraWorker.STRING_OUTPUT:
                         ocrOutput.setText((String)msg.obj);
                 }
@@ -67,6 +77,7 @@ public class CameraActivity extends AppCompatActivity {
         };
         worker.initUIHandler(UIHandler);
 
+        //odeslání šedého obélníku na pracovní vlákno v případě změny UI
         final View rootView = getWindow().getDecorView().getRootView();
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
