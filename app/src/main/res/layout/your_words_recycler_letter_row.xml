@@ -16,6 +16,8 @@
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="24sp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:visibility="visible"
         tools:text="A" />
 

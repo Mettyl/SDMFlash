@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -46,9 +48,12 @@ import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.sdm.sdmflash.databases.structure.appDatabase.WordDao;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFromText;
 
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.disposables.Disposable;
 
@@ -62,9 +67,12 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
     private ConstraintLayout flexibleSpaceLayout;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private Button ascBt;
+
 
     private boolean appBarCollapsed = false;
     private boolean blankList = false;
+    private boolean asc = true;
     private String currentQuery = "";
 
     public YourWordsFragment() {
@@ -101,9 +109,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         activity.setSupportActionBar(toolbar);
 
-        toolbar.setTitle("Your words");
+        toolbar.setTitle(R.string.your_words);
 
-        blankToolbar.setTitle("Your words");
+        blankToolbar.setTitle(R.string.your_words);
 
         final DrawerLayout drawerLayout = ((MainActivity) activity).getDrawerLayout();
 
@@ -149,17 +157,13 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         Bundle bundle = new Bundle();
                         bundle.putString("slovo", word.getWord());
                         bundle.putString("preklad", word.getTranslation());
-                        bundle.putString("zdroj", word.getSource());
+                        bundle.putString("popis", word.getDescription().isEmpty() ? getString(R.string.add_word_unknown) : word.getDescription());
+                        bundle.putString("zdroj", word.getSource().isEmpty() ? getString(R.string.add_word_unknown) : word.getSource());
                         bundle.putString("datum_pridani", df.format(word.getAdd_date()));
+                        bundle.putString("datum_zmeny", word.getChange_date() == null ? getString(R.string.your_words_never) : df.format(word.getChange_date()));
                         bundle.putString("kartoteka", word.getFile().name());
                         bundle.putInt("ID", word.getId());
 
-                        if (word.getChange_date() == null) {
-                            bundle.putString("datum_zmeny", "Never");
-                        } else {
-                            bundle.putString("datum_zmeny", df.format(word.getChange_date()));
-
-                        }
                         return bundle;
                     }
 
@@ -191,6 +195,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
         //RecyclerHeader views
         final TextView number = view.findViewById(R.id.your_words_recycler_header_words_count_tv);
         final TextView notTestedWords = view.findViewById(R.id.your_words_recycler_header_not_tested_words_count_tv);
+        ascBt = view.findViewById(R.id.your_words_recycler_header_asc_button);
 
 
         appBarLayout = view.findViewById(R.id.your_words_app_bar_layout);
@@ -257,6 +262,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                     YourWordsRecyclerAdapter adapter = (YourWordsRecyclerAdapter) recyclerView.getAdapter();
 
+                    if (!asc) {
+                        Collections.reverse(words);
+                    }
                     adapter.setAdapterRowsAndRearange(words);
 
                     //pokud je zapnuto  vyhledávání, zobrazí se znovu vyhledané slova (například když je nějaké odstraněno)
@@ -295,6 +303,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
             }
         };
 
+
         // Instance ViewModelu
         final YourWordsViewModel model = ViewModelProviders.of(this).get(YourWordsViewModel.class);
         model.getWordsByAlphabet().observe(this, observer);
@@ -316,6 +325,8 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                     public boolean onMenuItemClick(MenuItem item) {
 
+                        setAsc(true);
+                        model.getWords().removeObservers(YourWordsFragment.this);
                         ((YourWordsRecyclerAdapter) recyclerView.getAdapter()).setHeaderType(item.getItemId());
 
                         switch (item.getItemId()) {
@@ -323,7 +334,6 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                                 model.getWordsByAlphabet().observe(YourWordsFragment.this, observer);
                                 break;
                             case R.id.your_words_popup_item_difficulty:
-                                Log.i("debug", "clicked");
                                 model.getWordsByDifficulty().observe(YourWordsFragment.this, observer);
                                 break;
                             case R.id.your_words_popup_item_tested:
@@ -345,6 +355,56 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
             }
         });
+
+        ascBt.setText("ASC");
+        ascBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAsc(!asc);
+
+                YourWordsRecyclerAdapter adapter = (YourWordsRecyclerAdapter) recyclerView.getAdapter();
+                if (adapter.isSelectable()) {
+                    setRecyclerSelectable(false);
+                }
+                List<Word> list = model.getWords().getValue();
+                Collections.reverse(list);
+                adapter.setAdapterRowsAndRearange(list);
+                adapter.setCurrentList(adapter.getAdapterRowsWithHeaders());
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        ImageView flagL = view.findViewById(R.id.your_words_recycler_header_left_iv);
+        ImageView flagR = view.findViewById(R.id.your_words_recycler_header_right_iv);
+        TextView leftTV = view.findViewById(R.id.your_words_recycler_header_left_tv);
+        TextView rightTV = view.findViewById(R.id.your_words_recycler_header_right_tv);
+
+        if (Locale.getDefault().getLanguage().equals("en")) {
+            leftTV.setText("CZ");
+            rightTV.setText("EN");
+            flagL.setImageResource(R.drawable.cz_flag);
+            flagR.setImageResource(R.drawable.gb_flag);
+        } else {
+            leftTV.setText("EN");
+            rightTV.setText("CZ");
+            flagL.setImageResource(R.drawable.gb_flag);
+            flagR.setImageResource(R.drawable.cz_flag);
+        }
+
+        Button addWord = view.findViewById(R.id.your_words_recycler_header_add_word_button);
+        addWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddWordFragment addWord = new AddWordFragment();
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame, addWord).addToBackStack(null).commit();
+
+
+            }
+        });
+
 
         return view;
     }
@@ -396,15 +456,16 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                 flexibleSpaceLayout.setVisibility(View.VISIBLE);
 
                 AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
-
                 p.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED);
+
                 collapsingToolbarLayout.setLayoutParams(p);
+
+                recyclerView.scrollToPosition(0);
 
                 YourWordsRecyclerAdapter adapter = ((YourWordsRecyclerAdapter) recyclerView.getAdapter());
 
                 adapter.setSearching(false);
                 adapter.setCurrentList(adapter.getAdapterRowsWithHeaders());
-
 
                 return false;
             }
@@ -526,12 +587,17 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
 
         } else {
-
+            adapter.setAllSelected(false);
             toolbar.removeViewAt(0);
         }
 
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void setAsc(boolean asc) {
+        ascBt.setText(asc ? "ASC" : "DESC");
+        this.asc = asc;
     }
 
 
@@ -605,15 +671,9 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
     @Override
     public void onDialogNegativeClick(int id) {
 
-        AddWordFragment addWordFragment = new AddWordFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        addWordFragment.setArguments(bundle);
-
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_frame, addWordFragment).addToBackStack(null).commit();
-
+        Intent intent = new Intent(getContext(), AddWordFromText.class);
+        intent.putExtra("your_words", id);
+        startActivity(intent);
     }
 
     /**

@@ -43,6 +43,7 @@ public class WordInfoDialog extends DialogFragment {
 
         TextView slovo = view.findViewById(R.id.your_words_info_dialog_slovo);
         TextView preklad = view.findViewById(R.id.your_words_info_dialog_preklad);
+        TextView popis = view.findViewById(R.id.your_words_info_dialog_popis);
         TextView zdroj = view.findViewById(R.id.your_words_info_dialog_zdroj);
         TextView datumPridani = view.findViewById(R.id.your_words_info_dialog_datum_pridani);
         TextView datumZmeny = view.findViewById(R.id.your_words_info_dialog_datum_zmeny);
@@ -50,9 +51,15 @@ public class WordInfoDialog extends DialogFragment {
 
         slovo.setText(getArguments().getString("slovo"));
         preklad.setText(getArguments().getString("preklad"));
+        popis.setText(getArguments().getString("popis"));
         zdroj.setText(getArguments().getString("zdroj"));
         datumPridani.setText(getArguments().getString("datum_pridani"));
         datumZmeny.setText(getArguments().getString("datum_zmeny"));
+
+        slovo.setSelected(true);
+        preklad.setSelected(true);
+        popis.setSelected(true);
+        zdroj.setSelected(true);
 
         final int ID = getArguments().getInt("ID");
 
