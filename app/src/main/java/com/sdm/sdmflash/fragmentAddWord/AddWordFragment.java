@@ -222,7 +222,7 @@ public class AddWordFragment extends Fragment implements TranslationsDialog.Tran
             @Override
             public void run() {
                 List<String> sourceList = AppDatabase.getInstance(getContext()).sourceDao().loadAllStringSources();
-                spinner.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sourceList));
+                //spinner.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sourceList));
             }
         });
     }

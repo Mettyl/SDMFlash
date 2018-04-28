@@ -10,7 +10,7 @@ import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.Source;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
-import com.sdm.sdmflash.fragmentStudy.FlashCards;
+import com.sdm.sdmflash.fragmentFlashcards.FlashCards;
 
 import java.util.Date;
 import java.util.Random;
@@ -43,9 +43,9 @@ public class DbTest {
                 //přístup k metodám přes db.wordDao();
                 db.wordDao().deleteAll();
                 db.wordDao().insertAll(
-                        new Word(Language.CZ, "araha", "Prague", "book", new Date(), new Date(), WordFile.file1),
-                        new Word(Language.CZ, "bes", "Dog", "book", new Date(1462095200000L), new Date(), WordFile.file2),
-                        new Word(Language.EN, "cork", "práce", "web", new Date(1445095200000L), null, WordFile.file1),
+                        new Word(Language.CZ, "Praha", "Prague", "book", new Date(), new Date(), WordFile.file1),
+                        new Word(Language.CZ, "pes", "Dog", "book", new Date(1462095200000L), new Date(), WordFile.file2),
+                        new Word(Language.EN, "work", "práce", "web", new Date(1445095200000L), null, WordFile.file1),
                         new Word(Language.EN, "dump", "skočit", "book", new Date(1342095200000L), new Date(), WordFile.file1),
                         new Word(Language.CZ, "asdf", "hear", "wordbook", new Date(1492095200000L), new Date(), WordFile.file4),
                         new Word(Language.CZ, "dss", "hear", "book", new Date(), new Date(), WordFile.file1),

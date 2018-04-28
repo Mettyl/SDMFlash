@@ -6,4 +6,6 @@
     <color name="colorAccentLight">#a8ff4093</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="lightGreen">#FF99CC00</color>
+    <color name="orange">#FFFF8800</color>
 </resources>

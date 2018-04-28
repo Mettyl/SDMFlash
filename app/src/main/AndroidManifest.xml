@@ -28,7 +28,7 @@
             android:label="@string/title_activity_main">
         </activity>
         <activity
-            android:name=".fragmentStudy.FlashCardsActivity"
+            android:name=".fragmentFlashcards.FlashCardsActivity"
             android:label="Flash Cards"
             android:parentActivityName=".MainActivity">
 

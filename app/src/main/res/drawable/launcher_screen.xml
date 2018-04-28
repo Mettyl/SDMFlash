@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- The android:opacity=”opaque” line — this is critical in preventing a flash of black as your theme transitions. -->
+<!-- The android:opacity=”opaque” line — this is critical in preventing a flash of black as your theme transitions.
+        zdroj: https://android.jlelse.eu/right-way-to-create-splash-screen-on-android-e7f1709ba154
+-->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
 
     <!-- The background color, preferably the same as your normal theme -->
@@ -9,7 +11,7 @@
     <!-- Your product logo - 144dp color version of your app icon -->
     <item>
 
-        <scale
+        <bitmap
             android:src="@drawable/logo"
             android:gravity="center"/>
 

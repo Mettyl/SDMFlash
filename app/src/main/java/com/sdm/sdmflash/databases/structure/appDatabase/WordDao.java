@@ -175,6 +175,17 @@ public interface WordDao {
     @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate AND add_date <= :toDate ORDER BY change_date ASC LIMIT :limit")
     List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, Date toDate, int limit);
 
+    /**
+     * Vybírá od data a pouze z jednoho zdroje
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT word, translation FROM words WHERE source = :source AND file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
+    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, String source, int limit);
+
     // TEMP!!!
     @Query("UPDATE words SET add_date = :date WHERE id = :id")
     int changeDate(int id, Date date);

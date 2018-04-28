@@ -37,5 +37,14 @@
     <string name="item_source">Source</string>
     <string name="add_new_word">Add new word</string>
     <string name="daily_test">Daily Test</string>
+    <string name="flash_cards_quick_select">Choose your flash card set</string>
+    <string name="custom_flashcard">Custom FlashCard</string>
+    <string name="todays_words">Today\'s words</string>
+    <string name="this_weeks_words">This week\'s words</string>
+    <string name="this_months_words">This month\'s words</string>
+    <string name="this_years_words">This year\'s words</string>
+    <string name="start_flash_cards">Start FlashCards</string>
+    <string name="empty_source_error">You don\'t have any words from this source</string>
+    <string name="im_improving">I\'m imporivng</string>
 
 </resources>

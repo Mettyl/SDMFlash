@@ -8,6 +8,9 @@ package com.sdm.sdmflash.databases.dataTypes;
 public enum WordFile {
     file1(1), file2(2), file3(3), file4(4), file5(5);
 
+    /**
+     * celkový počet kartoték
+     */
     public static final int NUM_OF_FILES = 5;
     private byte id;
 

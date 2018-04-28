@@ -95,7 +95,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         toolbar = view.findViewById(R.id.your_words_toolbar);
 
-        final Toolbar blankToolbar = view.findViewById(R.id.your_words_blank_toolbar);
+        final Toolbar blankToolbar = view.findViewById(R.id.fragment_flashcards_toolbar);
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
 

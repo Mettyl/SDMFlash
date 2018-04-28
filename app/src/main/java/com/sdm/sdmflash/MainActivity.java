@@ -1,7 +1,7 @@
 package com.sdm.sdmflash;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.HandlerThread;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -13,14 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.sdm.sdmflash.camera.CameraWorker;
-import com.sdm.sdmflash.camera.activities.CameraActivity;
 import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentFlashcards.FlashCardsActivity;
+import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
 import com.sdm.sdmflash.fragmentStudy.StudyFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.content_frame, fragmentToSet)
+                            .addToBackStack(fragmentToSet.toString())
                             .commit();
                     fragmentToSet = null;
                 }
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.nav_home:
                 fragmentToSet = new HomeFragment();
+                break;
+            case R.id.nav_flashcards:
+                fragmentToSet = new FlashcardsFragment();
                 break;
             case R.id.nav_study:
                 fragmentToSet = new StudyFragment();

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.sdm.sdmflash.fragmentFlashcards.FlashCardsActivity;
 import com.sdm.sdmflash.R;
 
 /**

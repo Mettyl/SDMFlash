@@ -10,6 +10,7 @@ import com.sdm.sdmflash.camera.activities.CameraActivity;
 
 /**
  * Aktivita, která se vytvoří jako první, načte potřebná data a spustí hlavní aktivitu
+ * zdroj: https://android.jlelse.eu/right-way-to-create-splash-screen-on-android-e7f1709ba154
  */
 
 public class SplashActivity extends AppCompatActivity {
@@ -19,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         //zde lze vkládat kód, který se načte před spuštěním aplikace
-        ocrInit();
+//        ocrInit();
         // Start home activity
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         // close splash activity
