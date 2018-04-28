@@ -15,16 +15,20 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main">
+            android:name=".SplashActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".fragmentStudy.FlashCardsActivity"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main">
+        </activity>
+        <activity
+            android:name=".fragmentFlashcards.FlashCardsActivity"
             android:label="Flash Cards"
             android:parentActivityName=".MainActivity">
 

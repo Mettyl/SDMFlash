@@ -19,5 +19,9 @@
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
+    <!-- Splash screen theme -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_screen</item>
+    </style>
 
 </resources>

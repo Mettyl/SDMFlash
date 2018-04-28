@@ -103,7 +103,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
         toolbar = view.findViewById(R.id.your_words_toolbar);
 
-        final Toolbar blankToolbar = view.findViewById(R.id.your_words_blank_toolbar);
+        final Toolbar blankToolbar = view.findViewById(R.id.fragment_flashcards_toolbar);
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
 
@@ -551,6 +551,8 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                     class DeleteWords extends AsyncTask<Void, Void, Void> {
 
+                        private boolean deletedAll = false;
+
                         @Override
                         protected Void doInBackground(Void... voids) {
 
@@ -558,7 +560,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
 
                             if (adapter.isAllSelected()) {
                                 dao.deleteAll();
-                                Toast.makeText(getContext(), R.string.toast_your_words_deleted_all, Toast.LENGTH_SHORT).show();
+                                deletedAll = true;
                             } else {
 
                                 List<Integer> toDelete = adapter.getSelectedItemsID();
@@ -575,6 +577,7 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                         @Override
                         protected void onPostExecute(Void aVoid) {
 
+                            if (deletedAll)Toast.makeText(getContext(), R.string.toast_your_words_deleted_all, Toast.LENGTH_SHORT).show();
                             setRecyclerSelectable(false);
 
                         }

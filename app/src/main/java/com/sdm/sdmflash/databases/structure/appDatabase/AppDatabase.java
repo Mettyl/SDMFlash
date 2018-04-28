@@ -9,7 +9,7 @@ import android.content.Context;
 import com.sdm.sdmflash.databases.dataTypes.Converters;
 
 /**
- * Třída reprezentující SQLite databázi aplikace
+ * Lazy singleton třída reprezentující SQLite databázi aplikace
  * Created by Dominik on 02.12.2017.
  */
 

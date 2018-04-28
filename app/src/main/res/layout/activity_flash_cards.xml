@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_flashcards_container_all"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragmentStudy.FlashCardsActivity">
+    tools:context=".fragmentFlashcards.FlashCardsActivity"
+    tools:layout_editor_absoluteY="25dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_flashcards_card_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/activity_flashcards_card_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <include layout="@layout/flashcard_back" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/activity_flashcards_card_front"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <include layout="@layout/flashcard_front" />
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
     <Button
         android:id="@+id/next_button"
@@ -11,20 +47,23 @@
         android:layout_height="wrap_content"
         android:text="Next" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/flashcards_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/activity_flashcards_improve_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@android:color/holo_green_light"
+        android:text="@string/im_improving"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_flashcards_card_container"
+        app:layout_constraintVertical_bias="0.0" />
 
-    </android.support.constraint.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/word"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="false"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="false"
-        android:textAlignment="center"
-        android:textSize="36sp" />
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

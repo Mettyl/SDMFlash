@@ -6,8 +6,9 @@
     <color name="colorAccentLight">#a8ff4093</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="lightGreen">#FF99CC00</color>
+    <color name="orange">#FFFF8800</color>
     <color name="red">#ef1515</color>
     <color name="blue">#154fef</color>
-    <color name="orange">#ef8d15</color>
     <color name="green">#1a860b</color>
 </resources>
