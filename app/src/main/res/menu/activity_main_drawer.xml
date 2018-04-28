@@ -7,39 +7,39 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Home Screen" />
+            android:title="@string/home_screen" />
         <item
             android:id="@+id/nav_flashcards"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="FlashCards" />
+            android:title="@string/flashcards" />
         <item
-            android:id="@+id/nav_study"
+            android:id="@+id/nav_tests"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Study" />
+            android:title="@string/tests" />
         <item
             android:id="@+id/nav_add_word"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Add Word" />
+            android:title="@string/add_word" />
         <item
             android:id="@+id/nav_stats"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Statistics" />
+            android:title="@string/statistics" />
         <item
             android:id="@+id/nav_your_words"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Your words" />
+            android:title="@string/your_words" />
     </group>
 
-    <item android:title="Other">
+    <item android:title="@string/other">
         <menu>
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_menu_share"
-                android:title="About" />
+                android:title="@string/about" />
             <item
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Help" />
+                android:title="@string/help" />
         </menu>
     </item>
 

@@ -72,5 +72,12 @@
     <string name="start_flash_cards">Start FlashCards</string>
     <string name="empty_source_error">You don\'t have any words from this source</string>
     <string name="im_improving">I\'m imporivng</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="flashcards">FlashCards</string>
+    <string name="tests">Tests</string>
+    <string name="add_word">Add Word</string>
+    <string name="statistics">Statistics</string>
+    <string name="other">Other</string>
+    <string name="about">About</string>
 
 </resources>

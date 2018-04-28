@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(container.getId(), new FlashcardsFragment())
+                        .addToBackStack(null)
                         .commit();
             }
         });

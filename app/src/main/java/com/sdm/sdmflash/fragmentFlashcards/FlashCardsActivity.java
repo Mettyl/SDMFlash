@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 
+import java.io.File;
 import java.util.Queue;
 
 /**
@@ -24,6 +27,7 @@ public class FlashCardsActivity extends AppCompatActivity {
 
     //private TextView text;
     private ViewGroup container;
+    private Button improveButton;
 //    private int currentWordIndex;
 //    private boolean toggle;
     private FlashCards flashCards;
@@ -53,6 +57,7 @@ public class FlashCardsActivity extends AppCompatActivity {
         changeCameraDistance();
 
         container = findViewById(R.id.activity_flashcards_card_container);
+        improveButton = findViewById(R.id.activity_flashcards_improve_button);
 //        text = findViewById(R.id.word);
         flashCards = FlashCards.getInstance(AppDatabase.getInstance(this));
 //        currentWordIndex = 0;
@@ -120,6 +125,10 @@ public class FlashCardsActivity extends AppCompatActivity {
                 currentWord = words.poll();
                 words.add(currentWord);
 
+                if (!improveButton.isShown())
+                    ((ViewGroup)findViewById(R.id.activity_flashcards_container_all)).addView(improveButton);
+                //findViewById(R.id.activity_flashcards_improve_button).setEnabled(true);
+
                 mSetLeftIn.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
@@ -159,8 +168,12 @@ public class FlashCardsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //posunutí v kartotéce
+                        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
+                        WordFile currentFile = database.wordDao().getWordFile(currentWord.word);
+                        database.wordDao().changeWordFile(currentWord.word, currentFile.increase());
                     }
                 });
+                ((ViewGroup)findViewById(R.id.activity_flashcards_container_all)).removeView(v);
             }
         });
 

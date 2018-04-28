@@ -42,4 +42,16 @@ public enum WordFile {
     public void setId(byte id) {
         this.id = id;
     }
+
+    public WordFile increase(){
+        id++;
+        if (id > NUM_OF_FILES)id--;
+        return this;
+    }
+
+    public WordFile decrease(){
+        id--;
+        if (id < 0)id++;
+        return this;
+    }
 }

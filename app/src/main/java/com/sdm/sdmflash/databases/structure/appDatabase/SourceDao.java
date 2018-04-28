@@ -54,4 +54,8 @@ public interface SourceDao {
      */
     @Query("SELECT source FROM sources")
     List<String> loadAllStringSources();
+
+
+    @Query("SELECT id FROM sources WHERE source = :source")
+    int findIdBySource(String source);
 }

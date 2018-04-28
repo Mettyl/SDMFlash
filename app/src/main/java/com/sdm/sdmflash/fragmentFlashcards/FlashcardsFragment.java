@@ -28,9 +28,6 @@ import java.util.List;
 
 public class FlashcardsFragment extends Fragment {
 
-    private CardView dailyButton;
-    private CardView weekButton;
-    private CardView monthButton;
     private SeekBar seekBar;
     private TextView timeSign;
     private Spinner resourceSpinner;
@@ -54,9 +51,6 @@ public class FlashcardsFragment extends Fragment {
         toggle.syncState();
 
         //inicialice views
-        dailyButton = view.findViewById(R.id.fragment_flashcards_daily_button);
-        weekButton = view.findViewById(R.id.fragment_flashcards_week_button);
-        monthButton = view.findViewById(R.id.fragment_flashcards_month_button);
         seekBar = view.findViewById(R.id.fragment_flashcards_seek_bar_selection);
         timeSign = view.findViewById(R.id.fragment_flashcards_timesign);
         resourceSpinner = view.findViewById(R.id.fragment_flashcards_source_select);
@@ -121,7 +115,7 @@ public class FlashcardsFragment extends Fragment {
         });
 
         //zahajení deního testu
-        dailyButton.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fragment_flashcards_daily_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
@@ -131,7 +125,7 @@ public class FlashcardsFragment extends Fragment {
         });
 
         //zahajení týdeního testu
-        dailyButton.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fragment_flashcards_week_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
@@ -141,7 +135,7 @@ public class FlashcardsFragment extends Fragment {
         });
 
         //zahajení měsíčního testu
-        dailyButton.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fragment_flashcards_month_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
