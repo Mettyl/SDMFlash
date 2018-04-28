@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,6 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 case R.id.your_words_popup_item_difficulty:
 
                     if (!withHeaders || list.get(i).getFile().getId() == file) {
-                        Log.i("debug", "word added");
                         newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
 
                     } else {
@@ -113,9 +111,8 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     if (withHeaders && list.get(i).getChange_date() == null) {
                         if (once) {
                             once = false;
-                            newList.add(new AdapterRow("Never"));
+                            newList.add(new AdapterRow(context.getString(R.string.never)));
                             newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
-                            i--;
                         } else {
                             newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
                         }
@@ -140,14 +137,23 @@ public class YourWordsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     }
                     break;
                 case R.id.your_words_popup_item_source:
-
-                    if (!withHeaders || list.get(i).getSource().equals(source)) {
-                        newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
-
+                    if (withHeaders && list.get(i).getSource().isEmpty()) {
+                        if (once) {
+                            once = false;
+                            newList.add(new AdapterRow(context.getString(R.string.add_word_unknown)));
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                        } else {
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+                        }
                     } else {
-                        newList.add(new AdapterRow(String.valueOf(list.get(i).getSource().charAt(0)).toUpperCase() + list.get(i).getSource().substring(1)));
-                        source = list.get(i).getSource();
-                        i--;
+                        if (!withHeaders || list.get(i).getSource().equals(source)) {
+                            newList.add(new AdapterRow(list.get(i).getWord(), list.get(i).getTranslation(), list.get(i).getId(), Type.WORD, false));
+
+                        } else {
+                            newList.add(new AdapterRow(String.valueOf(list.get(i).getSource().charAt(0)).toUpperCase() + list.get(i).getSource().substring(1)));
+                            source = list.get(i).getSource();
+                            i--;
+                        }
                     }
                     break;
                 default:

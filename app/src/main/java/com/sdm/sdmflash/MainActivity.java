@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.sdm.sdmflash.databases.DbTest;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
@@ -26,13 +25,8 @@ import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -43,30 +37,12 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout frameLayout;
     private Fragment fragmentToSet = null;
 
-    private static void copyFileUsingFileStreams(File source, File dest)
-            throws IOException {
-        InputStream input = null;
-        OutputStream output = null;
-        try {
-            input = new FileInputStream(source);
-            output = new FileOutputStream(dest);
-            byte[] buf = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = input.read(buf)) > 0) {
-                output.write(buf, 0, bytesRead);
-            }
-        } catch (Exception e) {
-            Log.e("AndroidRuntime", Log.getStackTraceString(e));
-        } finally {
-            input.close();
-            output.close();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
         frameLayout = findViewById(R.id.content_frame);
@@ -107,18 +83,7 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        new DbTest().test(getApplicationContext());
-
-//        File database = getDatabasePath("SDMdictionarydatabase");
-//        Log.i("debug", database.getAbsolutePath());
-//        Log.i("debug", getExternalFilesDir(null).getAbsolutePath());
-//
-//        try {
-//            File out = new File(getExternalFilesDir(null).getPath() + "/SDMdictionarydatabase");
-//            copyFileUsingFileStreams(out, database);
-//        } catch (IOException e) {
-//            Log.e("AndroidRuntime", Log.getStackTraceString(e));
-//        }
+        //     new DbTest().test(getApplicationContext());
 
 
         //Načte slovník do databáze

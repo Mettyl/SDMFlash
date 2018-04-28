@@ -25,6 +25,10 @@ public class YourWordsViewModel extends AndroidViewModel {
         super(application);
     }
 
+    public LiveData<List<Word>> getWords() {
+        return words;
+    }
+
     public LiveData<List<Word>> getWordsByAlphabet() {
         int type = 1;
         if (words == null || wordsType != type) {

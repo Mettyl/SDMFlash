@@ -1,7 +1,8 @@
 package com.sdm.sdmflash.camera;
 
-import com.sdm.sdmflash.databases.dataTypes.Language;
-
+/**
+ * Jazyky rozpoznávání (použitelné v budoucnu)
+ */
 public enum CameraLanguage {
     CZ(0), EN(1);
 

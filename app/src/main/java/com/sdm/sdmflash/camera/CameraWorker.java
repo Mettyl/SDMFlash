@@ -8,114 +8,86 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 
-import com.sdm.sdmflash.databases.dataTypes.Language;
-
 import static com.sdm.sdmflash.MainActivity.TAG;
 
 /**
  * Created by Dominik on 07.04.2018.
+ * Třída, starající se o komunikaci s UIThread, správu OCR objektu a úpravu obrázků pro OCR
  */
 
 public class CameraWorker {
 
+    //Handlerer pracovního vlákna
     private Handler handler;
+    //pracovní vlákno
     private HandlerThread workerThread;
 
     private Handler UIHandler;
     private OCR ocr;
     private Bitmap currentImage;
+    //rozpoznávaný jazyk (pro možné budoucí použití)
     private CameraLanguage currentLanguage;
 
+    //sada označení zpráv pro komunikaci mezi pracovním vláknem a UI vláknem
     public static final int CAPTURE_REQUEST = 1;
     public static final int IMAGE_SANDED = 2;
     public static final int BOUNDING_RECT = 3;
     public static final int STRING_OUTPUT = 4;
 
-    /*private final Runnable ASKER_TASK = new Runnable() {
-        @Override
-        public void run() {
-            while (askerRuning){
-                Log.d(TAG, "run: AskerLoop");
-                if (true){
-                    ocrBusy = true;
-                    UIHandler.sendEmptyMessage(CAPTURE_REQUEST);
-                }
-                synchronized (asker){
-                    try {
-                        asker.wait();
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    };*/
-
+    /**
+     * vytváří instatnci OCR (nutné)
+     */
     public CameraWorker(String name, int priority) {
         ocr = new OCR();
         currentLanguage = CameraLanguage.EN;
-        /*workerThread = new HandlerThread(name, priority){
-            @Override
-            protected void onLooperPrepared() {
-
-                super.onLooperPrepared();
-
-                if (!asker.isAlive() && UIHandler != null) {
-                    askerRuning = true;
-                    asker.start();
-                }
-
-            }
-        }
-        workerThread.start();*/
     }
 
     public void initUIHandler(Handler UIHandler){
         this.UIHandler = UIHandler;
-        //askerRuning = true;
-
-        /*if (!asker.isAlive()){
-            askerRuning = true;
-            asker.start();
-        }*/
     }
 
+    /**
+     * voláno při onPause() aplikace
+     * inicializuje vlákno, a komunikaci s UIThread
+     */
     public synchronized void start() {
+        //inicializace pracovního vlákna
         if (workerThread == null){
             workerThread = new HandlerThread("CameraBackground");
             workerThread.start();
 
+            //komunikátor s UIThread
             handler = new Handler(workerThread.getLooper()){
                 @Override
                 public void handleMessage(Message msg) {
                     switch (msg.what){
+                        //pokud přišla vyfocená Bitmapa
                         case IMAGE_SANDED:
                             if (msg.obj != null) {
                                 currentImage = (Bitmap) msg.obj;
                                 Rect rect = ocr.getBoundingRect();
                                 if (rect != null)
                                     try {
+                                        //otočení pokud je na šířku a oříznutí podle šedého obdélníku v obrazu
                                         if (currentImage.getWidth() > currentImage.getHeight()){
                                             currentImage = rotateBitmap(currentImage, 90);
                                             currentImage = cropBitmap(currentImage, rect);
                                         } else
                                             currentImage = cropBitmap(currentImage, rect);
+                                        //OCR obrázku
                                         String text = ocr.getText(currentImage);
                                         Log.d("debug", "handleMessage: " + text);
                                         Message msg1 = Message.obtain();
                                         msg1.what = STRING_OUTPUT;
                                         msg1.obj = text;
+                                        //odeslání textu na UIThread
                                         UIHandler.sendMessage(msg1);
-//                                        synchronized (asker){
-//                                            ocrBusy = false;
-//                                            asker.notify();
-//                                        }
                                     }catch (IllegalArgumentException e){
                                         Log.d(TAG, "handleMessage: bounding rect out of bitmap");
                                     }
                             }
                             break;
+                        //obdržení šedého rámečku
                         case BOUNDING_RECT:
                             if (msg.obj != null)
                                 ocr.setBoundingRect((Rect)msg.obj);
@@ -123,17 +95,13 @@ public class CameraWorker {
                 }
             };
         }
-//        askerRuning = true;
-//        asker = new Thread(ASKER_TASK, "asker_thread");
-//        if (!asker.isAlive() && UIHandler != null)
-//        asker.start();
         ocr.start();
-
-        /*askerRuning = true;
-        asker = new Thread(ASKER_TASK);
-        asker.start();*/
     }
 
+    /**
+     *
+     * @return otočený obrázek
+     */
     private static Bitmap rotateBitmap(Bitmap source, float angle)
     {
         Matrix matrix = new Matrix();
@@ -141,22 +109,23 @@ public class CameraWorker {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    /**
+     *
+     * @return oříznutý obrázek
+     */
     private static Bitmap cropBitmap(Bitmap source, Rect boundingRect){
         return Bitmap.createBitmap(source, boundingRect.left, boundingRect.top, boundingRect.width(), boundingRect.height());
     }
 
+    /**
+     * voláno při onPause() aplikace zastaví pracovní vlákno
+     */
     public synchronized void pause(){
-//        askerRuning = false;
-//        asker.interrupt();
-//        asker = null;
         try {
-            /*askerRuning = false;
-            asker.join();
-            asker = null;*/
             ocr.pause();
 
             workerThread.quit();
-            //workerThread.join();
+            workerThread.join();
             workerThread = null;
             handler = null;
         } catch (Exception e) {

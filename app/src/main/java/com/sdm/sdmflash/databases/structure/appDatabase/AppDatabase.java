@@ -13,7 +13,7 @@ import com.sdm.sdmflash.databases.dataTypes.Converters;
  * Created by Dominik on 02.12.2017.
  */
 
-@Database(entities = {Word.class, Source.class}, version = 1)
+@Database(entities = {Word.class, Source.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {
@@ -29,13 +29,13 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    //! pouze v RAM
-                    /*INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "SDMdatabase")
-                            .build();*/
-                    INSTANCE = Room.inMemoryDatabaseBuilder(context,
-                            AppDatabase.class)
                             .build();
+//                    INSTANCE = Room.inMemoryDatabaseBuilder(context,
+//                            AppDatabase.class)
+//                            .build();
                 }
             }
         }

@@ -13,6 +13,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="EditText" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+    </style>
+
     <!-- Splash screen theme -->
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launcher_screen</item>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="34dp"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="3">
+
+    <TextView
+        android:id="@+id/add_word_from_text_autocomplete_row_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        tools:text="Ahoj" />
+
+    <ImageView
+        android:id="@+id/add_word_from_text_autocomplete_row_image"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_weight="2"
+        app:srcCompat="@drawable/cz_flag" />
+
+</LinearLayout>

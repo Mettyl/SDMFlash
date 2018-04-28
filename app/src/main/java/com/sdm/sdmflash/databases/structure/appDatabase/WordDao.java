@@ -61,6 +61,24 @@ public interface WordDao {
     Word loadById(int id);
 
     /**
+     * Vrací slovíčka podle slova
+     *
+     * @param word slovo
+     * @return hledaný objekt {@link Word}
+     */
+    @Query("SELECT * FROM words WHERE word = :word")
+    List<Word> loadByWord(String word);
+
+    /**
+     * Vrací slovíčka podle prekladu
+     *
+     * @param word slovo
+     * @return hledaný objekt {@link Word}
+     */
+    @Query("SELECT * FROM words WHERE translation = :word")
+    List<Word> loadByTranslation(String word);
+
+    /**
      * vloží slovíčka
      *
      * @param words Objekty Word
