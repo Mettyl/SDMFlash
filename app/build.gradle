@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86", "armeabi", "mips"
+        }
     }
     buildTypes {
         release {
@@ -39,6 +43,12 @@ dependencies {
     //RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    //CameraKit
+    implementation 'com.wonderkiln:camerakit:0.13.1'
+    //OCR
+    implementation 'com.rmtheis:tess-two:8.0.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     //Stepper
-    implementation project(':vertical-stepper-form')
+    implementation 'com.ernestoyaquello.stepperform:vertical-stepper-form:0.9.9'
 }

@@ -145,9 +145,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
-
-
     private void loadDictionary() {
         StringBuilder text = new StringBuilder();
         //K omezení počtu načtených slov při testování

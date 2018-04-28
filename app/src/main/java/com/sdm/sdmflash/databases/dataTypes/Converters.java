@@ -21,7 +21,7 @@ public class Converters {
         return date == null ? null : date.getTime();
     }
 
-    //Language
+    //CameraLanguage
     @TypeConverter
     public static Language fromLanguage(Short id) {
         return id == 0 ? null : Language.findById(id);

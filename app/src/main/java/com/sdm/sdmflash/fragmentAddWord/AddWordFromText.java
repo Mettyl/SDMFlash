@@ -102,7 +102,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         VerticalStepperFormLayout.Builder.newInstance(verticalStepperForm, mySteps, this, this)
                 .primaryColor(colorPrimary)
                 .primaryDarkColor(colorPrimaryDark)
-                .confirmationStepEnabled(true)
+//                .confirmationStepEnabled(true)
                 .displayBottomNavigation(true)
                 .materialDesignInDisabledSteps(true)
                 .showVerticalLineWhenStepsAreCollapsed(true)
@@ -624,7 +624,12 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                                 tagET.getText().toString().replaceAll("\\s+$", ""), new Date(),
                                 null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
 
-                Toast.makeText(getApplicationContext(), R.string.add_word_successfully_added, Toast.LENGTH_SHORT).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), R.string.add_word_successfully_added, Toast.LENGTH_SHORT).show();
+                    }
+                });
                 finish();
             }
         });

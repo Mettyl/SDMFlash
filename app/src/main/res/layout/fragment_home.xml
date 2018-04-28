@@ -13,6 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/ocr_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OCR" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

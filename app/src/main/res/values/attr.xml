@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BottomPanelLive">
+        <attr name="camera" format="reference" />
+        <attr name="cover" format="reference" />
+        <attr name="layout" format="reference" />
+    </declare-styleable>
+
+</resources>
