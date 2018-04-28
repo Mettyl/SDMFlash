@@ -50,5 +50,5 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     //Stepper
-    implementation project(':vertical-stepper-form')
+    implementation 'com.ernestoyaquello.stepperform:vertical-stepper-form:0.9.9'
 }
