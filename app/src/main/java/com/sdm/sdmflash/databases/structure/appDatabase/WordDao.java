@@ -11,6 +11,7 @@ import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -192,6 +193,20 @@ public interface WordDao {
      */
     @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate AND add_date <= :toDate ORDER BY change_date ASC LIMIT :limit")
     List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, Date toDate, int limit);
+
+    /**
+     * Vybírá od data a pouze z jednoho zdroje
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT word, translation FROM words WHERE source = :source AND file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
+    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, String source, int limit);
+
+     @Query("SELECT file FROM words WHERE word = :word")
+    WordFile getWordFile(String word);
 
     // TEMP!!!
     @Query("UPDATE words SET add_date = :date WHERE id = :id")

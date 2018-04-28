@@ -1,4 +1,4 @@
-package com.sdm.sdmflash.fragmentStudy;
+package com.sdm.sdmflash.fragmentTests;
 
 
 import android.content.Intent;
@@ -9,15 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.sdm.sdmflash.fragmentFlashcards.FlashCardsActivity;
 import com.sdm.sdmflash.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StudyFragment extends Fragment {
+public class TestsFragment extends Fragment {
 
 
-    public StudyFragment() {
+    public TestsFragment() {
         // Required empty public constructor
     }
 
@@ -26,15 +27,8 @@ public class StudyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_study, container, false);
+        View view = inflater.inflate(R.layout.fragment_tests, container, false);
 
-        Button flashcardsButton = view.findViewById(R.id.flashcards_button);
-        flashcardsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), FlashCardsActivity.class));
-            }
-        });
 
         return view;
     }

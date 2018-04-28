@@ -19,6 +19,8 @@ import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
 import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
 import com.sdm.sdmflash.fragmentStudy.StudyFragment;
+import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
+import com.sdm.sdmflash.fragmentTests.TestsFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;
 
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.content_frame, fragmentToSet)
+                            .addToBackStack(fragmentToSet.toString())
                             .commit();
                     fragmentToSet = null;
                 }
@@ -131,8 +134,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_home:
                 fragmentToSet = new HomeFragment();
                 break;
-            case R.id.nav_study:
-                fragmentToSet = new StudyFragment();
+            case R.id.nav_flashcards:
+                fragmentToSet = new FlashcardsFragment();
+                break;
+            case R.id.nav_tests:
+                fragmentToSet = new TestsFragment();
                 break;
             case R.id.nav_add_word:
                 fragmentToSet = new AddWordFragment();
