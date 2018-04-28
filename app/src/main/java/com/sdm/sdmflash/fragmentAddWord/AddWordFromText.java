@@ -35,6 +35,7 @@ import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.Source;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 
@@ -605,8 +606,11 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
+
+                AppDatabase database = AppDatabase.getInstance(getApplicationContext());
+
                 if (intentWord != null) {
-                    AppDatabase.getInstance(getApplicationContext()).wordDao().delete(intentWord);
+                    database.wordDao().delete(intentWord);
                 }
 
                 if (Locale.getDefault().getLanguage().equals("en") && ((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage() == Language.EN) {
@@ -619,9 +623,14 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     addedTranslation = s;
 
                 }
-                AppDatabase.getInstance(getApplicationContext()).wordDao().insertAll(
-                        new Word(Language.EN, addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""),
-                                tagET.getText().toString().replaceAll("\\s+$", ""), new Date(),
+                String tag = tagET.getText().toString().replaceAll("\\s+$", "");
+
+                if (database.sourceDao().findIdBySource(tag) == 0) {
+                    database.sourceDao().insertAll(new Source(tag));
+                }
+
+                database.wordDao().insertAll(
+                        new Word(Language.EN, addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""), tag, new Date(),
                                 null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
 
                 runOnUiThread(new Runnable() {

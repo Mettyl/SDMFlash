@@ -17,6 +17,7 @@ import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabas
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
 import com.sdm.sdmflash.fragmentStudy.StudyFragment;
 import com.sdm.sdmflash.fragmentYourWords.YourWordsFragment;
 import com.sdm.sdmflash.menu.HomeFragment;
@@ -135,6 +136,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_add_word:
                 fragmentToSet = new AddWordFragment();
+                break;
+            case R.id.nav_stats:
+                fragmentToSet = new StatisticsFragment();
                 break;
             case R.id.nav_your_words:
                 fragmentToSet = new YourWordsFragment();
