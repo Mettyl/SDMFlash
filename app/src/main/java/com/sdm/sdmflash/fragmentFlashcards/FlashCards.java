@@ -23,6 +23,7 @@ public class FlashCards {
      * Nová instance app database
      * Veškeré přístupy pouze z AccessExecutoru!!
      * Výstupy na UI prostředí pouze přes runOnUIThread()
+     *
      * @param db AppDatabase
      */
     private FlashCards(AppDatabase db) {
@@ -32,6 +33,7 @@ public class FlashCards {
     /**
      * Vrací instanci lazy singletonu {@link FlashCards}, pokud neexituje vytvoří novou
      * Veškeré přístupy pouze z AccessExecutoru!!
+     *
      * @param db AppDatabase databáze aplikace
      * @return instance Flashcards
      */
@@ -48,23 +50,24 @@ public class FlashCards {
 
     /**
      * Sestaví frontu slovíček která mohou být použita pro flashCards
+     *
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param files pole slvíček pro každou kartotéku
+     * @param files           pole slvíček pro každou kartotéku
      * @return fronta slovíček, která mohou být použita pro flashCards
      */
-    private Queue<WordsTuple> doFinalGroup(final int NUMBER_OF_WORDS, Queue<WordsTuple>[] files){
+    private Queue<WordsTuple> doFinalGroup(final int NUMBER_OF_WORDS, Queue<WordsTuple>[] files) {
         Queue<WordsTuple> finalGroup = new LinkedList<>();
 
         int initWords = finalGroup.size();
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
-            if (finalGroup.size() >= NUMBER_OF_WORDS)return finalGroup;
+            if (finalGroup.size() >= NUMBER_OF_WORDS) return finalGroup;
 
             //pokud máš co přidat, přidej
-            if (files[i].peek() != null){
+            if (files[i].peek() != null) {
                 finalGroup.add(files[i].poll());
             }
 
-            if (i == 5){
+            if (i == 5) {
                 i = 0;
                 //nic se nezměnilo
                 if (initWords == finalGroup.size()) return finalGroup;
@@ -80,9 +83,10 @@ public class FlashCards {
 
     /**
      * Vytvoří skupinu slovíček z jednoho zdroje připravených pro denní opakování
+     *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getDailyWordsBySource(final int NUMBER_OF_WORDS, String source){
+    public Queue<WordsTuple> getDailyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadDailyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -90,9 +94,10 @@ public class FlashCards {
 
     /**
      * Vytvoří skupinu slovíček z jednoho zdroje připravených pro týdenní opakování
+     *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getWeeklyWordsBySource(final int NUMBER_OF_WORDS, String source){
+    public Queue<WordsTuple> getWeeklyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadWeeklyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -100,9 +105,10 @@ public class FlashCards {
 
     /**
      * Vytvoří skupinu slovíček z jednoho zdroje připravených pro měsíční opakování
+     *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getMonthlyWordsBySource(final int NUMBER_OF_WORDS, String source){
+    public Queue<WordsTuple> getMonthlyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -110,9 +116,10 @@ public class FlashCards {
 
     /**
      * Vytvoří skupinu slovíček z jednoho zdroje připravených pro měsíční opakování
+     *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source){
+    public Queue<WordsTuple> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadYearsFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -120,18 +127,19 @@ public class FlashCards {
 
     /**
      * Vytvoří skupinu slovíček z jednoho zdroje připravených pro měsíční opakování
+     *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getAllWordsBySource(final int NUMBER_OF_WORDS, String source){
+    public Queue<WordsTuple> getAllWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
 
-
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro dnešní den a vloží do polí
+     *
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
      * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku

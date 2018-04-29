@@ -52,4 +52,8 @@ dependencies {
     implementation 'com.ernestoyaquello.stepperform:vertical-stepper-form:0.9.9'
     //horizontal stepper
     implementation 'com.stepstone.stepper:material-stepper:4.3.1'
+    //Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //Database Loader
+    implementation 'com.github.humazed:RoomAsset:1.0.3'
 }

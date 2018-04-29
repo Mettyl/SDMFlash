@@ -83,7 +83,7 @@ public class FlashcardsFragment extends Fragment {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                switch (progress){
+                switch (progress) {
                     case 0:
                         timeSign.setText(R.string.todays_words);
                         break;
@@ -146,7 +146,7 @@ public class FlashcardsFragment extends Fragment {
         return view;
     }
 
-    public void onSubmit(){
+    public void onSubmit() {
         Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
         intent.putExtra(FlashCardsActivity.TIME, seekBar.getProgress());
         if (resourceSpinner.getSelectedItem() != null)

@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 zdroj: http://www.freepik.com
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="612.001dp"
     android:height="612.001dp"
-    android:viewportWidth="612.001"
-    android:viewportHeight="612.001">
+    android:viewportHeight="612.001"
+    android:viewportWidth="612.001">
 
     <path
         android:fillColor="#000000"

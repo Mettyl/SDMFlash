@@ -17,7 +17,6 @@ import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 
-import java.io.File;
 import java.util.Queue;
 
 /**
@@ -25,6 +24,9 @@ import java.util.Queue;
  */
 public class FlashCardsActivity extends AppCompatActivity {
 
+    public static final String TIME = "time";
+    public static final String SOURCE = "resource";
+    private final int WORDS_COUNT = 10;
     //private TextView text;
     private ViewGroup container;
 //    private Button improveButton;
@@ -33,18 +35,12 @@ public class FlashCardsActivity extends AppCompatActivity {
     private FlashCards flashCards;
     private Queue<WordsTuple> words;
     private WordsTuple currentWord;
-    private final int WORDS_COUNT = 10;
-
     //animation properties
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
     private boolean mIsBackVisible = false;
     private View mCardFrontLayout;
     private View mCardBackLayout;
-
-    public static final String TIME = "time";
-    public static final String SOURCE = "resource";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +152,7 @@ public class FlashCardsActivity extends AppCompatActivity {
                         database.wordDao().changeWordFile(currentWord.word, currentFile.increase());
                     }
                 });
-                ((ViewGroup)findViewById(R.id.activity_flashcards_container_all)).removeView(v);
+                ((ViewGroup) findViewById(R.id.activity_flashcards_container_all)).removeView(v);
             }
         });*/
 

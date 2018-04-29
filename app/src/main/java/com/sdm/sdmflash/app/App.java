@@ -10,8 +10,8 @@ import android.os.Handler;
 
 public class App extends Application{
     private static Context context;
-    private static Handler handler;
     public static final String TAG = "debug";
+    private static Handler handler;
 
     @Override
     public void onCreate() {
