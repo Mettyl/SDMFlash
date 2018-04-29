@@ -4,12 +4,12 @@ package com.sdm.sdmflash.databases.structure.dictionaryDatabase;
  * Created by mety on 11.2.18.
  */
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
+
+import com.huma.room_for_asset.RoomAsset;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,9 +21,11 @@ import java.io.OutputStream;
  * Created by mety on 11.2.18.
  */
 
-@Database(entities = {EnWord.class, EnCzJoin.class, CzWord.class}, version = 1)
+@Database(entities = {EnWord.class, EnCzJoin.class, CzWord.class}, version = 2)
 
 public abstract class DictionaryDatabase extends RoomDatabase {
+
+    public static String dictionaryDatabaseName = "SDMdictionarydatabase.db";
 
     private static volatile DictionaryDatabase DICINSTANCE;
 
@@ -38,32 +40,32 @@ public abstract class DictionaryDatabase extends RoomDatabase {
             synchronized (DictionaryDatabase.class) {
                 if (DICINSTANCE == null) {
 
-                    RoomDatabase.Callback rdc = new RoomDatabase.Callback() {
-                        public void onCreate(SupportSQLiteDatabase db) {
-                            Log.i("debug", "Importing database from assets");
-                            try {
-                                File database = context.getApplicationContext().getDatabasePath("SDMdictionarydatabase");
-                                copyFileUsingFileStreams(context.getApplicationContext().getAssets().open("SDMdictionarydatabase.db"), database);
-                            } catch (IOException e) {
-                                Log.e("AndroidRuntime", Log.getStackTraceString(e));
-                            }
-                        }
+//                    boolean exists = checkDatabse(context);
 
-                        public void onOpen(SupportSQLiteDatabase db) {
-
-                        }
-                    };
-                    DICINSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            DictionaryDatabase.class, "SDMdictionarydatabase").addCallback(rdc)
+                    DICINSTANCE = RoomAsset.databaseBuilder(context.getApplicationContext(),
+                            DictionaryDatabase.class, dictionaryDatabaseName)
                             .build();
-                    //! pouze v RAM
-//                    DICINSTANCE = Room.inMemoryDatabaseBuilder(context,
-//                            DictionaryDatabase.class).allowMainThreadQueries()
-//                            .build();
+//                    try {
+//                            Log.i("debug", context.getApplicationContext().getDatabasePath(dictionaryDatabaseName).exists() + "");
+//                            copyFileUsingFileStreams(context.getApplicationContext().getAssets().open("SDMdictionarydatabase.db"), context.getApplicationContext().getDatabasePath(dictionaryDatabaseName));
+//                        } catch (IOException e) {
+//                            Log.i("debug", "Error copying database from assets!");
+//                            e.printStackTrace();
+//                        }
+//                    }
+
                 }
             }
         }
         return DICINSTANCE;
+    }
+
+
+    private static boolean checkDatabse(Context context) {
+
+        File database = context.getApplicationContext().getDatabasePath(dictionaryDatabaseName);
+
+        return database.exists();
     }
 
     private static void copyFileUsingFileStreams(InputStream source, File dest)
