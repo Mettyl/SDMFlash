@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 
@@ -43,6 +46,17 @@ public class StatisticsFragment extends Fragment {
         Toolbar toolbar = view.findViewById(R.id.toolbar_statistics);
         toolbar.setTitle("Statistics");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        final DrawerLayout drawerLayout = ((MainActivity) activity).getDrawerLayout();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawerLayout.addDrawerListener(toggle);
+
+        toggle.syncState();
 
         // nastaveni combined chartu
         combinedChart = view.findViewById(R.id.statistics_chart);

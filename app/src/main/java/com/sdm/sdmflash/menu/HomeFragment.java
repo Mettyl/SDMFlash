@@ -1,19 +1,20 @@
 package com.sdm.sdmflash.menu;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.camera.activities.CameraActivity;
-import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
 
 /**
@@ -35,19 +36,27 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        view.findViewById(R.id.ocr_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), CameraActivity.class));
-            }
-        });
+        Toolbar toolbar = view.findViewById(R.id.toolbar_home);
+        toolbar.setTitle("Home");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        final DrawerLayout drawerLayout = ((MainActivity) activity).getDrawerLayout();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawerLayout.addDrawerListener(toggle);
+
+        toggle.syncState();
 
         view.findViewById(R.id.add_word_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(container.getId(), new FlashcardsFragment())
+                        .replace(container.getId(), new AddWordFragment())
                         .addToBackStack(null)
                         .commit();
             }
@@ -64,9 +73,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Toolbar toolbar = view.findViewById(R.id.toolbar_home);
-        toolbar.setTitle("Home");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         return view;
     }
 

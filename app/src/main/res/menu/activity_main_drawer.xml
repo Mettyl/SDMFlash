@@ -6,41 +6,29 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home_black"
             android:title="@string/home_screen" />
         <item
             android:id="@+id/nav_flashcards"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_flash"
             android:title="@string/flashcards" />
         <item
             android:id="@+id/nav_tests"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_test"
             android:title="@string/tests" />
         <item
             android:id="@+id/nav_add_word"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_add_word"
             android:title="@string/add_word" />
         <item
             android:id="@+id/nav_stats"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_statistics"
             android:title="@string/statistics" />
         <item
             android:id="@+id/nav_your_words"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_your_words"
             android:title="@string/your_words" />
     </group>
 
-    <item android:title="@string/other">
-        <menu>
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/about" />
-            <item
-                android:id="@+id/nav_help"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/help" />
-        </menu>
-    </item>
 
 </menu>
