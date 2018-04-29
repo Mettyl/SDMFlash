@@ -2,36 +2,47 @@ package com.sdm.sdmflash.fragmentStatistics;
 
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.utils.Utils;
 import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.databases.structure.AccessExecutor;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class StatisticsFragment extends Fragment {
 
-    private CombinedChart combinedChart;
+    private LineChart lineChart;
 
     public StatisticsFragment() {
     }
@@ -56,81 +67,211 @@ public class StatisticsFragment extends Fragment {
 
         drawerLayout.addDrawerListener(toggle);
 
+
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                List<TestChartEntry> list = AppDatabase.getInstance(getContext()).testChartDao().getFromWeek();
+                Log.i("debug", "list " + list.size());
+            }
+        });
+
+
         toggle.syncState();
+        List<TestChartEntry> testChartEntryList = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-4 10:15:25"), df.parse("20012-10-4 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-4 14:00:25"), df.parse("20012-10-4 15:04:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-9 10:15:25"), df.parse("20012-10-9 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-9 10:15:25"), df.parse("20012-10-9 10:30:25")));
+            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-10 10:15:25"), df.parse("20012-10-10 10:30:25")));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<StudyChartEntry> studyChartEntryList = new ArrayList<>();
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420200200000L), new Date(1420204200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420300200000L), new Date(1420306200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420403200000L), new Date(1420412200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420501200000L), new Date(1420504200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
+        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
+
 
         // nastaveni combined chartu
-        combinedChart = view.findViewById(R.id.statistics_chart);
-        combinedChart.getDescription().setEnabled(false);
-        combinedChart.getAxisLeft().setEnabled(false);
-        combinedChart.setBackgroundColor(Color.WHITE);
-        combinedChart.setDrawGridBackground(false);
-        combinedChart.setDrawBarShadow(false);
-        combinedChart.setHighlightPerDragEnabled(false);
-        combinedChart.setHighlightPerTapEnabled(false);
-        combinedChart.setHighlightFullBarEnabled(false);
-        combinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE});
+        lineChart = view.findViewById(R.id.statistics_chart);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getAxisLeft().setEnabled(false);
+        lineChart.setBackgroundColor(Color.WHITE);
+        lineChart.setDrawGridBackground(false);
+        lineChart.setHighlightPerDragEnabled(false);
+        lineChart.setHighlightPerTapEnabled(false);
+        // animate both axes with easing
+        lineChart.animateXY(2000, 2000, Easing.EasingOption.EaseOutBack, Easing.EasingOption.Linear);
 
-        List<TestChartEntry> testChartEntryList = new ArrayList<>();
-        testChartEntryList.add(new TestChartEntry(2, 1, 6, new Date(1420200200000L), new Date(1420207200000L)));
-        testChartEntryList.add(new TestChartEntry(4, 0, 3, new Date(1420300200000L), new Date(1420302200000L)));
-        testChartEntryList.add(new TestChartEntry(1, 5, 2, new Date(1420403200000L), new Date(1420414200000L)));
-        testChartEntryList.add(new TestChartEntry(3, 3, 8, new Date(1420501200000L), new Date(1420505200000L)));
-        testChartEntryList.add(new TestChartEntry(6, 3, 0, new Date(1420600200000L), new Date(1420603200000L)));
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinimum(0f);
+        rightAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return (int) value + " min";
+            }
+        });
 
-        LineData lineData = new LineData();
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(0f);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setAxisMinimum(0f);
+        xAxis.setGranularity(1f);
+
+        Calendar calendar = Calendar.getInstance();
+        final int day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        final String[] days = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                int i = (day - 6) + (int) value;
+                if (i < 0) {
+                    return days[7 + i];
+                } else {
+                    return days[i];
+                }
+            }
+        });
+
+
+        int[] data = new int[7];
+        int i = -1;
+        int value = 0;
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(testChartEntryList.get(0).getEndTest());
+
+        for (int l = 0; l < testChartEntryList.size(); l++) {
+
+            cal2.setTime(testChartEntryList.get(l).getEndTest());
+
+            if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                    cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)) {
+
+                Log.i("debug", "same day " + l);
+
+                value += (int) (((testChartEntryList.get(l).getEndTest().getTime() - testChartEntryList.get(l).getStartTest().getTime()) / 1000) / 60);
+
+                Log.i("debug", " one value " + (int) (((testChartEntryList.get(l).getEndTest().getTime() - testChartEntryList.get(l).getStartTest().getTime()) / 1000) / 60));
+
+            } else {
+
+                i++;
+
+                if (i > 6) {
+                    Log.i("debug", "Unexpected");
+                    break;
+                }
+
+                Log.i("debug", "final value " + value);
+                Log.i("debug", "i: " + i);
+
+                data[i] = value;
+                value = 0;
+
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                        Math.abs(cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR)) > 1) {
+
+                    Log.i("debug", "First day " + cal1.get(Calendar.DAY_OF_YEAR));
+                    Log.i("debug", "Second day " + cal2.get(Calendar.DAY_OF_YEAR));
+
+                    int difference = Math.abs(cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR));
+                    for (int d = 0; d < difference - 1; d++) {
+                        i++;
+                        data[i] = 0;
+                    }
+                }
+
+                cal1.setTime(testChartEntryList.get(l).getEndTest());
+                l--;
+
+            }
+            if (l == testChartEntryList.size() - 1) {
+                data[data.length - 1] = value;
+            }
+        }
+
 
         ArrayList<Entry> entries = new ArrayList<Entry>();
 
-        for (int index = 0; index < testChartEntryList.size(); index++)
-            entries.add(new Entry(index, (testChartEntryList.get(index).getEndTest().getTime() - testChartEntryList.get(index).getStartTest().getTime()) / 1000000));
+        for (int index = 0; index < 7; index++) {
 
-        LineDataSet set = new LineDataSet(entries, "Line DataSet");
-        set.setColor(Color.BLACK);
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.BLACK);
-        set.setCircleRadius(5f);
-        set.setFillColor(Color.BLACK);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawValues(false);
-
-
-        lineData.addDataSet(set);
-
-
-        List<BarEntry> entriesGroup1 = new ArrayList<>();
-        List<BarEntry> entriesGroup2 = new ArrayList<>();
-        List<BarEntry> entriesGroup3 = new ArrayList<>();
-
-        for (int i = 0; i < testChartEntryList.size(); i++) {
-            entriesGroup1.add(new BarEntry(i, testChartEntryList.get(i).getWordsDown()));
-            entriesGroup2.add(new BarEntry(i, testChartEntryList.get(i).getWordsStayed()));
-            entriesGroup3.add(new BarEntry(i, testChartEntryList.get(i).getWordsUp()));
+            if (index < testChartEntryList.size()) {
+                entries.add(new Entry(index, data[index]));
+            } else {
+                entries.add(new Entry(index, 0));
+            }
         }
 
-        BarDataSet set1 = new BarDataSet(entriesGroup1, "Group 1");
-        BarDataSet set2 = new BarDataSet(entriesGroup2, "Group 2");
-        BarDataSet set3 = new BarDataSet(entriesGroup3, "Group 3");
+        LineDataSet set1 = new LineDataSet(entries, "Study time");
+        set1.setColor(Color.BLUE);
+        set1.setLineWidth(2.5f);
+        set1.setCircleColor(Color.BLUE);
+        set1.setCircleRadius(5f);
+        set1.setFillColor(Color.BLUE);
+        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set1.setDrawValues(true);
 
-        set1.setColor(Color.RED);
-        set2.setColor(Color.YELLOW);
-        set3.setColor(Color.GREEN);
+        set1.setDrawFilled(true);
+        if (Utils.getSDKInt() >= 18) {
 
-        float groupSpace = 0.06f;
-        float barSpace = 0.04f; // x2 dataset
-        float barWidth = 0.30f; // x2 dataset
-// (0.04 + 0.30) * 3 + 0.06 = 1.00 -> interval per "group"
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_blue);
+            set1.setFillDrawable(drawable);
+        } else {
+            set1.setFillColor(Color.BLUE);
+        }
 
-        BarData barData = new BarData(set1, set2, set3);
-        barData.setBarWidth(barWidth);
-        barData.groupBars(0, groupSpace, barSpace);
+        ArrayList<Entry> entries2 = new ArrayList<Entry>();
 
-        CombinedData data = new CombinedData();
+        for (int index = 0; index < 7; index++) {
 
-        data.setData(barData);
-        data.setData(lineData);
+            if (index < studyChartEntryList.size()) {
+                entries2.add(new Entry(index, (int) (((studyChartEntryList.get(index).getEndStudy().getTime() - studyChartEntryList.get(index).getStartStudy().getTime()) / (1000 * 60)) % 60)));
+            } else {
+                entries2.add(new Entry(index, 0));
+            }
+        }
 
-        combinedChart.setData(data);
-        combinedChart.invalidate();
+        LineDataSet set2 = new LineDataSet(entries2, "Test time");
+        set2.setColor(Color.RED);
+        set2.setLineWidth(2.5f);
+        set2.setCircleColor(Color.RED);
+        set2.setCircleRadius(5f);
+        set2.setFillColor(Color.RED);
+        set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set2.setDrawValues(true);
+
+        set2.setDrawFilled(true);
+        if (Utils.getSDKInt() >= 18) {
+
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_red);
+            set2.setFillDrawable(drawable);
+        } else {
+            set2.setFillColor(Color.RED);
+        }
+
+        LineData lineData = new LineData();
+        lineData.addDataSet(set1);
+        lineData.addDataSet(set2);
+
+        lineChart.setData(lineData);
+        lineChart.invalidate();
 
 
         return view;

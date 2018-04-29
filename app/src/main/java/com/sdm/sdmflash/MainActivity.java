@@ -12,6 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.sdm.sdmflash.databases.structure.AccessExecutor;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
@@ -26,6 +29,8 @@ import com.sdm.sdmflash.menu.HomeFragment;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity
@@ -82,7 +87,21 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        //     new DbTest().test(getApplicationContext());
+        final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AppDatabase.getInstance(getApplicationContext()).testChartDao().insertAll(
+                            new TestChartEntry(2, 1, 6, df.parse("2018-4-23 10:15:25"), df.parse("2018-4-23 10:30:25")),
+                            new TestChartEntry(2, 1, 6, df.parse("2018-4-24 10:15:25"), df.parse("2018-4-24 10:30:25")),
+                            new TestChartEntry(2, 1, 6, df.parse("2018-4-25 10:15:25"), df.parse("2018-4-25 10:30:25")),
+                            new TestChartEntry(2, 1, 6, df.parse("2018-4-26 10:15:25"), df.parse("2018-4-26 10:30:25")));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         //Načte slovník do databáze
