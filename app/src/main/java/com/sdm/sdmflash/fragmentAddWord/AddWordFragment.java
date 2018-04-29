@@ -4,6 +4,8 @@ package com.sdm.sdmflash.fragmentAddWord;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
 
 /**
@@ -38,6 +41,15 @@ public class AddWordFragment extends Fragment implements CardAdapter.OnCardClick
         activity.setSupportActionBar(toolbar);
 
         toolbar.setTitle("Add word");
+
+        final DrawerLayout drawerLayout = ((MainActivity) activity).getDrawerLayout();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawerLayout.addDrawerListener(toggle);
+
+        toggle.syncState();
 
 
         RecyclerView recyclerView = view.findViewById(R.id.add_word_recycler_view);
