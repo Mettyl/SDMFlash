@@ -74,91 +74,6 @@ public class FlashCards {
         return finalGroup;
     }
 
-    //-------------------------------------------
-    // připravené testy ze všech zdrojů
-    //-------------------------------------------
-
-    /**
-     * Vytvoří skupinu slovíček připravených pro denní opakování
-     * @return Fronta dvojic slov k zobrazení
-     */
-    public Queue<WordsTuple> getDailyWords(final int NUMBER_OF_WORDS){
-
-        return doFinalGroup(NUMBER_OF_WORDS, loadDailyFiles(NUMBER_OF_WORDS));
-
-    }
-
-    /**
-     * Vytvoří skupinu slovíček připravených pro týdenní opakování
-     * @return Fronta dvojic slov k zobrazení
-     */
-    public Queue<WordsTuple> getWeeklyWords(final int NUMBER_OF_WORDS){
-
-        return doFinalGroup(NUMBER_OF_WORDS, loadWeeklyFiles(NUMBER_OF_WORDS));
-
-    }
-
-    /**
-     * Vytvoří skupinu slovíček připravených pro měsíční opakování
-     * @return Fronta dvojic slov k zobrazení
-     */
-    public Queue<WordsTuple> getMonthlyWords(final int NUMBER_OF_WORDS){
-
-        return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFiles(NUMBER_OF_WORDS));
-
-    }
-
-    /**
-     * Načte z databáze z každé kartotéky n slovíček pro dnešní den a vloží do polí
-     * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @return pole slvíček pro každou kartotéku
-     */
-    private Queue<WordsTuple>[] loadDailyFiles(final int NUMBER_OF_WORDS){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, -24);
-
-        for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
-            files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
-        }
-        return files;
-    }
-
-    /**
-     * Načte z databáze z každé kartotéky n slovíček pro tento týden a vloží do polí
-     * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @return pole slvíček pro každou kartotéku
-     */
-    private Queue<WordsTuple>[] loadWeeklyFiles(final int NUMBER_OF_WORDS){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
-
-        for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
-            files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
-        }
-        return files;
-    }
-
-    /**
-     * Načte z databáze z každé kartotéky n slovíček pro tento měsíc a vloží do polí
-     * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @return pole slvíček pro každou kartotéku
-     */
-    private Queue<WordsTuple>[] loadMonthlyFiles(final int NUMBER_OF_WORDS){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -1);
-
-        for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
-            files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
-        }
-        return files;
-    }
-
     //----------------------------------------------
     //custom FlashCard + source
     //---------------------------------------------
@@ -199,7 +114,7 @@ public class FlashCards {
      */
     public Queue<WordsTuple> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source){
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
+        return doFinalGroup(NUMBER_OF_WORDS, loadYearsFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -209,7 +124,7 @@ public class FlashCards {
      */
     public Queue<WordsTuple> getAllWordsBySource(final int NUMBER_OF_WORDS, String source){
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
+        return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -218,7 +133,7 @@ public class FlashCards {
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro dnešní den a vloží do polí
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param source {@link Source} ze kterého se slova vybírají
+     * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
     private Queue<WordsTuple>[] loadDailyFilesBySource(final int NUMBER_OF_WORDS, String source){
@@ -228,7 +143,10 @@ public class FlashCards {
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            if (source != null)
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            else
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -236,7 +154,7 @@ public class FlashCards {
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro tento týden a vloží do polí
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param source {@link Source} ze kterého se slova vybírají
+     * @param source {@link Source} ze kterého se slova vybírají  (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
     private Queue<WordsTuple>[] loadWeeklyFilesBySource(final int NUMBER_OF_WORDS, String source){
@@ -246,7 +164,10 @@ public class FlashCards {
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            if (source != null)
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            else
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -254,7 +175,7 @@ public class FlashCards {
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro tento měsíc a vloží do polí
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param source {@link Source} ze kterého se slova vybírají
+     * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
     private Queue<WordsTuple>[] loadMonthlyFilesBySource(final int NUMBER_OF_WORDS, String source){
@@ -264,7 +185,10 @@ public class FlashCards {
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            if (source != null)
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            else
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -272,7 +196,7 @@ public class FlashCards {
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro tento rok a vloží do polí
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param source {@link Source} ze kterého se slova vybírají
+     * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
     private Queue<WordsTuple>[] loadYearsFilesBySource(final int NUMBER_OF_WORDS, String source){
@@ -282,7 +206,10 @@ public class FlashCards {
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            if (source != null)
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+            else
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -290,7 +217,7 @@ public class FlashCards {
     /**
      * Načte z databáze z daného zdroje z každé kartotéky n slovíček pro tento rok a vloží do polí
      * @param NUMBER_OF_WORDS n počet slovíček pro opakování
-     * @param source {@link Source} ze kterého se slova vybírají
+     * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
     private Queue<WordsTuple>[] loadAllFilesBySource(final int NUMBER_OF_WORDS, String source){
@@ -298,7 +225,10 @@ public class FlashCards {
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
-            files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), source, NUMBER_OF_WORDS));
+            if (source != null)
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), source, NUMBER_OF_WORDS));
+            else
+                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), NUMBER_OF_WORDS));
         }
         return files;
     }

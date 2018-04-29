@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +50,9 @@ public class FlashcardsFragment extends Fragment {
         toggle.syncState();
 
         //inicialice views
-        seekBar = view.findViewById(R.id.fragment_flashcards_seek_bar_selection);
-        timeSign = view.findViewById(R.id.fragment_flashcards_timesign);
-        resourceSpinner = view.findViewById(R.id.fragment_flashcards_source_select);
+        seekBar = view.findViewById(R.id.fragment_tests_seekbar_selection);
+        timeSign = view.findViewById(R.id.fragment_tests_timesign);
+        resourceSpinner = view.findViewById(R.id.fragment_tests_source_select);
         startButton = view.findViewById(R.id.fragment_flashcards_start_button);
 
         //po potvrzení sestavení flashcards
@@ -150,7 +149,8 @@ public class FlashcardsFragment extends Fragment {
     public void onSubmit(){
         Intent intent = new Intent(getActivity(), FlashCardsActivity.class);
         intent.putExtra(FlashCardsActivity.TIME, seekBar.getProgress());
-        intent.putExtra(FlashCardsActivity.SOURCE, resourceSpinner.getSelectedItem().toString());
+        if (resourceSpinner.getSelectedItem() != null)
+            intent.putExtra(FlashCardsActivity.SOURCE, resourceSpinner.getSelectedItem().toString());
         getActivity().startActivity(intent);
     }
 
