@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.camera.activities.CameraActivity;
 import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
+import com.sdm.sdmflash.fragmentTests.TestsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +48,17 @@ public class HomeFragment extends Fragment {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(container.getId(), new FlashcardsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        view.findViewById(R.id.daily_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(container.getId(), new TestsFragment())
                         .addToBackStack(null)
                         .commit();
             }

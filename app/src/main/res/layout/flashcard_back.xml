@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:padding="16dp"
         android:src="@drawable/flashcards_card"
-        android:tint="@color/lightGreen" />
+        android:tint="@color/purple" />
 
     <TextView
         android:id="@+id/activity_flashcards_card_text"

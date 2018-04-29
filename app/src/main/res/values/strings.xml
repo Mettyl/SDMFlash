@@ -79,5 +79,12 @@
     <string name="statistics">Statistics</string>
     <string name="other">Other</string>
     <string name="about">About</string>
+    <string name="writing">Writing</string>
+    <string name="next">NEXT</string>
+    <string name="write_the_translation">write the translation</string>
+    <string name="no_words_in_this_category">No words in this category :(</string>
+    <string name="you_have_number_points">You have {0} points</string>
+    <string name="choose_the_resource">Choose the resource</string>
+    <string name="all">All</string>
 
 </resources>

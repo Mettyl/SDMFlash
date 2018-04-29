@@ -34,7 +34,8 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".camera.activities.CameraActivity" />
-        <activity android:name=".fragmentAddWord.AddWordFromText"></activity>
+        <activity android:name=".fragmentAddWord.AddWordFromText"/>
+        <activity android:name=".fragmentTests.writing_test.WritingTestActivity"/>
     </application>
 
 </manifest>
