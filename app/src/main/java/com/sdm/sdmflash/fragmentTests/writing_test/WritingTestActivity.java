@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.app.App;
+import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
@@ -95,6 +97,17 @@ public class WritingTestActivity extends AppCompatActivity {
                         .beginTransaction()
                         .add(R.id.activity_writing_test_container, fragmentComplete)
                         .commit();
+
+                new AccessExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase database = AppDatabase.getInstance(getApplicationContext());
+                        for(String w : answers){
+                            WordFile file = database.wordDao().getWordFile(w);
+                            database.wordDao().changeWordFile(w, file.increase());
+                        }
+                    }
+                });
             }
 
             @Override
