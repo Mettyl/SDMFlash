@@ -113,7 +113,7 @@ public class TestsFragment extends Fragment {
             @Override
             public void run() {
                 final List<String> sources = AppDatabase.getInstance(getContext()).sourceDao().loadAllStringSources();
-                sources.add(getString(R.string.all));
+                sources.add(0, getString(R.string.all));
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item, sources);
                 getActivity().runOnUiThread(new Runnable() {

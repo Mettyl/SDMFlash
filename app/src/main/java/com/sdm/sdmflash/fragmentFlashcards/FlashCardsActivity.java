@@ -71,6 +71,9 @@ public class FlashCardsActivity extends AppCompatActivity {
             public void run() {
             //vybere slova
             String source = getIntent().getStringExtra(SOURCE);
+            String all = getString(R.string.all);
+            if (source.equals(all))
+                source = null;
             switch (getIntent().getIntExtra(TIME, 0)){
                 case 0:
                     words = flashCards.getDailyWordsBySource(WORDS_COUNT, source);

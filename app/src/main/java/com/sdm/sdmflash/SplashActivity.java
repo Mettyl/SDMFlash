@@ -7,6 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.sdm.sdmflash.camera.CameraWorker;
 import com.sdm.sdmflash.camera.activities.CameraActivity;
+import com.sdm.sdmflash.databases.dataTypes.Language;
+import com.sdm.sdmflash.databases.dataTypes.WordFile;
+import com.sdm.sdmflash.databases.structure.AccessExecutor;
+import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
+
+import java.util.Date;
 
 /**
  * Aktivita, která se vytvoří jako první, načte potřebná data a spustí hlavní aktivitu
