@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="2">
 
     <include
         android:id="@+id/toolbar_statistics"
@@ -10,9 +11,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.github.mikephil.charting.charts.CombinedChart
-        android:id="@+id/statistics_chart"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/usage_time"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/statistics_usage_chart"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/words_distribution"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/statistics_distribution_chart"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

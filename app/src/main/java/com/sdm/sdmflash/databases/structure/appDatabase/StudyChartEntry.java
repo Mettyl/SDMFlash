@@ -20,9 +20,9 @@ public class StudyChartEntry {
     private Date endStudy;
 
 
-    public StudyChartEntry(Date startTest, Date endTest) {
-        this.startStudy = startTest;
-        this.endStudy = endTest;
+    public StudyChartEntry(Date startStudy, Date endStudy) {
+        this.startStudy = startStudy;
+        this.endStudy = endStudy;
     }
 
     public int getId() {
