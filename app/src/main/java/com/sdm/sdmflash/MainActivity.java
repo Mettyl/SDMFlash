@@ -136,9 +136,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_tests:
                 fragmentToSet = new TestsFragment();
                 break;
-            case R.id.nav_add_word:
-                fragmentToSet = new AddWordFragment();
-                break;
             case R.id.nav_stats:
                 fragmentToSet = new StatisticsFragment();
                 break;

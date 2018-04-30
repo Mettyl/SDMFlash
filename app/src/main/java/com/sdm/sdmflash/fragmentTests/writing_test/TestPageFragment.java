@@ -1,6 +1,7 @@
 package com.sdm.sdmflash.fragmentTests.writing_test;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,13 +14,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.SeekBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
-import com.sdm.sdmflash.fragmentTests.writing_test.StepperAdapter;
-import com.sdm.sdmflash.fragmentTests.writing_test.WritingTestActivity;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;
 
@@ -27,18 +27,55 @@ import java.text.Normalizer;
 
 public class TestPageFragment extends Fragment implements Step {
 
+    private TextView question;
+    private EditText input;
+    private WritingTestActivity activity;
+
+    private int position;
+    private Word currentWord;
+    private boolean right = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_test_writing_step, container, false);
 
-        final TextView question = v.findViewById(R.id.fragment_test_writing_question);
-        final EditText input = v.findViewById(R.id.fragment_test_writing_answer_input);
-        final WritingTestActivity activity = (WritingTestActivity) getActivity();
+        question = v.findViewById(R.id.fragment_test_writing_question);
+        input = v.findViewById(R.id.fragment_test_writing_answer_input);
+        activity = (WritingTestActivity) getActivity();
 
-        final int position = getArguments().getInt(StepperAdapter.CURRENT_STEP_POSITION_KEY, 0);
-        final WordsTuple currentWord = activity.getWords().get(position);
+        position = getArguments().getInt(StepperAdapter.CURRENT_STEP_POSITION_KEY, 0);
+        currentWord = activity.getWords().get(position);
 
-        question.setText(currentWord.word);
+        question.setText(currentWord.getWord());
+
+        //nastaví smajlíka podle kartotéky
+        ImageView fileEmoji = v.findViewById(R.id.fragment_test_writing_emoji);
+
+        switch (currentWord.getFile()){
+            case file1: fileEmoji.setImageResource(R.drawable.file1); break;
+            case file2: fileEmoji.setImageResource(R.drawable.file2); break;
+            case file3: fileEmoji.setImageResource(R.drawable.file3); break;
+            case file4: fileEmoji.setImageResource(R.drawable.file4); break;
+            case file5: fileEmoji.setImageResource(R.drawable.file5); break;
+        }
+
+        //inicializace nápovědy
+        v.findViewById(R.id.fragment_test_writing_hint).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!currentWord.getDescription().equals("")){
+                    if (question.getText() == currentWord.getWord()){
+                        question.setText(currentWord.getDescription());
+                    }else
+                        question.setText(currentWord.getWord());
+                }else{
+                    if (question.getText() == getString(R.string.nothing)){
+                        question.setText(currentWord.getWord());
+                    }else
+                        question.setText(R.string.nothing);
+                }
+            }
+        });
 
         input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -52,8 +89,14 @@ public class TestPageFragment extends Fragment implements Step {
             //kontrola správnosti vloženého slova
             @Override
             public void afterTextChanged(Editable s) {
-                if (checkAnswer(input.getText().toString(), currentWord.translation))
-                    activity.setRightAnswer(currentWord.word);
+                if (checkAnswer(input.getText().toString(), currentWord.getTranslation())){
+                    //správné slovo
+                    activity.setCorrectAnswer(position);
+                    right = true;
+                } else{
+                    activity.setFalseAnswer(position);
+                    right = false;
+                }
             }
         });
 
@@ -96,6 +139,14 @@ public class TestPageFragment extends Fragment implements Step {
     @Override
     public void onSelected() {
         //update UI when selected
+        if (activity.isFinished()){
+            input.setVisibility(View.INVISIBLE);
+            if (!right){
+                question.setTextColor(Color.RED);
+            } else {
+                question.setTextColor(Color.GREEN);
+            }
+        }
     }
 
     @Override

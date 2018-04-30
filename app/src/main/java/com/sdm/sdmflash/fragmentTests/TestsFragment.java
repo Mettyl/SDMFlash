@@ -18,10 +18,13 @@ import android.widget.TextView;
 
 import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.fragmentTests.writing_test.WritingTestActivity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +34,7 @@ public class TestsFragment extends Fragment {
 
     public static final String TIME_KEY = "TIME_KEY";
     public static final String SOURCE_KEY = "SOURCE_KEY";
+    public static final String LANGUAGE_KEY = "LANGUAGE_KEY";
 
     public TestsFragment() {
         // Required empty public constructor
@@ -57,14 +61,19 @@ public class TestsFragment extends Fragment {
         final SeekBar seekBar = view.findViewById(R.id.fragment_tests_seekbar_selection);
         final TextView timeSign = view.findViewById(R.id.fragment_tests_timesign);
         final Spinner sourceSpinner = view.findViewById(R.id.fragment_tests_source_select);
+        final Spinner languageSpinner = view.findViewById(R.id.fragment_tests_language_select);
 
         view.findViewById(R.id.fragment_tests_writing_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WritingTestActivity.class);
                 intent.putExtra(TIME_KEY, seekBar.getProgress());
+                //zdroje
                 if (sourceSpinner.getSelectedItem() != null)
                     intent.putExtra(SOURCE_KEY, sourceSpinner.getSelectedItem().toString());
+                //jazyky
+                if (languageSpinner.getSelectedItem() != null)
+                    intent.putExtra(LANGUAGE_KEY, languageSpinner.getSelectedItem().toString());
                 startActivity(intent);
             }
         });
@@ -113,15 +122,31 @@ public class TestsFragment extends Fragment {
             @Override
             public void run() {
                 final List<String> sources = AppDatabase.getInstance(getContext()).sourceDao().loadAllStringSources();
-                sources.add(getString(R.string.all));
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                sources.add(0, getString(R.string.all));
+                final ArrayAdapter<String> sourceAdapter = new ArrayAdapter<>(getContext(),
                         R.layout.support_simple_spinner_dropdown_item, sources);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        sourceSpinner.setAdapter(adapter);
+                        sourceSpinner.setAdapter(sourceAdapter);
                     }
                 });
+            }
+        });
+
+        //inicialice spinneru s jazyky
+        final List<Language> languages = Language.getLanguagesList();
+        List<String> strings = new ArrayList<>(languages.size());
+        for (Object object : languages) {
+            strings.add(object.toString());
+        }
+        strings.add(0, getString(R.string.all));
+        final ArrayAdapter<String> languageAdapter = new ArrayAdapter<>(getContext(),
+                R.layout.support_simple_spinner_dropdown_item, strings);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                languageSpinner.setAdapter(languageAdapter);
             }
         });
 

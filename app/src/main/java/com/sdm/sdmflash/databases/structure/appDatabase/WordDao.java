@@ -164,6 +164,15 @@ public interface WordDao {
     int changeWordFile(int id, WordFile file);
 
     /**
+     * aktualizeje chenge_date
+     * @param word cílové slovo
+     * @param newChangeDate nové datum zmněny
+     * @return
+     */
+    @Query("UPDATE words SET change_date = :newChangeDate WHERE word = :word")
+    int updateChangeDate(String word, Date newChangeDate);
+
+    /**
      * Vybírá z celkové kartokéky
      *
      * @param file  kartoréka k zobrazení
@@ -181,8 +190,8 @@ public interface WordDao {
      * @param fromDate od tohoto data
      * @return dvojice slov z kartotéky
      */
-    @Query("SELECT word, translation FROM words WHERE file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
-    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, int limit);
+    @Query("SELECT * FROM words WHERE file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
+    List<Word> loadWordPairsByFile(WordFile file, Date fromDate, int limit);
 
     /**
      * Vybírá od data do data
@@ -204,16 +213,36 @@ public interface WordDao {
      * @param fromDate od tohoto data
      * @return dvojice slov z kartotéky
      */
-    @Query("SELECT word, translation FROM words WHERE source = :source AND file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
-    List<WordsTuple> loadWordPairsByFile(WordFile file, Date fromDate, String source, int limit);
+    @Query("SELECT * FROM words WHERE source = :source AND file = :file AND add_date >= :fromDate ORDER BY change_date ASC LIMIT :limit")
+    List<Word> loadWordPairsByFile(WordFile file, Date fromDate, String source, int limit);
+
+    /**
+     * Vybírá od data a pouze z jednoho zdroje a jazyka
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @param language zazyk vyberu
+     * @param source zdroj
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT * FROM words WHERE source = :source AND file = :file AND add_date >= :fromDate AND language = :language ORDER BY change_date ASC LIMIT :limit")
+    List<Word> loadWordPairsByFileAndLanguage(WordFile file, Date fromDate, String source, Language language, int limit);
+
+    /**
+     * Vybírá od data a pouze z jednoho zdroje a jazyka
+     *
+     * @param file     kartoréka k zobrazení
+     * @param limit    počet zobrazených slov
+     * @param fromDate od tohoto data
+     * @param language zazyk vyberu
+     * @return dvojice slov z kartotéky
+     */
+    @Query("SELECT * FROM words WHERE file = :file AND add_date >= :fromDate AND language = :language ORDER BY change_date ASC LIMIT :limit")
+    List<Word> loadWordPairsByFileAndLanguage(WordFile file, Date fromDate, Language language, int limit);
 
     @Query("SELECT file FROM words WHERE word = :word")
     WordFile getWordFile(String word);
-
-    // TEMP!!!
-    @Query("UPDATE words SET add_date = :date WHERE id = :id")
-    int changeDate(int id, Date date);
-
 
     @Query("SELECT COUNT(*) FROM words WHERE change_date IS NULL")
     int notTestedWords();

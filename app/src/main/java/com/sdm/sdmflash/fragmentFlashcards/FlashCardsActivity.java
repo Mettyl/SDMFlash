@@ -15,6 +15,7 @@ import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
 import java.util.Date;
 import java.util.Queue;
@@ -33,8 +34,8 @@ public class FlashCardsActivity extends AppCompatActivity {
 //    private int currentWordIndex;
 //    private boolean toggle;
     private FlashCards flashCards;
-    private Queue<WordsTuple> words;
-    private WordsTuple currentWord;
+    private Queue<Word> words;
+    private Word currentWord;
     //animation properties
     private AnimatorSet mSetRightOut;
     private AnimatorSet mSetLeftIn;
@@ -69,39 +70,43 @@ public class FlashCardsActivity extends AppCompatActivity {
         new AccessExecutor().execute(new Runnable() {
             @Override
             public void run() {
-            //vybere slova
-            String source = getIntent().getStringExtra(SOURCE);
-            switch (getIntent().getIntExtra(TIME, 0)){
-                case 0:
-                    words = flashCards.getDailyWordsBySource(WORDS_COUNT, source);
-                    break;
-                case 1:
-                    words = flashCards.getWeeklyWordsBySource(WORDS_COUNT, source);
-                    break;
-                case 2:
-                    words = flashCards.getMonthlyWordsBySource(WORDS_COUNT, source);
-                    break;
-                case 3:
-                    words = flashCards.getYearsWordsBySource(WORDS_COUNT, source);
-                    break;
-                case 4:
-                    words = flashCards.getAllWordsBySource(WORDS_COUNT, source);
-                    break;
-            }
-            //TODO: předělat tak, aby se zobrazovalo už na předchozím fragmentu výběru jako Toast
-            //pokud databáze neobsahuje slova z tohoto zdroje
-            if (words.size() == 0){
-                WordsTuple word = new WordsTuple(getString(R.string.empty_source_error), getString(R.string.empty_source_error));
-                words.add(word);
-            }
-            currentWord = words.poll();
-            words.add(currentWord);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setUpCard(currentWord.word, currentWord.translation);
+                //vybere slova
+                String source = getIntent().getStringExtra(SOURCE);
+                String all = getString(R.string.all);
+                if (source != null && source.equals(all))
+                    source = null;
+                switch (getIntent().getIntExtra(TIME, 0)){
+                    case 0:
+                        words = flashCards.getDailyWordsBySource(WORDS_COUNT, source);
+                        break;
+                    case 1:
+                        words = flashCards.getWeeklyWordsBySource(WORDS_COUNT, source);
+                        break;
+                    case 2:
+                        words = flashCards.getMonthlyWordsBySource(WORDS_COUNT, source);
+                        break;
+                    case 3:
+                        words = flashCards.getYearsWordsBySource(WORDS_COUNT, source);
+                        break;
+                    case 4:
+                        words = flashCards.getAllWordsBySource(WORDS_COUNT, source);
+                        break;
                 }
-            });
+                //TODO: předělat tak, aby se zobrazovalo už na předchozím fragmentu výběru jako Toast
+                //pokud databáze neobsahuje slova z tohoto zdroje
+                if (words.size() == 0){
+                    setUpCard(getString(R.string.empty_source_error), getString(R.string.empty_source_error));
+                    findViewById(R.id.next_button).setEnabled(false);
+                } else {
+                    currentWord = words.poll();
+                    words.add(currentWord);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setUpCard(currentWord.getWord(), currentWord.getTranslation());
+                        }
+                    });
+                }
             }
         });
 
@@ -126,10 +131,10 @@ public class FlashCardsActivity extends AppCompatActivity {
                 //oprava pořadí karet
                 TextView frontText = mCardFrontLayout.findViewById(R.id.activity_flashcards_card_text);
                 if (mIsBackVisible){
-                    frontText.setText(currentWord.word);
+                    frontText.setText(currentWord.getWord());
                     flipCard(view);
                 }else{
-                    setUpCard(currentWord.word, currentWord.translation);
+                    setUpCard(currentWord.getWord(), currentWord.getTranslation());
                 }
             }
         });
@@ -141,7 +146,7 @@ public class FlashCardsActivity extends AppCompatActivity {
                 super.onAnimationEnd(animation);
                 if (!mIsBackVisible){
                     TextView backText = mCardBackLayout.findViewById(R.id.activity_flashcards_card_text);
-                    backText.setText(currentWord.translation);
+                    backText.setText(currentWord.getTranslation());
                 }
             }
         });

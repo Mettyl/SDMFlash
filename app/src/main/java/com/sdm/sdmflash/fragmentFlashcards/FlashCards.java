@@ -1,9 +1,10 @@
 package com.sdm.sdmflash.fragmentFlashcards;
 
+import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
-import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.Source;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,8 +56,8 @@ public class FlashCards {
      * @param files           pole slvíček pro každou kartotéku
      * @return fronta slovíček, která mohou být použita pro flashCards
      */
-    private Queue<WordsTuple> doFinalGroup(final int NUMBER_OF_WORDS, Queue<WordsTuple>[] files) {
-        Queue<WordsTuple> finalGroup = new LinkedList<>();
+    private Queue<Word> doFinalGroup(final int NUMBER_OF_WORDS, Queue<Word>[] files) {
+        Queue<Word> finalGroup = new LinkedList<>();
 
         int initWords = finalGroup.size();
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
@@ -86,7 +87,7 @@ public class FlashCards {
      *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getDailyWordsBySource(final int NUMBER_OF_WORDS, String source) {
+    public Queue<Word> getDailyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadDailyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -97,7 +98,7 @@ public class FlashCards {
      *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getWeeklyWordsBySource(final int NUMBER_OF_WORDS, String source) {
+    public Queue<Word> getWeeklyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadWeeklyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -108,7 +109,7 @@ public class FlashCards {
      *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getMonthlyWordsBySource(final int NUMBER_OF_WORDS, String source) {
+    public Queue<Word> getMonthlyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -119,7 +120,7 @@ public class FlashCards {
      *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source) {
+    public Queue<Word> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadYearsFilesBySource(NUMBER_OF_WORDS, source));
 
@@ -130,9 +131,21 @@ public class FlashCards {
      *
      * @return Fronta dvojic slov k zobrazení
      */
-    public Queue<WordsTuple> getAllWordsBySource(final int NUMBER_OF_WORDS, String source) {
+    public Queue<Word> getAllWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
         return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySource(NUMBER_OF_WORDS, source));
+
+    }
+
+
+    /**
+     * Vytvoří skupinu slovíček z jednoho zdroje připravených pro měsíční opakování
+     *
+     * @return Fronta dvojic slov k zobrazení
+     */
+    public Queue<Word> getAllWordsBySourceAndLanguage(final int NUMBER_OF_WORDS, Date fromDate, String source, Language language) {
+
+        return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySourceAndLanguage(NUMBER_OF_WORDS, fromDate, source, language));
 
     }
 
@@ -144,8 +157,8 @@ public class FlashCards {
      * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
-    private Queue<WordsTuple>[] loadDailyFilesBySource(final int NUMBER_OF_WORDS, String source){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+    private Queue<Word>[] loadDailyFilesBySource(final int NUMBER_OF_WORDS, String source){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -24);
 
@@ -165,8 +178,8 @@ public class FlashCards {
      * @param source {@link Source} ze kterého se slova vybírají  (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
-    private Queue<WordsTuple>[] loadWeeklyFilesBySource(final int NUMBER_OF_WORDS, String source){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+    private Queue<Word>[] loadWeeklyFilesBySource(final int NUMBER_OF_WORDS, String source){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -7);
 
@@ -186,8 +199,8 @@ public class FlashCards {
      * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
-    private Queue<WordsTuple>[] loadMonthlyFilesBySource(final int NUMBER_OF_WORDS, String source){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+    private Queue<Word>[] loadMonthlyFilesBySource(final int NUMBER_OF_WORDS, String source){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
 
@@ -207,8 +220,8 @@ public class FlashCards {
      * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
-    private Queue<WordsTuple>[] loadYearsFilesBySource(final int NUMBER_OF_WORDS, String source){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+    private Queue<Word>[] loadYearsFilesBySource(final int NUMBER_OF_WORDS, String source){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);
 
@@ -228,8 +241,8 @@ public class FlashCards {
      * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
      * @return pole slvíček pro každou kartotéku
      */
-    private Queue<WordsTuple>[] loadAllFilesBySource(final int NUMBER_OF_WORDS, String source){
-        Queue<WordsTuple>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+    private Queue<Word>[] loadAllFilesBySource(final int NUMBER_OF_WORDS, String source){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
 
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
@@ -237,6 +250,28 @@ public class FlashCards {
                 files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), source, NUMBER_OF_WORDS));
             else
                 files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), NUMBER_OF_WORDS));
+        }
+        return files;
+    }
+
+    /**
+     *
+     * @param NUMBER_OF_WORDS n počet slovíček pro opakování
+     * @param date datum od kterého se slova načítají
+     * @param source {@link Source} ze kterého se slova vybírají (pokud null, je vybirano ze všech zdrojů)
+     * @param language jazyky načítaných slov
+     * @return
+     */
+    private Queue<Word>[] loadAllFilesBySourceAndLanguage(final int NUMBER_OF_WORDS, Date date, String source, Language language){
+        Queue<Word>[] files = new LinkedList[WordFile.NUM_OF_FILES+1];
+
+        for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
+            files[i] = new LinkedList<>();
+            if (source != null){
+                files[i].addAll(db.wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, source, language, NUMBER_OF_WORDS));
+            } else {
+                files[i].addAll(db.wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, language, NUMBER_OF_WORDS));
+            }
         }
         return files;
     }
