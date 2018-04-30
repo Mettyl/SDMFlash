@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
@@ -46,6 +47,17 @@ public class TestPageFragment extends Fragment implements Step {
         currentWord = activity.getWords().get(position);
 
         question.setText(currentWord.getWord());
+
+        //nastaví smajlíka podle kartotéky
+        ImageView fileEmoji = v.findViewById(R.id.fragment_test_writing_emoji);
+
+        switch (currentWord.getFile()){
+            case file1: fileEmoji.setImageResource(R.drawable.file1); break;
+            case file2: fileEmoji.setImageResource(R.drawable.file2); break;
+            case file3: fileEmoji.setImageResource(R.drawable.file3); break;
+            case file4: fileEmoji.setImageResource(R.drawable.file4); break;
+            case file5: fileEmoji.setImageResource(R.drawable.file5); break;
+        }
 
         //inicializace nápovědy
         v.findViewById(R.id.fragment_test_writing_hint).setOnClickListener(new View.OnClickListener() {
