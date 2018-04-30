@@ -11,11 +11,10 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
 import com.sdm.sdmflash.camera.activities.CameraActivity;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFromText;
 import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraView;
 
@@ -123,8 +122,8 @@ public class BottomPanelLive extends LinearLayout {
             }
             case MotionEvent.ACTION_UP: {
                 handleViewTouchFeedback(view, motionEvent);
-                Intent intent = new Intent(cameraActivity, MainActivity.class);
-                intent.putExtra(CameraActivity.CAMERA_OUTPUT, cameraActivity.getOcrOutput().getText());
+                Intent intent = new Intent(cameraActivity, AddWordFromText.class);
+                intent.putExtra(CameraActivity.CAMERA_OUTPUT, cameraActivity.getOcrOutput().getText().toString());
                 //start nové aktivity s předáním textu
                 cameraActivity.startActivity(intent);
                 Log.d("debug", "onTouchCheckButton");

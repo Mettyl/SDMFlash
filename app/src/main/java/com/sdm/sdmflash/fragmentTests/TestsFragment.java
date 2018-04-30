@@ -24,7 +24,6 @@ import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.fragmentTests.writing_test.WritingTestActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -78,12 +77,6 @@ public class TestsFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.fragment_tests_abc_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         //změna textu časových období
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
