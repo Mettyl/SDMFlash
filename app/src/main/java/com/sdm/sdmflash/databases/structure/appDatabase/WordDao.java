@@ -28,7 +28,10 @@ public interface WordDao {
      * @return List objektů Word
      */
     @Query("SELECT * FROM words ORDER BY LOWER(word) ASC")
-    LiveData<List<Word>> getAll();
+    List<Word> getAll();
+
+    @Query("SELECT * FROM words ORDER BY LOWER(word) ASC")
+    LiveData<List<Word>> getAllLive();
 
     @Query("SELECT * FROM words ORDER BY file ASC")
     LiveData<List<Word>> getAllByFile();

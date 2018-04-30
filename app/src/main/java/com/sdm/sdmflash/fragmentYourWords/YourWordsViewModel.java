@@ -93,7 +93,7 @@ public class YourWordsViewModel extends AndroidViewModel {
             protected LiveData<List<Word>> doInBackground(Application... app) {
                 switch (type) {
                     case 1:
-                        return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAll();
+                        return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAllLive();
                     case 2:
                         return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAllByFile();
                     case 3:
@@ -103,7 +103,7 @@ public class YourWordsViewModel extends AndroidViewModel {
                     case 5:
                         return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAllSource();
                     default:
-                        return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAll();
+                        return AppDatabase.getInstance(app[0].getApplicationContext()).wordDao().getAllLive();
                 }
             }
         }
