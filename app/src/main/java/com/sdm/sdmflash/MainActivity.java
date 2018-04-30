@@ -82,9 +82,6 @@ public class MainActivity extends AppCompatActivity
         HomeFragment homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, homeFragment, homeFragment.getTag()).commit();
 
-        //     new DbTest().test(getApplicationContext());
-
-
         //Načte slovník do databáze
 
         // loadDictionary();

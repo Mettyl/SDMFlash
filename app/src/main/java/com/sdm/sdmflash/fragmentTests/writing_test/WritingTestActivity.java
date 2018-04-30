@@ -6,19 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.app.App;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 import com.sdm.sdmflash.fragmentFlashcards.FlashCards;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
-import com.sdm.sdmflash.fragmentTests.writing_test.FragmentComplete;
-import com.sdm.sdmflash.fragmentTests.writing_test.StepperAdapter;
 import com.stepstone.stepper.StepperLayout;
 import com.stepstone.stepper.VerificationError;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class WritingTestActivity extends AppCompatActivity {
@@ -36,6 +35,9 @@ public class WritingTestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_writing_test);
         mStepperAdapter = new StepperAdapter(getSupportFragmentManager(), this);
         mStepperLayout = findViewById(R.id.stepperLayout);
+
+        //Mereni casu testu
+        final Date start = new Date();
 
         new AccessExecutor().execute(new Runnable() {
             @Override
@@ -73,7 +75,7 @@ public class WritingTestActivity extends AppCompatActivity {
                         //pokud nejsou nalezena žádná slova
                         FragmentComplete fragmentComplete = new FragmentComplete();
                         fragmentComplete.setMessage(getString(R.string.no_words_in_this_category));
-                        if (wordsSize == 0){
+                        if (wordsSize == 0) {
                             mStepperLayout.setNextButtonEnabled(false);
                             getSupportFragmentManager()
                                     .beginTransaction()
@@ -102,7 +104,11 @@ public class WritingTestActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         AppDatabase database = AppDatabase.getInstance(getApplicationContext());
-                        for(String w : answers){
+
+                        //prida zaznam do databaze, jak dlouho test trval - by Mety :D
+                        database.testChartDao().insertAll(new TestChartEntry(0, 0, 0, start, new Date()));
+
+                        for (String w : answers) {
                             WordFile file = database.wordDao().getWordFile(w);
                             database.wordDao().changeWordFile(w, file.increase());
                         }
@@ -128,7 +134,7 @@ public class WritingTestActivity extends AppCompatActivity {
     }
 
     //TODO: pokud platí že může existovat více slov, je třeba předělat tento systém
-    public void setRightAnswer(String word){
+    public void setRightAnswer(String word) {
         if (!answers.contains(word))
             answers.add(word);
     }

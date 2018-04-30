@@ -13,7 +13,7 @@ import com.sdm.sdmflash.databases.dataTypes.Converters;
  * Created by Dominik on 02.12.2017.
  */
 
-@Database(entities = {Word.class, Source.class}, version = 2, exportSchema = false)
+@Database(entities = {Word.class, Source.class, TestChartEntry.class, StudyChartEntry.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 
 public abstract class AppDatabase extends RoomDatabase {
@@ -45,4 +45,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract WordDao wordDao();
 
     public abstract SourceDao sourceDao();
+
+    public abstract TestChartDao testChartDao();
+
+    public abstract StudyChartDao studyChartDao();
 }
