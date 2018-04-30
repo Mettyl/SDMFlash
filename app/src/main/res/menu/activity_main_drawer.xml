@@ -17,10 +17,6 @@
             android:icon="@drawable/ic_test"
             android:title="@string/tests" />
         <item
-            android:id="@+id/nav_add_word"
-            android:icon="@drawable/ic_add_word"
-            android:title="@string/add_word" />
-        <item
             android:id="@+id/nav_stats"
             android:icon="@drawable/ic_statistics"
             android:title="@string/statistics" />

@@ -1,6 +1,7 @@
 package com.sdm.sdmflash.menu;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,10 @@ import android.view.ViewGroup;
 
 import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.camera.activities.CameraActivity;
 import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
+import com.sdm.sdmflash.fragmentAddWord.AddWordFromText;
+import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
 
 /**
@@ -54,11 +58,7 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.add_word_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(container.getId(), new AddWordFragment())
-                        .addToBackStack(null)
-                        .commit();
+                startActivity(new Intent(getActivity(), CameraActivity.class));
             }
         });
 
@@ -68,6 +68,24 @@ public class HomeFragment extends Fragment {
                 getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .replace(container.getId(), new TestsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        view.findViewById(R.id.fragment_home_type_card).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AddWordFromText.class));
+            }
+        });
+
+        view.findViewById(R.id.fragment_home_graph).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(container.getId(), new StatisticsFragment())
                         .addToBackStack(null)
                         .commit();
             }

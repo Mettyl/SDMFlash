@@ -28,8 +28,7 @@ public class SplashActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         //zde lze vkládat kód, který se načte před spuštěním aplikace
-        //TODO:zapnout inicializaci
-        //ocrInit();
+        ocrInit();
         // Start home activity
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         // close splash activity
