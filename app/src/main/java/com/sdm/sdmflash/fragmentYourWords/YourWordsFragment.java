@@ -576,12 +576,17 @@ public class YourWordsFragment extends Fragment implements WordInfoDialog.WordIn
                                 deletedAll = true;
                             } else {
 
-                                List<Integer> toDelete = adapter.getSelectedItemsID();
+                                final List<Integer> toDelete = adapter.getSelectedItemsID();
 
                                 for (int i = 0; i < toDelete.size(); i++) {
                                     dao.delete(dao.loadById(toDelete.get(i)));
                                 }
-                                Toast.makeText(getContext(), getString(R.string.toast_your_words_you_have_deleted) + String.valueOf(toDelete.size()) + getString(R.string.toast_your_words_words), Toast.LENGTH_SHORT).show();
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getContext(), getString(R.string.toast_your_words_you_have_deleted) + String.valueOf(toDelete.size()) + getString(R.string.toast_your_words_words), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                                 adapter.getSelectedItemsID().clear();
                             }
                             return null;

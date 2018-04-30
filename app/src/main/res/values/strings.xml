@@ -84,9 +84,15 @@
     <string name="write_the_translation">write the translation</string>
     <string name="no_words_in_this_category">No words in this category :(</string>
     <string name="you_have_number_points">You have {0} points</string>
-    <string name="choose_the_resource">Choose the resource</string>
+    <string name="choose_resource">Choose resource</string>
     <string name="all">All</string>
     <string name="usage_time">Usage time</string>
     <string name="words_distribution">Words distribution</string>
+    <string name="well_done">Well Done</string>
+    <string name="finish">Finish</string>
+    <string name="points">Points</string>
+    <string name="today_s_words">Today\'s words</string>
+    <string name="choose_language">Choose language</string>
+    <string name="nothing">nothing :(</string>
 
 </resources>

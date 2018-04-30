@@ -6,11 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.sdm.sdmflash.R;
+import com.sdm.sdmflash.databases.dataTypes.DateTools;
+import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.sdm.sdmflash.fragmentFlashcards.FlashCards;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
 import com.stepstone.stepper.StepperLayout;
@@ -24,8 +27,9 @@ public class WritingTestActivity extends AppCompatActivity {
 
     private StepperLayout mStepperLayout;
     private StepperAdapter mStepperAdapter;
-    private List<WordsTuple> words;
-    private List<String> answers;
+    private List<Word> words;
+    private boolean[] correctAnswers;
+    private boolean finished;
 
     public static final int WORDS_COUNT = 10;
 
@@ -45,28 +49,50 @@ public class WritingTestActivity extends AppCompatActivity {
                 int progress = getIntent().getIntExtra(TestsFragment.TIME_KEY, 0);
                 String source = getIntent().getStringExtra(TestsFragment.SOURCE_KEY);
                 String all = getString(R.string.all);
-                if (source.equals(all))
+                if (source != null && source.equals(all))
                     source = null;
                 FlashCards flashCards = FlashCards.getInstance(AppDatabase.getInstance(getApplicationContext()));
-                switch (progress) {
-                    case 0:
-                        words = new ArrayList<>(flashCards.getDailyWordsBySource(WORDS_COUNT, source));
-                        break;
-                    case 1:
-                        words = new ArrayList<>(flashCards.getWeeklyWordsBySource(WORDS_COUNT, source));
-                        break;
-                    case 2:
-                        words = new ArrayList<>(flashCards.getMonthlyWordsBySource(WORDS_COUNT, source));
-                        break;
-                    case 3:
-                        words = new ArrayList<>(flashCards.getYearsWordsBySource(WORDS_COUNT, source));
-                        break;
-                    case 4:
-                        words = new ArrayList<>(flashCards.getAllWordsBySource(WORDS_COUNT, source));
+                String language = getIntent().getStringExtra(TestsFragment.LANGUAGE_KEY);
+
+                if (language.equals(all)){
+                    switch (progress) {
+                        case 0:
+                            words = new ArrayList<>(flashCards.getDailyWordsBySource(WORDS_COUNT, source));
+                            break;
+                        case 1:
+                            words = new ArrayList<>(flashCards.getWeeklyWordsBySource(WORDS_COUNT, source));
+                            break;
+                        case 2:
+                            words = new ArrayList<>(flashCards.getMonthlyWordsBySource(WORDS_COUNT, source));
+                            break;
+                        case 3:
+                            words = new ArrayList<>(flashCards.getYearsWordsBySource(WORDS_COUNT, source));
+                            break;
+                        case 4:
+                            words = new ArrayList<>(flashCards.getAllWordsBySource(WORDS_COUNT, source));
+                    }
+                } else {
+                    //pokud byl zvolen jazyk
+                    switch (progress) {
+                        case 0:
+                            words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, DateTools.getDayBack(new Date()), source, Language.valueOf(language)));
+                            break;
+                        case 1:
+                            words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, DateTools.getMonthBack(new Date()), source, Language.valueOf(language)));
+                            break;
+                        case 2:
+                            words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, DateTools.getWeekBack(new Date()), source, Language.valueOf(language)));
+                            break;
+                        case 3:
+                            words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, DateTools.getYearBack(new Date()), source, Language.valueOf(language)));
+                            break;
+                        case 4:
+                            words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, new Date(), source, Language.valueOf(language)));
+                    }
                 }
 
                 final int wordsSize = words.size();
-                answers = new ArrayList<>();
+                correctAnswers = new boolean[wordsSize];
                 mStepperAdapter.setWordsCount(wordsSize);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -88,13 +114,16 @@ public class WritingTestActivity extends AppCompatActivity {
         });
 
         mStepperLayout.setListener(new StepperLayout.StepperListener() {
+            // po skonční testu
             @Override
             public void onCompleted(View completeButton) {
-                mStepperLayout.setBackButtonEnabled(false);
+                //mStepperLayout.setBackButtonEnabled(false);
                 mStepperLayout.setCompleteButtonEnabled(false);
+                finished = true;
+                mStepperAdapter.findStep(mStepperAdapter.getCount()-1).onSelected();
 
                 FragmentComplete fragmentComplete = new FragmentComplete();
-                fragmentComplete.setPoints(answers.size());
+                fragmentComplete.setPoints(countPoints(correctAnswers));
                 getSupportFragmentManager()
                         .beginTransaction()
                         .add(R.id.activity_writing_test_container, fragmentComplete)
@@ -108,9 +137,18 @@ public class WritingTestActivity extends AppCompatActivity {
                         //prida zaznam do databaze, jak dlouho test trval - by Mety :D
                         database.testChartDao().insertAll(new TestChartEntry(0, 0, 0, start, new Date()));
 
-                        for (String w : answers) {
-                            WordFile file = database.wordDao().getWordFile(w);
-                            database.wordDao().changeWordFile(w, file.increase());
+                        //zvýší nebo sníži slovu kartotéku na základě výsledku testu
+                        for (int i = 0; i < correctAnswers.length; i++) {
+
+                            String currentWord = words.get(i).getWord();
+                            WordFile file = database.wordDao().getWordFile(currentWord);
+                            //aktualizuje change date
+                            database.wordDao().updateChangeDate(currentWord, new Date());
+                            if (correctAnswers[i]){
+                                database.wordDao().changeWordFile(currentWord, file.increase());
+                            }else {
+                                database.wordDao().changeWordFile(currentWord, file.decrease());
+                            }
                         }
                     }
                 });
@@ -133,13 +171,28 @@ public class WritingTestActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: pokud platí že může existovat více slov, je třeba předělat tento systém
-    public void setRightAnswer(String word) {
-        if (!answers.contains(word))
-            answers.add(word);
+    // z pole správných odpovědí spočítá skore
+    private int countPoints(boolean[] a){
+        int points = 0;
+        for (boolean answer : a){
+            if (answer) points++;
+        }
+        return points;
     }
 
-    public List<WordsTuple> getWords() {
+    public void setCorrectAnswer(int position) {
+        correctAnswers[position] = true;
+    }
+
+    public void setFalseAnswer(int position){
+        correctAnswers[position] = false;
+    }
+
+    public List<Word> getWords() {
         return words;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }

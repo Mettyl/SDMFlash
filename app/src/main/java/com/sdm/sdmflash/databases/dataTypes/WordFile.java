@@ -12,6 +12,8 @@ public enum WordFile {
      * celkový počet kartoték
      */
     public static final int NUM_OF_FILES = 5;
+    public static final int MIN_VALUE = 1;
+    public static final int MAX_VALUE = 5;
     private byte id;
 
     WordFile(int id) {
@@ -45,13 +47,13 @@ public enum WordFile {
 
     public WordFile increase() {
         id++;
-        if (id > NUM_OF_FILES) id--;
+        if (id > MAX_VALUE) id--;
         return this;
     }
 
     public WordFile decrease() {
         id--;
-        if (id < 0) id++;
+        if (id < MIN_VALUE) id++;
         return this;
     }
 }
