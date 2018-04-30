@@ -86,5 +86,7 @@
     <string name="you_have_number_points">You have {0} points</string>
     <string name="choose_the_resource">Choose the resource</string>
     <string name="all">All</string>
+    <string name="usage_time">Usage time</string>
+    <string name="words_distribution">Words distribution</string>
 
 </resources>

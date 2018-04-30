@@ -8,15 +8,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
+import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
 
+import java.util.Date;
 import java.util.Queue;
 
 /**
@@ -42,6 +42,9 @@ public class FlashCardsActivity extends AppCompatActivity {
     private View mCardFrontLayout;
     private View mCardBackLayout;
 
+    //nahrava cas
+    private Date start;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,10 @@ public class FlashCardsActivity extends AppCompatActivity {
         flashCards = FlashCards.getInstance(AppDatabase.getInstance(this));
 //        currentWordIndex = 0;
 //        toggle = true;
+
+
+        //zacne merit cas - added by Mety :D
+        start = new Date();
 
         new AccessExecutor().execute(new Runnable() {
             @Override
@@ -163,6 +170,17 @@ public class FlashCardsActivity extends AppCompatActivity {
                 flipCard(v);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase.getInstance(getApplicationContext()).studyChartDao().insertAll(new StudyChartEntry(start, new Date()));
+            }
+        });
+        super.onBackPressed();
     }
 
     private void setUpCard(String word, String translation){

@@ -11,20 +11,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.sdm.sdmflash.MainActivity;
 import com.sdm.sdmflash.R;
@@ -32,9 +36,8 @@ import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
+import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +46,7 @@ import java.util.List;
 public class StatisticsFragment extends Fragment {
 
     private LineChart lineChart;
+    private BarChart barChart;
 
     public StatisticsFragment() {
     }
@@ -68,43 +72,11 @@ public class StatisticsFragment extends Fragment {
         drawerLayout.addDrawerListener(toggle);
 
 
-        new AccessExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                List<TestChartEntry> list = AppDatabase.getInstance(getContext()).testChartDao().getFromWeek();
-                Log.i("debug", "list " + list.size());
-            }
-        });
-
-
         toggle.syncState();
-        List<TestChartEntry> testChartEntryList = new ArrayList<>();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-4 10:15:25"), df.parse("20012-10-4 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-4 14:00:25"), df.parse("20012-10-4 15:04:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-5 10:15:25"), df.parse("20012-10-5 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-9 10:15:25"), df.parse("20012-10-9 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-9 10:15:25"), df.parse("20012-10-9 10:30:25")));
-            testChartEntryList.add(new TestChartEntry(2, 1, 6, df.parse("20012-10-10 10:15:25"), df.parse("20012-10-10 10:30:25")));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        List<StudyChartEntry> studyChartEntryList = new ArrayList<>();
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420200200000L), new Date(1420204200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420300200000L), new Date(1420306200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420403200000L), new Date(1420412200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420501200000L), new Date(1420504200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
-        studyChartEntryList.add(new StudyChartEntry(new Date(1420600200000L), new Date(1420603200000L)));
 
 
         // nastaveni combined chartu
-        lineChart = view.findViewById(R.id.statistics_chart);
+        lineChart = view.findViewById(R.id.statistics_usage_chart);
         lineChart.getDescription().setEnabled(false);
         lineChart.getAxisLeft().setEnabled(false);
         lineChart.setBackgroundColor(Color.WHITE);
@@ -120,7 +92,7 @@ public class StatisticsFragment extends Fragment {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return (int) value + " min";
+                return value + " min";
             }
         });
 
@@ -149,132 +121,234 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
+        //////////////////////////////////////////////
 
-        int[] data = new int[7];
-        int i = -1;
-        int value = 0;
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTime(testChartEntryList.get(0).getEndTest());
+        barChart = view.findViewById(R.id.statistics_distribution_chart);
+        barChart.getDescription().setEnabled(false);
+        barChart.getAxisLeft().setEnabled(false);
+        barChart.setBackgroundColor(Color.WHITE);
+        barChart.setDrawGridBackground(false);
+        barChart.setHighlightPerDragEnabled(false);
+        barChart.setHighlightPerTapEnabled(false);
 
-        for (int l = 0; l < testChartEntryList.size(); l++) {
+        barChart.animateXY(1000, 1000, Easing.EasingOption.EaseInOutQuad, Easing.EasingOption.Linear);
 
-            cal2.setTime(testChartEntryList.get(l).getEndTest());
+        XAxis barChartXAxis = barChart.getXAxis();
+        barChartXAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChartXAxis.setDrawGridLines(false);
+        barChartXAxis.setGranularity(1f); // only intervals of 1 day
+        barChartXAxis.setLabelCount(5);
 
-            if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                    cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)) {
 
-                Log.i("debug", "same day " + l);
+        YAxis barChartAxisLeft = barChart.getAxisLeft();
+        barChartAxisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        barChartAxisLeft.setSpaceTop(15f);
+        barChartAxisLeft.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-                value += (int) (((testChartEntryList.get(l).getEndTest().getTime() - testChartEntryList.get(l).getStartTest().getTime()) / 1000) / 60);
+        YAxis barChartAxisRight = barChart.getAxisRight();
+        barChartAxisRight.setDrawGridLines(false);
+        barChartAxisRight.setSpaceTop(15f);
+        barChartAxisRight.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-                Log.i("debug", " one value " + (int) (((testChartEntryList.get(l).getEndTest().getTime() - testChartEntryList.get(l).getStartTest().getTime()) / 1000) / 60));
 
-            } else {
+        new AccessExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
 
-                i++;
+                List<TestChartEntry> testList = AppDatabase.getInstance(getContext()).testChartDao().getFromWeek(new Date().getTime() - 518400000);
+                List<StudyChartEntry> studyList = AppDatabase.getInstance(getContext()).studyChartDao().getFromWeek(new Date().getTime() - 518400000);
 
-                if (i > 6) {
-                    Log.i("debug", "Unexpected");
-                    break;
+
+                ArrayList<Entry> entriesTest = new ArrayList<Entry>();
+                ArrayList<Entry> entriesStudy = new ArrayList<Entry>();
+
+                int[] testPole = countTestMinutesInDays(testList);
+                int[] studyPole = countStudyMinutesInDays(studyList);
+
+                for (int index = 0; index < 7; index++) {
+                    entriesTest.add(new Entry(index, testPole[index]));
+                    entriesStudy.add(new Entry(index, studyPole[index]));
                 }
 
-                Log.i("debug", "final value " + value);
-                Log.i("debug", "i: " + i);
+                LineDataSet set1 = new LineDataSet(entriesStudy, "Study time");
+                set1.setColor(Color.BLUE);
+                set1.setLineWidth(2.5f);
+                set1.setCircleColor(Color.BLUE);
+                set1.setCircleRadius(5f);
+                set1.setFillColor(Color.BLUE);
+                set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                set1.setDrawValues(true);
 
-                data[i] = value;
-                value = 0;
+                set1.setDrawFilled(true);
+                if (Utils.getSDKInt() >= 18) {
 
-                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                        Math.abs(cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR)) > 1) {
+                    Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_blue);
+                    set1.setFillDrawable(drawable);
+                } else {
+                    set1.setFillColor(Color.BLUE);
+                }
 
-                    Log.i("debug", "First day " + cal1.get(Calendar.DAY_OF_YEAR));
-                    Log.i("debug", "Second day " + cal2.get(Calendar.DAY_OF_YEAR));
+                LineDataSet set2 = new LineDataSet(entriesTest, "Test time");
+                set2.setColor(Color.RED);
+                set2.setLineWidth(2.5f);
+                set2.setCircleColor(Color.RED);
+                set2.setCircleRadius(5f);
+                set2.setFillColor(Color.RED);
+                set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+                set2.setDrawValues(true);
 
-                    int difference = Math.abs(cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR));
-                    for (int d = 0; d < difference - 1; d++) {
-                        i++;
-                        data[i] = 0;
+                set2.setDrawFilled(true);
+                if (Utils.getSDKInt() >= 18) {
+
+                    Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_red);
+                    set2.setFillDrawable(drawable);
+                } else {
+                    set2.setFillColor(Color.RED);
+                }
+
+
+                final LineData lineData = new LineData();
+                lineData.addDataSet(set1);
+                lineData.addDataSet(set2);
+
+                List<Word> words = AppDatabase.getInstance(getContext()).wordDao().getAll();
+
+                ArrayList<BarEntry> entries = new ArrayList<>();
+
+                ArrayList<BarEntry> entries2 = new ArrayList<>();
+
+                ArrayList<BarEntry> entries3 = new ArrayList<>();
+
+                ArrayList<BarEntry> entries4 = new ArrayList<>();
+
+                ArrayList<BarEntry> entries5 = new ArrayList<>();
+
+                int[] files = new int[5];
+                for (Word w : words) {
+                    switch (w.getFile()) {
+                        case file1:
+                            files[0] += 1;
+                            break;
+                        case file2:
+                            files[1] += 1;
+                            break;
+                        case file3:
+                            files[2] += 1;
+                            break;
+                        case file4:
+                            files[3] += 1;
+                            break;
+                        case file5:
+                            files[4] += 1;
+                            break;
                     }
                 }
 
-                cal1.setTime(testChartEntryList.get(l).getEndTest());
-                l--;
+                entries.add(new BarEntry(1, files[0]));
+                entries2.add(new BarEntry(2, files[1]));
+                entries3.add(new BarEntry(3, files[2]));
+                entries4.add(new BarEntry(4, files[3]));
+                entries5.add(new BarEntry(5, files[4]));
 
+                List<IBarDataSet> bars = new ArrayList<IBarDataSet>();
+
+                BarDataSet dataset = new BarDataSet(entries, "First");
+                dataset.setColor(getResources().getColor(R.color.red));
+                bars.add(dataset);
+
+                BarDataSet dataset2 = new BarDataSet(entries2, "Second");
+                dataset2.setColor(getResources().getColor(R.color.orange));
+                bars.add(dataset2);
+
+                BarDataSet dataset3 = new BarDataSet(entries3, "Third");
+                dataset3.setColor(getResources().getColor(R.color.yellow));
+                bars.add(dataset3);
+
+                BarDataSet dataset4 = new BarDataSet(entries4, "Fourth");
+                dataset4.setColor(getResources().getColor(R.color.lightGreen));
+                bars.add(dataset4);
+
+                BarDataSet dataset5 = new BarDataSet(entries5, "Fifth");
+                dataset5.setColor(getResources().getColor(R.color.green));
+                bars.add(dataset5);
+
+                final BarData data = new BarData(bars);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lineChart.setData(lineData);
+                        lineChart.invalidate();
+                        barChart.setData(data);
+                        barChart.invalidate();
+
+                    }
+                });
             }
-            if (l == testChartEntryList.size() - 1) {
-                data[data.length - 1] = value;
-            }
-        }
+        });
 
 
-        ArrayList<Entry> entries = new ArrayList<Entry>();
 
-        for (int index = 0; index < 7; index++) {
-
-            if (index < testChartEntryList.size()) {
-                entries.add(new Entry(index, data[index]));
-            } else {
-                entries.add(new Entry(index, 0));
-            }
-        }
-
-        LineDataSet set1 = new LineDataSet(entries, "Study time");
-        set1.setColor(Color.BLUE);
-        set1.setLineWidth(2.5f);
-        set1.setCircleColor(Color.BLUE);
-        set1.setCircleRadius(5f);
-        set1.setFillColor(Color.BLUE);
-        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set1.setDrawValues(true);
-
-        set1.setDrawFilled(true);
-        if (Utils.getSDKInt() >= 18) {
-
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_blue);
-            set1.setFillDrawable(drawable);
-        } else {
-            set1.setFillColor(Color.BLUE);
-        }
-
-        ArrayList<Entry> entries2 = new ArrayList<Entry>();
-
-        for (int index = 0; index < 7; index++) {
-
-            if (index < studyChartEntryList.size()) {
-                entries2.add(new Entry(index, (int) (((studyChartEntryList.get(index).getEndStudy().getTime() - studyChartEntryList.get(index).getStartStudy().getTime()) / (1000 * 60)) % 60)));
-            } else {
-                entries2.add(new Entry(index, 0));
-            }
-        }
-
-        LineDataSet set2 = new LineDataSet(entries2, "Test time");
-        set2.setColor(Color.RED);
-        set2.setLineWidth(2.5f);
-        set2.setCircleColor(Color.RED);
-        set2.setCircleRadius(5f);
-        set2.setFillColor(Color.RED);
-        set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set2.setDrawValues(true);
-
-        set2.setDrawFilled(true);
-        if (Utils.getSDKInt() >= 18) {
-
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.gradient_red);
-            set2.setFillDrawable(drawable);
-        } else {
-            set2.setFillColor(Color.RED);
-        }
-
-        LineData lineData = new LineData();
-        lineData.addDataSet(set1);
-        lineData.addDataSet(set2);
-
-        lineChart.setData(lineData);
-        lineChart.invalidate();
 
 
         return view;
     }
 
+    public int[] countTestMinutesInDays(List<TestChartEntry> testChartEntryList) {
+
+        int[] data = new int[7];
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(new Date());
+
+        int value = 0;
+
+        for (int l = 0; l < 7; l++) {
+
+            for (int j = 0; j < testChartEntryList.size(); j++) {
+
+                cal2.setTime(testChartEntryList.get(j).getEndTest());
+
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                        (cal1.get(Calendar.DAY_OF_YEAR) - 6 + l) == cal2.get(Calendar.DAY_OF_YEAR)) {
+
+                    value += (int) (((testChartEntryList.get(j).getEndTest().getTime() - testChartEntryList.get(j).getStartTest().getTime()) / 1000) / 60);
+                }
+            }
+            data[l] = value;
+            value = 0;
+        }
+        return data;
+
+    }
+
+    public int[] countStudyMinutesInDays(List<StudyChartEntry> studyChartEntryList) {
+
+        int[] data = new int[7];
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(new Date());
+
+        int value = 0;
+
+        for (int l = 0; l < 7; l++) {
+
+            for (int j = 0; j < studyChartEntryList.size(); j++) {
+
+                cal2.setTime(studyChartEntryList.get(j).getEndStudy());
+
+                if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                        (cal1.get(Calendar.DAY_OF_YEAR) - 6 + l) == cal2.get(Calendar.DAY_OF_YEAR)) {
+
+                    value += (int) (((studyChartEntryList.get(j).getEndStudy().getTime() - studyChartEntryList.get(j).getStartStudy().getTime()) / 1000) / 60);
+                }
+            }
+            data[l] = value;
+            value = 0;
+        }
+        return data;
+
+    }
 }

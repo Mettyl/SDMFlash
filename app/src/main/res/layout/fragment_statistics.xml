@@ -15,12 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Usage time"
+        android:text="@string/usage_time"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/statistics_chart"
+        android:id="@+id/statistics_usage_chart"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_weight="1" />
@@ -29,11 +29,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Words distribution"
+        android:text="@string/words_distribution"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <com.github.mikephil.charting.charts.PieChart
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/statistics_distribution_chart"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_weight="1" />

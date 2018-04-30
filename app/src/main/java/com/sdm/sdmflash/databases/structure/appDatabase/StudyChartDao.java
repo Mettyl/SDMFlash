@@ -8,20 +8,19 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 @Dao
-public interface TestChartDao {
+public interface StudyChartDao {
 
-
-    @Query("SELECT * FROM test_chart_entries WHERE end_test_date > :time")
-    List<TestChartEntry> getFromWeek(long time);
+    @Query("SELECT * FROM study_chart_entries WHERE end_study_date > :time")
+    List<StudyChartEntry> getFromWeek(long time);
 
     @Insert
-    void insertAll(TestChartEntry... entries);
+    void insertAll(StudyChartEntry... entries);
 
 
     @Delete
-    void delete(TestChartEntry chartEntry);
+    void delete(StudyChartEntry chartEntry);
 
 
-    @Query("DELETE FROM test_chart_entries")
+    @Query("DELETE FROM study_chart_entries")
     void deleteAll();
 }
