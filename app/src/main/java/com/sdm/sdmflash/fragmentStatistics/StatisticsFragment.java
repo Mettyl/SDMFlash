@@ -162,8 +162,8 @@ public class StatisticsFragment extends Fragment {
                 ArrayList<Entry> entriesTest = new ArrayList<Entry>();
                 ArrayList<Entry> entriesStudy = new ArrayList<Entry>();
 
-                int[] testPole = countTestMinutesInDays(testList);
-                int[] studyPole = countStudyMinutesInDays(studyList);
+                float[] testPole = countTestMinutesInDays(testList);
+                float[] studyPole = countStudyMinutesInDays(studyList);
 
                 for (int index = 0; index < 7; index++) {
                     entriesTest.add(new Entry(index, testPole[index]));
@@ -294,15 +294,15 @@ public class StatisticsFragment extends Fragment {
         return view;
     }
 
-    public int[] countTestMinutesInDays(List<TestChartEntry> testChartEntryList) {
+    public float[] countTestMinutesInDays(List<TestChartEntry> testChartEntryList) {
 
-        int[] data = new int[7];
+        float[] data = new float[7];
 
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(new Date());
 
-        int value = 0;
+        float value = 0;
 
         for (int l = 0; l < 7; l++) {
 
@@ -313,7 +313,7 @@ public class StatisticsFragment extends Fragment {
                 if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                         (cal1.get(Calendar.DAY_OF_YEAR) - 6 + l) == cal2.get(Calendar.DAY_OF_YEAR)) {
 
-                    value += (int) (((testChartEntryList.get(j).getEndTest().getTime() - testChartEntryList.get(j).getStartTest().getTime()) / 1000) / 60);
+                    value += ((testChartEntryList.get(j).getEndTest().getTime() - testChartEntryList.get(j).getStartTest().getTime()) / 1000.0f) / 60.0f;
                 }
             }
             data[l] = value;
@@ -323,15 +323,15 @@ public class StatisticsFragment extends Fragment {
 
     }
 
-    public int[] countStudyMinutesInDays(List<StudyChartEntry> studyChartEntryList) {
+    public float[] countStudyMinutesInDays(List<StudyChartEntry> studyChartEntryList) {
 
-        int[] data = new int[7];
+        float[] data = new float[7];
 
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(new Date());
 
-        int value = 0;
+        float value = 0;
 
         for (int l = 0; l < 7; l++) {
 
@@ -342,7 +342,7 @@ public class StatisticsFragment extends Fragment {
                 if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                         (cal1.get(Calendar.DAY_OF_YEAR) - 6 + l) == cal2.get(Calendar.DAY_OF_YEAR)) {
 
-                    value += (int) (((studyChartEntryList.get(j).getEndStudy().getTime() - studyChartEntryList.get(j).getStartStudy().getTime()) / 1000) / 60);
+                    value += ((studyChartEntryList.get(j).getEndStudy().getTime() - studyChartEntryList.get(j).getStartStudy().getTime()) / 1000.0f) / 60.0f;
                 }
             }
             data[l] = value;

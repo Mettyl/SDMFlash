@@ -47,6 +47,8 @@ import java.util.Locale;
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
 
+import static com.sdm.sdmflash.camera.activities.CameraActivity.CAMERA_OUTPUT;
+
 public class AddWordFromText extends AppCompatActivity implements VerticalStepperForm, TranslationAdapter.ClickListener {
 
     private VerticalStepperFormLayout verticalStepperForm;
@@ -64,6 +66,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
     private String addedTag = "";
 
     private Word intentWord;
+    private String cameraWord;
 
     public AddWordFromText() {
 
@@ -96,6 +99,9 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     }
                 });
 
+            } else if (getIntent().getExtras().getString(CAMERA_OUTPUT) != null) {
+                Log.i("debug", "pridano");
+                cameraWord = getIntent().getExtras().getString(CAMERA_OUTPUT);
             }
         }
         // Sestaveni stepperu
@@ -158,6 +164,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         if (intentWord != null) {
             autoCompleteTextView.setText(intentWord.getWord());
             addedWord = intentWord.getWord();
+        } else if (cameraWord != null) {
+            autoCompleteTextView.setText(cameraWord);
         }
         // pri zmene textu zavola metodu checkWord
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
@@ -629,7 +637,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 }
 
                 database.wordDao().insertAll(
-                        new Word(Language.EN, addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""), tag, new Date(),
+                        new Word(((AutoCompleteAdapter) autoCompleteTextView.getAdapter()).getSearchedLanguage(), addedWord, addedTranslation, descriptionET.getText().toString().replaceAll("\\s+$", ""), tag, new Date(),
                                 null, WordFile.findById(((DifficultyAdapter) difficultyRecycler.getAdapter()).getSelectedItem())));
 
                 runOnUiThread(new Runnable() {
