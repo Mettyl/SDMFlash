@@ -72,6 +72,7 @@ public class TestsFragment extends Fragment {
                     intent.putExtra(SOURCE_KEY, sourceSpinner.getSelectedItem().toString());
                 //jazyky
                 if (languageSpinner.getSelectedItem() != null)
+                    languageSpinner.getSelectedItem().toString();
                     intent.putExtra(LANGUAGE_KEY, languageSpinner.getSelectedItem().toString());
                 startActivity(intent);
             }

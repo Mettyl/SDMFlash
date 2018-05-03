@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Flash Dictionary</string>
-    <string name="title_activity_main">HlavníAktivita</string>
 
     <string name="navigation_drawer_open">Otevřít navigační zásvuku</string>
     <string name="navigation_drawer_close">Zavřít navigační zásuvku</string>
@@ -11,7 +10,6 @@
     <string name="delete">Odstranit</string>
     <string name="edit">editovat</string>
 
-    <string name="hello_blank_fragment">Ahoj prázdný fragment</string>
     <string name="word">Slovo:</string>
     <string name="translation">Překlad:</string>
     <string name="tager">Tag:</string>
@@ -35,12 +33,11 @@
     <string name="you_do_not_have_any_words_yet">Ještě nemáte žádná slova :(</string>
     <string name="item_difficulty">Složitost</string>
     <string name="item_added">Přidáno</string>
-    <string name="item_source">Zdroj</string>
     <string name="add_word_translation_exists">Tento překlad daného slova již existuje!</string>
     <string name="add_word_successfully_added">Slovo úspěšně přidáno.</string>
     <string name="add_word_choose_or_add">Vyberte nebo přidejte překlad!</string>
     <string name="add_word_translation_long">Překlad je příliš dlouhý!</string>
-    <string name="add_word_add_some">Přidejtě nějaké slovo!</string>
+    <string name="add_word_add_some">Přidejte nějaké slovo!</string>
     <string name="add_word_too_long">Slovo je příliš dlouhé!</string>
     <string name="add_word_unknown">Neznámo</string>
     <string name="add_word_word">Slovo</string>
@@ -53,7 +50,7 @@
     <string name="add_word_enter_tag">Vložit tag</string>
     <string name="add_word_choose_difficulty">Vyberte složitost (defaultní doporučená):</string>
     <string name="add_word_found_translations">Nalezlené překlady:</string>
-    <string name="add_word_any_translations">Jakékoliv překlady pro dané slovo.</string>
+    <string name="add_word_any_translations">Žádnés překlady pro dané slovo.</string>
     <string name="add_word_write_your_own">Napište vlastní překlad</string>
     <string name="add_word_enter_transltaions">Vložit překlad</string>
     <string name="add_word_type_here">Pište zde</string>
@@ -63,7 +60,6 @@
     <string name="your_words">Vaše slova</string>
     <string name="tag">Tag</string>
     <string name="daily_test">Denní test</string>
-    <string name="flash_cards_quick_select">Vyberte váší flash card sadu</string>
     <string name="custom_flashcard">Vlastní FlashCard</string>
     <string name="todays_words">Dnešní slova</string>
     <string name="this_weeks_words">Slova tohoto týdne</string>
@@ -71,14 +67,10 @@
     <string name="this_years_words">Slova tohoto roku</string>
     <string name="start_flash_cards">Spustit FlashCards</string>
     <string name="empty_source_error">Nemáte žádná slova z tohoto zdroje</string>
-    <string name="im_improving">Zlepšuju se</string>
     <string name="home_screen">Domácí obrazavka</string>
     <string name="flashcards">FlashCards</string>
     <string name="tests">Testy</string>
-    <string name="add_word">Přidat slovo</string>
     <string name="statistics">Statistiky</string>
-    <string name="other">Další</string>
-    <string name="about">O čem</string>
     <string name="writing">Psaní</string>
     <string name="next">DALŠÍ</string>
     <string name="write_the_translation">napište překlad</string>
@@ -88,5 +80,20 @@
     <string name="all">Všechno</string>
     <string name="usage_time">Doba používání</string>
     <string name="words_distribution">Rozdělení slov</string>
+    <string name="choose_resource">Vyberte zdroj</string>
+    <string name="well_done">Výborně</string>
+    <string name="finish">Konec</string>
+    <string name="points">Body</string>
+    <string name="today_s_words">Dnešní slova</string>
+    <string name="choose_language">Zvolte jazyk</string>
+    <string name="nothing">nic :(</string>
+    <string name="type_new_word">Napiště slovo</string>
+    <string name="snap_new_word">Vyfoťte slovo</string>
+    <string name="filter_words">Filtrovat slova</string>
+    <string name="not_tested">Netestováno:</string>
+    <string name="add_by_typing">Napsat slovo</string>
+    <string name="write_your_word_manualy">Přidat nové slovo manuálně</string>
+    <string name="add_by_photo">Vyfotit slovo</string>
+    <string name="take_a_photo_of_words">Přidat slovo pomocí kamery</string>
 
 </resources>

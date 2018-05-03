@@ -10,7 +10,7 @@ import android.os.Handler;
 
 public class App extends Application{
     private static Context context;
-    public static final String TAG = "debug";
+    public static final String DEBUG_TAG = "debug";
     private static Handler handler;
 
     @Override

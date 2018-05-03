@@ -147,6 +147,7 @@ public interface WordDao {
     @Query("SELECT add_date, change_date FROM words WHERE word = :word LIMIT 1")
     DatesTuple loadDatesByWord(String word);
 
+    //TODO: opravit na zmenu pouze přes id
     /**
      * @param word slovo pro změnu kartotéky
      * @param file nová kartotéka

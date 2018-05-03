@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.sdm.sdmflash.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
@@ -36,10 +34,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         cards = new ArrayList<>();
 
         Resources res = context.getResources();
-        cards.add(new Card("Add by typing", "Write your word manualy", R.drawable.card_pen, res.getColor(R.color.red)));
-        cards.add(new Card("Add by photo", "Take a photo of words", R.drawable.card_camera, res.getColor(R.color.blue)));
-        cards.add(new Card("Import from picture", "Chose words from picture", R.drawable.card_image, res.getColor(R.color.orange)));
-        cards.add(new Card("Import from XLSX", "Load words from excel file", R.drawable.card_excel, res.getColor(R.color.green)));
+        cards.add(new Card(context.getString(R.string.add_by_typing), context.getString(R.string.write_your_word_manualy), R.drawable.card_pen, res.getColor(R.color.red)));
+        cards.add(new Card(context.getString(R.string.add_by_photo), context.getString(R.string.take_a_photo_of_words), R.drawable.card_camera, res.getColor(R.color.blue)));
+        //cards.add(new Card("Import from picture", "Chose words from picture", R.drawable.card_image, res.getColor(R.color.orange)));
+        //cards.add(new Card("Import from XLSX", "Load words from excel file", R.drawable.card_excel, res.getColor(R.color.green)));
     }
 
 

@@ -99,7 +99,8 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     }
                 });
 
-            } else if (getIntent().getExtras().getString(CAMERA_OUTPUT) != null) {
+            }
+            if (getIntent().getExtras().getString(CAMERA_OUTPUT) != null) {
                 Log.i("debug", "pridano");
                 cameraWord = getIntent().getExtras().getString(CAMERA_OUTPUT);
             }
@@ -115,7 +116,6 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 .showVerticalLineWhenStepsAreCollapsed(true)
                 .stepsSubtitles(new String[]{getResources().getString(R.string.add_word_unknown), getResources().getString(R.string.add_word_unknown), " "})
                 .init();
-
 
     }
 
@@ -166,6 +166,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
             addedWord = intentWord.getWord();
         } else if (cameraWord != null) {
             autoCompleteTextView.setText(cameraWord);
+            addedWord = cameraWord;
         }
         // pri zmene textu zavola metodu checkWord
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {

@@ -16,7 +16,6 @@ import com.sdm.sdmflash.databases.structure.dictionaryDatabase.CzWord;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.DictionaryDatabase;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnCzJoin;
 import com.sdm.sdmflash.databases.structure.dictionaryDatabase.EnWord;
-import com.sdm.sdmflash.fragmentAddWord.AddWordFragment;
 import com.sdm.sdmflash.fragmentFlashcards.FlashcardsFragment;
 import com.sdm.sdmflash.fragmentStatistics.StatisticsFragment;
 import com.sdm.sdmflash.fragmentTests.TestsFragment;
@@ -146,61 +145,6 @@ public class MainActivity extends AppCompatActivity
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void loadDictionary() {
-        StringBuilder text = new StringBuilder();
-        //K omezení počtu načtených slov při testování
-        int i = 0;
-        try {
-            //Načte soubor z assets složky
-            BufferedReader br = new BufferedReader(new InputStreamReader(getAssets().open("en-cs.txt"), "UTF-8"));
-            Scanner scanner = null;
-            //Instance databáze
-            DictionaryDatabase database = DictionaryDatabase.getInstance(getApplicationContext());
-            String line;
-            while ((line = br.readLine()) != null && i < 220000) {
-                text.append(line);
-                text.append('\n');
-
-                //Rozdělí soubor podle tabulátoru
-                scanner = new Scanner(line).useDelimiter("\\t");
-                //Kontrola jestli jsou na řádku dvě slova (často nejsou)
-                if (scanner.hasNext()) {
-                    String enWord = scanner.next();
-                    if (scanner.hasNext()) {
-                        String czWord = scanner.next();
-                        //Kontrola jestli dané slovo už v databázi není
-                        int enId = database.enWordDao().findIdByWord(enWord);
-                        if (enId == 0) {
-                            //Pokud ne, přidá se nové slovo do databáze a vrátí se jeho id
-                            database.enWordDao().insertAll(new EnWord(enWord));
-                            enId = database.enWordDao().findIdByWord(enWord);
-                        }
-                        int czId = database.czWordDao().findIdByWord(czWord);
-                        if (czId == 0) {
-                            database.czWordDao().insertAll(new CzWord(czWord));
-                            czId = database.czWordDao().findIdByWord(czWord);
-                        }
-                        //Vytvoření relací mezi slovami
-                        final EnCzJoin join = new EnCzJoin(enId, czId);
-                        database.enCzJoinDao().insert(join);
-                    }
-                }
-                if (i % 10000 == 0) {
-                    Log.i(TAG, "Načteno: " + i);
-                }
-                i++;
-            }
-            Log.i(TAG, "Načítaní dokončeno");
-
-            scanner.close();
-            br.close();
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-            Log.i("debug", "Chyba při čtení ze souboru");
-        }
     }
 
     public DrawerLayout getDrawerLayout() {

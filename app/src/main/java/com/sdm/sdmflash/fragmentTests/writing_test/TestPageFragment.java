@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 import com.stepstone.stepper.Step;
 import com.stepstone.stepper.VerificationError;

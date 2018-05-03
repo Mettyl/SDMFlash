@@ -3,6 +3,7 @@ package com.sdm.sdmflash.fragmentTests.writing_test;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.sdm.sdmflash.R;
@@ -90,7 +91,7 @@ public class WritingTestActivity extends AppCompatActivity {
                             words = new ArrayList<>(flashCards.getAllWordsBySourceAndLanguage(WORDS_COUNT, new Date(), source, Language.valueOf(language)));
                     }
                 }
-
+                Log.d("debug", "run: word picked " + words.size());
                 final int wordsSize = words.size();
                 correctAnswers = new boolean[wordsSize];
                 mStepperAdapter.setWordsCount(wordsSize);
