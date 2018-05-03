@@ -1,5 +1,6 @@
 package com.sdm.sdmflash.fragmentFlashcards;
 
+import com.sdm.sdmflash.app.App;
 import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.dataTypes.WordFile;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
@@ -17,32 +18,19 @@ import java.util.Queue;
 
 public class FlashCards {
 
-    private static AppDatabase db;
     private static volatile FlashCards INSTANCE;
-
-    /**
-     * Nová instance app database
-     * Veškeré přístupy pouze z AccessExecutoru!!
-     * Výstupy na UI prostředí pouze přes runOnUIThread()
-     *
-     * @param db AppDatabase
-     */
-    private FlashCards(AppDatabase db) {
-        FlashCards.db = db;
-    }
-
+    
     /**
      * Vrací instanci lazy singletonu {@link FlashCards}, pokud neexituje vytvoří novou
      * Veškeré přístupy pouze z AccessExecutoru!!
      *
-     * @param db AppDatabase databáze aplikace
      * @return instance Flashcards
      */
     public static FlashCards getInstance(AppDatabase db) {
         if (INSTANCE == null) {
             synchronized (FlashCards.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new FlashCards(db);
+                    INSTANCE = new FlashCards();
                 }
             }
         }
@@ -56,7 +44,7 @@ public class FlashCards {
      * @param files           pole slvíček pro každou kartotéku
      * @return fronta slovíček, která mohou být použita pro flashCards
      */
-    private Queue<Word> doFinalGroup(final int NUMBER_OF_WORDS, Queue<Word>[] files) {
+    private Queue<Word> doTestGroup(final int NUMBER_OF_WORDS, Queue<Word>[] files) {
         Queue<Word> finalGroup = new LinkedList<>();
 
         int initWords = finalGroup.size();
@@ -64,7 +52,7 @@ public class FlashCards {
             if (finalGroup.size() >= NUMBER_OF_WORDS) return finalGroup;
 
             //pokud máš co přidat, přidej
-            if (files[i].peek() != null) {
+            if (files[i].peek() != null && !finalGroup.contains(files[i].peek())) {
                 finalGroup.add(files[i].poll());
             }
 
@@ -89,7 +77,7 @@ public class FlashCards {
      */
     public Queue<Word> getDailyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadDailyFilesBySource(NUMBER_OF_WORDS, source));
+        return doTestGroup(NUMBER_OF_WORDS, loadDailyFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -100,7 +88,7 @@ public class FlashCards {
      */
     public Queue<Word> getWeeklyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadWeeklyFilesBySource(NUMBER_OF_WORDS, source));
+        return doTestGroup(NUMBER_OF_WORDS, loadWeeklyFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -111,7 +99,7 @@ public class FlashCards {
      */
     public Queue<Word> getMonthlyWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
+        return doTestGroup(NUMBER_OF_WORDS, loadMonthlyFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -122,7 +110,7 @@ public class FlashCards {
      */
     public Queue<Word> getYearsWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadYearsFilesBySource(NUMBER_OF_WORDS, source));
+        return doTestGroup(NUMBER_OF_WORDS, loadYearsFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -133,7 +121,7 @@ public class FlashCards {
      */
     public Queue<Word> getAllWordsBySource(final int NUMBER_OF_WORDS, String source) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySource(NUMBER_OF_WORDS, source));
+        return doTestGroup(NUMBER_OF_WORDS, loadAllFilesBySource(NUMBER_OF_WORDS, source));
 
     }
 
@@ -145,7 +133,7 @@ public class FlashCards {
      */
     public Queue<Word> getAllWordsBySourceAndLanguage(final int NUMBER_OF_WORDS, Date fromDate, String source, Language language) {
 
-        return doFinalGroup(NUMBER_OF_WORDS, loadAllFilesBySourceAndLanguage(NUMBER_OF_WORDS, fromDate, source, language));
+        return doTestGroup(NUMBER_OF_WORDS, loadAllFilesBySourceAndLanguage(NUMBER_OF_WORDS, fromDate, source, language));
 
     }
 
@@ -165,9 +153,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null)
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
             else
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -186,9 +174,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null)
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
             else
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -207,9 +195,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null)
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
             else
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -228,9 +216,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null)
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), source, NUMBER_OF_WORDS));
             else
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), calendar.getTime(), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -247,9 +235,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null)
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), source, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), source, NUMBER_OF_WORDS));
             else
-                files[i].addAll(db.wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFile(WordFile.findById(i), new Date(0), NUMBER_OF_WORDS));
         }
         return files;
     }
@@ -268,9 +256,9 @@ public class FlashCards {
         for (int i = 1; i <= WordFile.NUM_OF_FILES; i++) {
             files[i] = new LinkedList<>();
             if (source != null){
-                files[i].addAll(db.wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, source, language, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, source, language, NUMBER_OF_WORDS));
             } else {
-                files[i].addAll(db.wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, language, NUMBER_OF_WORDS));
+                files[i].addAll(AppDatabase.getInstance(App.getContext()).wordDao().loadWordPairsByFileAndLanguage(WordFile.findById(i), date, language, NUMBER_OF_WORDS));
             }
         }
         return files;

@@ -38,6 +38,7 @@ import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

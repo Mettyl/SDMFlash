@@ -125,7 +125,6 @@ public class CameraWorker {
             ocr.pause();
 
             workerThread.quit();
-            workerThread.join();
             workerThread = null;
             handler = null;
         } catch (Exception e) {

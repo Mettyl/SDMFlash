@@ -18,11 +18,9 @@
         android:title="@string/un_select_all_words"
         app:showAsAction="never" />
     <item
-        android:id="@+id/your_words_toolbar_menu_help"
         android:title="@string/help"
         app:showAsAction="never" />
     <item
-        android:id="@+id/your_words_toolbar_menu_settings"
         android:title="@string/settings"
         app:showAsAction="never" />
 

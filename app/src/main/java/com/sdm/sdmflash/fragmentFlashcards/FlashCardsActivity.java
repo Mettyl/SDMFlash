@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sdm.sdmflash.R;
-import com.sdm.sdmflash.databases.dataTypes.WordsTuple;
+import com.sdm.sdmflash.databases.dataTypes.Language;
 import com.sdm.sdmflash.databases.structure.AccessExecutor;
 import com.sdm.sdmflash.databases.structure.appDatabase.AppDatabase;
 import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
@@ -95,8 +95,15 @@ public class FlashCardsActivity extends AppCompatActivity {
                 //TODO: předělat tak, aby se zobrazovalo už na předchozím fragmentu výběru jako Toast
                 //pokud databáze neobsahuje slova z tohoto zdroje
                 if (words.size() == 0){
-                    setUpCard(getString(R.string.empty_source_error), getString(R.string.empty_source_error));
-                    findViewById(R.id.next_button).setEnabled(false);
+                    currentWord = new Word(Language.EN, getString(R.string.empty_source_error), getString(R.string.empty_source_error), null, null, null, null, null);
+                    words.add(currentWord);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            findViewById(R.id.next_button).setEnabled(false);
+                            setUpCard(currentWord.getWord(), currentWord.getTranslation());
+                        }
+                    });
                 } else {
                     currentWord = words.poll();
                     words.add(currentWord);
