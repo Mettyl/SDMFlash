@@ -38,7 +38,6 @@ import com.sdm.sdmflash.databases.structure.appDatabase.StudyChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.TestChartEntry;
 import com.sdm.sdmflash.databases.structure.appDatabase.Word;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,7 +92,7 @@ public class StatisticsFragment extends Fragment {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return value + " min";
+                return (Math.round(value * 100.0) / 100.0) + " min";
             }
         });
 

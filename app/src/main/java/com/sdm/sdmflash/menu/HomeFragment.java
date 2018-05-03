@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return value + " min";
+                return (Math.round(value * 100.0) / 100.0) + " min";
             }
         });
 

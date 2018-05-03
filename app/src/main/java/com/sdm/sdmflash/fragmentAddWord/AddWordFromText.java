@@ -90,7 +90,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark);
 
         if (getIntent().getExtras() != null) {
-            if (getIntent().getExtras().getInt("your_words") != -1) {
+            if (getIntent().getExtras().getInt("your_words") != 0) {
 
                 new AccessExecutor().execute(new Runnable() {
                     @Override
@@ -99,8 +99,7 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                     }
                 });
 
-            }
-            if (getIntent().getExtras().getString(CAMERA_OUTPUT) != null) {
+            } else if (getIntent().getExtras().getString(CAMERA_OUTPUT) != null) {
                 Log.i("debug", "pridano");
                 cameraWord = getIntent().getExtras().getString(CAMERA_OUTPUT);
             }
@@ -558,6 +557,9 @@ public class AddWordFromText extends AppCompatActivity implements VerticalSteppe
                 //
                 if (verticalStepperForm.isStepCompleted(1)) {
                     verticalStepperForm.setStepSubtitle(1, addedTranslation);
+                }
+                if (cameraWord != null) {
+                    new FindTranslation().execute(cameraWord);
                 }
                 break;
             case 1:

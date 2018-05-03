@@ -50,7 +50,7 @@
     <string name="add_word_enter_tag">Vložit tag</string>
     <string name="add_word_choose_difficulty">Vyberte složitost (defaultní doporučená):</string>
     <string name="add_word_found_translations">Nalezlené překlady:</string>
-    <string name="add_word_any_translations">Žádnés překlady pro dané slovo.</string>
+    <string name="add_word_any_translations">Žádné překlady pro dané slovo.</string>
     <string name="add_word_write_your_own">Napište vlastní překlad</string>
     <string name="add_word_enter_transltaions">Vložit překlad</string>
     <string name="add_word_type_here">Pište zde</string>
