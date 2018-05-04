@@ -94,5 +94,19 @@
     <string name="write_your_word_manualy">Write your word manualy</string>
     <string name="add_by_photo">Add by photo</string>
     <string name="take_a_photo_of_words">Take a photo of words</string>
+    <string name="su">Su</string>
+    <string name="mo">Mo</string>
+    <string name="tu">Tu</string>
+    <string name="we">We</string>
+    <string name="th">Th</string>
+    <string name="fr">Fr</string>
+    <string name="sa">Sa</string>
+    <string name="study_time">Study time</string>
+    <string name="test_time">Test time</string>
+    <string name="first">Hard</string>
+    <string name="second">Harder</string>
+    <string name="third">Medium</string>
+    <string name="fourth">Easier</string>
+    <string name="fifth">Easy</string>
 
 </resources>

@@ -60,7 +60,7 @@ public class StatisticsFragment extends Fragment {
 
         // nastaveni toolbaru
         Toolbar toolbar = view.findViewById(R.id.toolbar_statistics);
-        toolbar.setTitle("Statistics");
+        toolbar.setTitle(getString(R.string.statistics));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         final AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -108,7 +108,7 @@ public class StatisticsFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         final int day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
-        final String[] days = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+        final String[] days = {getString(R.string.su), getString(R.string.mo), getString(R.string.tu), getString(R.string.we), getString(R.string.th), getString(R.string.fr), getString(R.string.sa)};
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
@@ -171,7 +171,7 @@ public class StatisticsFragment extends Fragment {
                     entriesStudy.add(new Entry(index, studyPole[index]));
                 }
 
-                LineDataSet set1 = new LineDataSet(entriesStudy, "Study time");
+                LineDataSet set1 = new LineDataSet(entriesStudy, getString(R.string.study_time));
                 set1.setColor(Color.BLUE);
                 set1.setLineWidth(2.5f);
                 set1.setCircleColor(Color.BLUE);
@@ -189,7 +189,7 @@ public class StatisticsFragment extends Fragment {
                     set1.setFillColor(Color.BLUE);
                 }
 
-                LineDataSet set2 = new LineDataSet(entriesTest, "Test time");
+                LineDataSet set2 = new LineDataSet(entriesTest, getString(R.string.test_time));
                 set2.setColor(Color.RED);
                 set2.setLineWidth(2.5f);
                 set2.setCircleColor(Color.RED);
@@ -197,7 +197,6 @@ public class StatisticsFragment extends Fragment {
                 set2.setFillColor(Color.RED);
                 set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
                 set2.setDrawValues(true);
-
                 set2.setDrawFilled(true);
                 if (Utils.getSDKInt() >= 18) {
 
@@ -253,23 +252,23 @@ public class StatisticsFragment extends Fragment {
 
                 List<IBarDataSet> bars = new ArrayList<IBarDataSet>();
 
-                BarDataSet dataset = new BarDataSet(entries, "First");
+                BarDataSet dataset = new BarDataSet(entries, getString(R.string.first));
                 dataset.setColor(getResources().getColor(R.color.red));
                 bars.add(dataset);
 
-                BarDataSet dataset2 = new BarDataSet(entries2, "Second");
+                BarDataSet dataset2 = new BarDataSet(entries2, getString(R.string.second));
                 dataset2.setColor(getResources().getColor(R.color.orange));
                 bars.add(dataset2);
 
-                BarDataSet dataset3 = new BarDataSet(entries3, "Third");
+                BarDataSet dataset3 = new BarDataSet(entries3, getString(R.string.third));
                 dataset3.setColor(getResources().getColor(R.color.yellow));
                 bars.add(dataset3);
 
-                BarDataSet dataset4 = new BarDataSet(entries4, "Fourth");
+                BarDataSet dataset4 = new BarDataSet(entries4, getString(R.string.fourth));
                 dataset4.setColor(getResources().getColor(R.color.lightGreen));
                 bars.add(dataset4);
 
-                BarDataSet dataset5 = new BarDataSet(entries5, "Fifth");
+                BarDataSet dataset5 = new BarDataSet(entries5, getString(R.string.fifth));
                 dataset5.setColor(getResources().getColor(R.color.green));
                 bars.add(dataset5);
 

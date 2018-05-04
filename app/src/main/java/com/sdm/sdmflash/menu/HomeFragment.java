@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         final int day = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
-        final String[] days = {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+        final String[] days = {getString(R.string.su), getString(R.string.mo), getString(R.string.tu), getString(R.string.we), getString(R.string.th), getString(R.string.fr), getString(R.string.sa)};
 
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
@@ -177,7 +177,7 @@ public class HomeFragment extends Fragment {
                     entriesStudy.add(new Entry(index, studyPole[index]));
                 }
 
-                LineDataSet set1 = new LineDataSet(entriesStudy, "Study time");
+                LineDataSet set1 = new LineDataSet(entriesStudy, getString(R.string.study_time));
                 set1.setColor(Color.BLUE);
                 set1.setLineWidth(2.5f);
                 set1.setCircleColor(Color.BLUE);
@@ -195,7 +195,7 @@ public class HomeFragment extends Fragment {
                     set1.setFillColor(Color.BLUE);
                 }
 
-                LineDataSet set2 = new LineDataSet(entriesTest, "Test time");
+                LineDataSet set2 = new LineDataSet(entriesTest, getString(R.string.test_time));
                 set2.setColor(Color.RED);
                 set2.setLineWidth(2.5f);
                 set2.setCircleColor(Color.RED);
@@ -228,7 +228,6 @@ public class HomeFragment extends Fragment {
                 });
             }
         });
-
 
         return view;
     }

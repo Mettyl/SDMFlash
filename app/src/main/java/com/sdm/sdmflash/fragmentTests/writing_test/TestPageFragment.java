@@ -32,7 +32,6 @@ public class TestPageFragment extends Fragment implements Step {
 
     private int position;
     private Word currentWord;
-    private boolean right = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class TestPageFragment extends Fragment implements Step {
         activity = (WritingTestActivity) getActivity();
 
         position = getArguments().getInt(StepperAdapter.CURRENT_STEP_POSITION_KEY, 0);
-        currentWord = activity.getWords().get(position);
+        currentWord = activity.getWord(position);
 
         question.setText(currentWord.getWord());
 
@@ -91,10 +90,8 @@ public class TestPageFragment extends Fragment implements Step {
                 if (checkAnswer(input.getText().toString(), currentWord.getTranslation())){
                     //správné slovo
                     activity.setCorrectAnswer(position);
-                    right = true;
                 } else{
                     activity.setFalseAnswer(position);
-                    right = false;
                 }
             }
         });
@@ -140,10 +137,10 @@ public class TestPageFragment extends Fragment implements Step {
         //update UI when selected
         if (activity.isFinished()){
             input.setVisibility(View.INVISIBLE);
-            if (!right){
-                question.setTextColor(Color.RED);
-            } else {
+            if (activity.isCorrect(position)){
                 question.setTextColor(Color.GREEN);
+            } else {
+                question.setTextColor(Color.RED);
             }
         }
     }

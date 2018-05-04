@@ -121,6 +121,7 @@ public class WritingTestActivity extends AppCompatActivity {
                 //mStepperLayout.setBackButtonEnabled(false);
                 mStepperLayout.setCompleteButtonEnabled(false);
                 finished = true;
+                //updatuje poslední step ve stepperu
                 mStepperAdapter.findStep(mStepperAdapter.getCount()-1).onSelected();
 
                 FragmentComplete fragmentComplete = new FragmentComplete();
@@ -181,6 +182,10 @@ public class WritingTestActivity extends AppCompatActivity {
         return points;
     }
 
+    public boolean isCorrect(int position){
+        return correctAnswers[position];
+    }
+
     public void setCorrectAnswer(int position) {
         correctAnswers[position] = true;
     }
@@ -189,8 +194,8 @@ public class WritingTestActivity extends AppCompatActivity {
         correctAnswers[position] = false;
     }
 
-    public List<Word> getWords() {
-        return words;
+    public Word getWord(int position) {
+        return words.get(position);
     }
 
     public boolean isFinished() {

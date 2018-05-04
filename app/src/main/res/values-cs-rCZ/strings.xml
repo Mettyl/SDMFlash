@@ -76,7 +76,6 @@
     <string name="write_the_translation">napište překlad</string>
     <string name="no_words_in_this_category">Žádná slova v této kategorii :(</string>
     <string name="you_have_number_points">Máte {0} bodů</string>
-    <string name="choose_the_resource">Vyberte zdroj</string>
     <string name="all">Všechno</string>
     <string name="usage_time">Doba používání</string>
     <string name="words_distribution">Rozdělení slov</string>
@@ -95,5 +94,19 @@
     <string name="write_your_word_manualy">Přidat nové slovo manuálně</string>
     <string name="add_by_photo">Vyfotit slovo</string>
     <string name="take_a_photo_of_words">Přidat slovo pomocí kamery</string>
+    <string name="su">Ne</string>
+    <string name="mo">Po</string>
+    <string name="tu">Út</string>
+    <string name="we">St</string>
+    <string name="th">Čt</string>
+    <string name="fr">Pá</string>
+    <string name="sa">So</string>
+    <string name="study_time">Doba učení</string>
+    <string name="test_time">Doba testování</string>
+    <string name="first">Těžké</string>
+    <string name="second">Těžší</string>
+    <string name="third">Středně těžke</string>
+    <string name="fourth">Lehčí</string>
+    <string name="fifth">Lehké</string>
 
 </resources>
